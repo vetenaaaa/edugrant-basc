@@ -423,7 +423,7 @@ text-5xl  zxczxc tracking-[-9px] -translate-x-2
                   Verify
                 </Button>
                 <Label>
-                  Didn't recieved the code?{" "}
+                  Didn&apos;t recieved the code?{" "}
                   <span className="underline">Resend Now</span>{" "}
                 </Label>
               </div>
