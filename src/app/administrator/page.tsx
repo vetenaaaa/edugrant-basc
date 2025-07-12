@@ -30,8 +30,8 @@ export default function Admin() {
           setUser(validToken.data.safeData[0]) 
           router.replace("/administrator/home/dashboard")
         }
-      } catch (error: any) {
-        console.log(error?.response?.data?.message || "Something Went Wrong!!!");
+      } catch (error) {
+        alert("Something Went Wrong!!!");
         console.log(error)
       }
     };
@@ -55,9 +55,9 @@ export default function Admin() {
           alert(res.data.message);
           setShowVerification(true);
         }
-      } catch (error: any) {
+      } catch (error) {
         console.log(error)
-        alert(error?.response?.data?.message || "Something Went Wrong!!")
+        alert("Something Went Wrong!!")
       }
     } else {
       try {
@@ -69,9 +69,9 @@ export default function Admin() {
           setUser(res.data.safeData);
           router.replace("/administrator/home/dashboard");
         }
-      } catch (error: any) {
+      } catch (error) {
         console.log(error);
-        alert(error?.response?.data?.message)
+        alert("Something Wrong")
       }
     }
   };

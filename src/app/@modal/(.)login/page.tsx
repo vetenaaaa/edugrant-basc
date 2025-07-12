@@ -87,9 +87,9 @@ export default function LoginClient() {
           router.replace("/home/dashboard");
         }, 1000)
       }
-    } catch (error: any) {
+    } catch (error) {
       console.log(error);
-      alert(error.response.data.message);
+      alert("Invalid!");
     }
   };
   const router = useRouter();
@@ -140,9 +140,9 @@ export default function LoginClient() {
         setCurrentStep((prev) => prev + 1);
         alert(res.data.message)
       }
-    } catch (error: any) {
+    } catch (error) {
       console.log(error)
-      error?.response?.data?.message? alert(error.response.data.message) : alert("Something Went Wrong!!!!")
+      alert("Something Went Wrong!!!!")
     }
   }
 
