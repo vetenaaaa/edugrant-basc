@@ -10,7 +10,7 @@ export async function middleware(request: NextRequest){
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                Cookie: `token=${token}`, // Forward user's cookies
+                Cookie: `token=${token}`
             },
             body: JSON.stringify({})
             });
