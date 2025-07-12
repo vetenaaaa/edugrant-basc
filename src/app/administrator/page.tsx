@@ -11,6 +11,7 @@ import BlurText from "@/components/ui/blur";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "../userData/User";
+import { NextRequest } from "next/server";
 
 type FormData = {
   username: string;
