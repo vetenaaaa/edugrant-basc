@@ -6,23 +6,20 @@ import Link from "next/link";
 import apply from "@/assets/apply.svg";
 import { ModeToggle } from "@/components/ui/dark-mode";
 import track from "@/assets/track.svg";
-import Footer from "./footer";
 import {
   ArrowRight,
-  LogIn,
   LogInIcon,
-  Menu,
   MessageCircleQuestion,
   MonitorCog,
   Home,
-  Sparkles,
   Settings,
   Mail,
   HelpCircle,
+  Zap,
 } from "lucide-react";
 import bascLogo from "@/assets/basclogo.png";
 import bascImage from "@/assets/BASCjf5989_03 copy.jpg";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import {
   Accordion,
   AccordionContent,
@@ -30,15 +27,10 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import SpotlightBorderWrapper from "@/components/ui/border";
 import { Separator } from "@/components/ui/separator";
-import { useEffect } from "react";
-import axios from "axios";
-import { useRouter } from "next/navigation";
-import { useUserStore } from "./userData/User";
 const navItems = [
   { label: "Home", icon: Home },
-  { label: "Features", icon: Sparkles },
+  { label: "Features", icon: Zap },
   { label: "How it works", icon: Settings },
   { label: "Contact", icon: Mail },
   { label: "Faqs", icon: HelpCircle },
@@ -100,209 +92,157 @@ const howItWorks = [
     image: track.src,
   },
 ];
-
-export default function LandingPage() {
-  const {setUser} = useUserStore()
-  const router = useRouter();
-  useEffect(() => {
-    const checkToken = async () => {
-      try {
-        const validToken = await axios.post(`${process.env.NEXT_PUBLIC_USER_API}/tokenValidation`,{},{withCredentials:true});
-        if(validToken.status === 200){
-          setUser(validToken.data.safeData)
-          router.replace("/home/dashboard")
-        }
-      } catch (error: any) {
-        console.log(error?.response?.data?.message || "Something Went Wrong!!!")
-      }
-    };
-    checkToken();
-  }, []);
-return (
-    <>
-      <div className="relative w-full your-class ">
-        <header className="py-8 w-[95%] mx-auto hidden lg:flex justify-between items-center">
-          <span className="flex items-center gap-5 h-15 py-3">
-            <span className="flex items-center gap-2">
-              <img className="h-10 w-10" src={bascLogo.src} alt="" />
-              <p className="font-semibold text-xl ">basc edugrant</p>
-            </span>
-            <Separator orientation="vertical" />
-            <ul className="flex gap-2">
-              {navItems.map((item, index) => (
-                <li
-                  key={index}
-                  onClick={() => {
-                    const sectionId = item.label
-                      .toLowerCase()
-                      .replace(/\s+/g, "-");
-                    const section = document.getElementById(sectionId);
-                    if (section) {
-                      section.scrollIntoView({ behavior: "smooth" });
-                    }
-                  }}
-                  className=" flex items-center"
-                >
-                  <Button variant="link" className="cursor-pointer">
-                    <item.icon className="w-4 h-4" />
-                    {item.label}
-                  </Button>
-                </li>
-              ))}
-            </ul>
-          </span>
-          <span className="flex gap-3 items-center">
-            <Link href={"/login"} prefetch={true}>
-              <Button>
-                Login <LogInIcon />
-              </Button>
-            </Link>
-            <ModeToggle />
-          </span>
-        </header>
-
-        <div className="relative h-[75vh] w-[95%] mx-auto justify-center items-start flex-col border rounded-3xl p-10 overflow-hidden bg-[var(--green)] hidden lg:flex shadow-md">
-          <img
-            className="absolute opacity-3 h-[120%] [mask-image:linear-gradient(to_right,transparent,black_30%)] pointer-events-none"
-            src={bascLogo.src}
-            alt=""
-          />
-          <img
-            className="h-full w-[40%] object-cover absolute right-0 [mask-image:linear-gradient(to_right,transparent,black)] z-10"
-            src={bascImage.src}
-            alt=""
-          />
-          <div className=" flex items-start ">
-            <motion.span
-              className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-green-500/70 
-  text-6xl font-semibold zxczxc tracking-[-7px] 
-  "
-              initial={{ backgroundPosition: "200% 0" }}
-              animate={{ backgroundPosition: "-200% 0" }}
-              transition={{
-                repeat: Infinity,
-                repeatType: "loop",
-                duration: 7,
-                ease: "linear",
+const HeaderComponent = () => {
+  return (
+    <header className="py-7 w-[95%] mx-auto hidden lg:flex justify-between items-center ">
+      <span className="flex items-center gap-5 h-15 py-3">
+        <span className="flex items-center gap-2">
+          <img className="h-10 w-10" src={bascLogo.src} alt="" />
+          <p className="font-semibold text-xl ">basc edugrant</p>
+        </span>
+        <Separator orientation="vertical" />
+        <ul className="flex gap-2">
+          {navItems.map((item, index) => (
+            <li
+              key={index}
+              onClick={() => {
+                const sectionId = item.label.toLowerCase().replace(/\s+/g, "-");
+                const section = document.getElementById(sectionId);
+                if (section) {
+                  section.scrollIntoView({ behavior: "smooth" });
+                }
               }}
+              className=" flex items-center"
             >
-              Edugrant
-            </motion.span>
-            <p className="text-center mt-1 text-lg text-yellow-400">
-              &nbsp;Online Scholarship Application Portal
-            </p>
-          </div>{" "}
-          <BlurText
-            text=" Apply, track, and get notified — all in one place for BASC students"
-            delay={150}
-            animateBy="words"
-            direction="top"
-            className="text-2xl mt-3"
-          />
-          <span className="mt-10">
-            <Link href={"/register"} prefetch={true}>
-              <Button>
-                Get started <ArrowRight />
+              <Button variant="link" className="cursor-pointer">
+                <item.icon className="w-4 h-4" />
+                {item.label}
               </Button>
-            </Link>
-          </span>
-        </div>
+            </li>
+          ))}
+        </ul>
+      </span>
+      <span className="flex gap-3 items-center">
+        <Link href={"/login"} prefetch={true}>
+          <Button variant="outline">
+            Login <LogInIcon />
+          </Button>
+        </Link>
+        <ModeToggle />
+      </span>
+    </header>
+  );
+};
+const HeroLanding = () => {
+  return (
+    <div className="relative h-[75vh] w-[95%] mx-auto justify-center items-start flex-col border rounded-3xl p-10 overflow-hidden bg-[var(--green)] flex shadow-md">
+      <img
+        className="absolute opacity-3 h-[120%] [mask-image:linear-gradient(to_right,transparent,black_30%)] pointer-events-none"
+        src={bascLogo.src}
+        alt=""
+      />
+      <img
+        className="h-full w-[40%] object-cover absolute right-0 [mask-image:linear-gradient(to_right,transparent,black)] z-10"
+        src={bascImage.src}
+        alt=""
+      />
 
-        <div className="lg:hidden flex justify-between items-center w-full px-4 pt-2">
-          <img className=" h-12 w-12" src={bascLogo.src} alt="BASC Logo" />
-          <div className="flex gap-2 items-center">
-            <ModeToggle />
-            <Menu className=" h-8 w-8" />
-          </div>
-        </div>
-        <div className="p-4 mt-10 lg:hidden block">
-          <motion.span
-            className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-green-500/70 
-            text-4xl font-semibold zxczxc tracking-[-5px] 
-            "
-            initial={{ backgroundPosition: "200% 0" }}
-            animate={{ backgroundPosition: "-200% 0" }}
-            transition={{
-              repeat: Infinity,
-              repeatType: "loop",
-              duration: 7,
-              ease: "linear",
-            }}
+      <motion.span
+        className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-green-500/70 
+text-6xl  zxczxc tracking-[-8px] -translate-x-2
+"
+        initial={{ backgroundPosition: "200% 0" }}
+        animate={{ backgroundPosition: "-200% 0" }}
+        transition={{
+          repeat: Infinity,
+          repeatType: "loop",
+          duration: 7,
+          ease: "linear",
+        }}
+      >
+        Edugrant
+      </motion.span>
+
+      <BlurText
+        text="Online scholarship application portal for BASC students."
+        delay={150}
+        animateBy="words"
+        direction="top"
+        className="text-2xl mt-3 text-white"
+      />
+
+      <Link href={"/register"} prefetch={true} className="mt-8">
+        <Button variant="outline">
+          Get started <ArrowRight />
+        </Button>
+      </Link>
+    </div>
+  );
+};
+
+const HowitworksComponent = () => {
+  return (
+    <div className="w-3/4 mx-auto mt-15 space-y-5">
+      <h1
+        id="how-it-works"
+        className="font-semibold text-xl border-l-4 border-green-600 pl-5 flex items-center gap-2"
+      >
+        How It Works <MonitorCog />
+      </h1>
+      <div className="grid md:grid-cols-2 gap-6">
+        {howItWorks.map((step, index) => (
+          <div
+            key={index}
+            className="p-4 border rounded-lg shadow-sm flex flex-col sm:flex-row items-start gap-4 backdrop:backdrop-blur-2xl bg-muted-foreground/5"
           >
-            Edugrant
-          </motion.span>
-
-          <p className="mt-5 font-light px-1">
-            Apply, track, and get notified — all in one place for{" "}
-            <span className="text-yellow-400 font-semibold">
-              BASC students.
-            </span>
-          </p>
-          <div className="flex gap-3 mt-8">
-            <Link href={"/register"} prefetch={true}>
-              <Button variant="outline" className="flex-1 py-5">
-                Apply Now <ArrowRight />
-              </Button>
-            </Link>
-            <Link href={"/login"} prefetch={true}>
-              <Button className="flex-1 py-5">
-                Login <LogIn />
-              </Button>
-            </Link>
-          </div>
-        </div>
-
-        <div className="p-4 lg:w-3/4 mx-auto  space-y-15 mt-10">
-          <div className="space-y-8">
-            <h1
-              id="how-it-works"
-              className="font-semibold text-xl border-l-4 border-green-600 pl-5 flex items-center gap-2"
-            >
-              How It Works <MonitorCog />
-            </h1>
-            <div className="grid md:grid-cols-2 gap-6">
-              {howItWorks.map((step, index) => (
-                <SpotlightBorderWrapper key={index}>
-                  <div className="p-4 border rounded-lg shadow-sm flex flex-col sm:flex-row items-start gap-4 backdrop:backdrop-blur-2xl bg-muted-foreground/5">
-                    <img
-                      src={step.image}
-                      alt={step.title}
-                      className="w-full h-40  object-cover rounded-md"
-                    />
-                    <div>
-                      <h3 className="text-lg font-medium">{step.title}</h3>
-                      <p className="text-sm mt-1 text-muted-foreground">
-                        {step.description}
-                      </p>
-                    </div>
-                  </div>
-                </SpotlightBorderWrapper>
-              ))}
+            <img
+              src={step.image}
+              alt={step.title}
+              className="w-full h-40  object-cover rounded-md"
+            />
+            <div>
+              <h3 className="text-lg font-medium">{step.title}</h3>
+              <p className="text-sm mt-1 text-muted-foreground">
+                {step.description}
+              </p>
             </div>
           </div>
+        ))}
+      </div>
+    </div>
+  );
+};
 
-          <div className="space-y-5">
-            <h1
-              id="faqs"
-              className="font-semibold text-xl border-l-4 border-green-600 pl-5 flex items-center gap-2"
-            >
-              Frequently Ask Questions <MessageCircleQuestion />
-            </h1>
-            <Accordion type="single" collapsible>
-              {faqs.map((faq) => (
-                <AccordionItem key={faq.value} value={faq.value}>
-                  <AccordionTrigger className="!py-8">
-                    {faq.question}
-                  </AccordionTrigger>
-                  <AccordionContent>{faq.answer}</AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
-          </div>
-          <div className="px-4 pb-10 lg:w-3/4 mx-auto">
-            <Footer />
-          </div>
-        </div>
+const FaqsComponent = () => {
+  return (
+    <div className="space-y-5 w-3/4 mx-auto mt-15">
+      <h1
+        id="faqs"
+        className="font-semibold text-xl border-l-4 border-green-600 pl-5 flex items-center gap-2"
+      >
+        Frequently Ask Questions <MessageCircleQuestion />
+      </h1>
+      <Accordion type="single" collapsible>
+        {faqs.map((faq) => (
+          <AccordionItem key={faq.value} value={faq.value}>
+            <AccordionTrigger className="!py-8">
+              {faq.question}
+            </AccordionTrigger>
+            <AccordionContent>{faq.answer}</AccordionContent>
+          </AccordionItem>
+        ))}
+      </Accordion>
+    </div>
+  );
+};
+export default function LandingPage() {
+  return (
+    <>
+      <div className="relative w-full your-class ">
+        <HeaderComponent />
+        <HeroLanding />
+        <HowitworksComponent />
+        <FaqsComponent />
       </div>
     </>
   );

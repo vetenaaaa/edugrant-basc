@@ -1,202 +1,266 @@
+// /app/administrator
+
 "use client";
-
-import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { motion } from "framer-motion";
-import BlurText from "@/components/ui/blur";
-import axios from "axios";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useUserStore } from "../userData/User";
-import { NextRequest } from "next/server";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
 
-type FormData = {
-  username: string;
-  password: string;
-  remember?: boolean;
-  code?: string;
-};
+import { Input } from "@/components/ui/input";
+import { useForm } from "react-hook-form";
+import axios from "axios";
+const loginSchema = z.object({
+  email: z
+    .string()
+    .min(1, "Email is required")
+    .email({ message: "Please enter a vali email" }),
+  password: z
+    .string()
+    .min(1, "Password is required")
+    .max(20, "Password must be at least 8 characters long"),
+});
 
-export default function Admin() {
-  const {setUser} = useUserStore()
+const optSchema = z.object({
+  otp: z
+    .string()
+    .min(1, "One time password is required")
+    .max(6, "OTP must be 6 characters long"),
+});
+
+type LoginFormData = z.infer<typeof loginSchema>;
+type otpFormData = z.infer<typeof optSchema>;
+
+export default function LoginAdmin() {
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
+  const [credentials, setCredentials] = useState({
+    email: "",
+    password: "",
+  });
+  const LoginForm = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const otpForm = useForm<otpFormData>({
+    resolver: zodResolver(optSchema),
+
+    defaultValues: {
+      otp: "",
+    },
+  });
+
   useEffect(() => {
     const checkToken = async () => {
       try {
-        const validToken = await axios.post(`${process.env.NEXT_PUBLIC_ADMIN_API}/adminTokenAuthentication`,{},{withCredentials:true});
-        if(validToken.status === 200){
-          setUser(validToken.data.safeData[0]) 
-          router.replace("/administrator/home/dashboard")
+        const response = await axios.post(
+          `https://edugrant-express-server-production.up.railway.app/administrator/adminTokenAuthentication`,
+          {},
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            withCredentials: true,
+          }
+        );
+
+
+        console.log("token", response.data);
+        if (response.status === 200) {
+          router.push("/administrator/home");
+          console.log("authenticated");
         }
       } catch (error) {
-        alert("Something Went Wrong!!!");
-        console.log(error)
+        console.log("No valid token found", error);
       }
     };
     checkToken();
-  }, []);
-  const [showVerification, setShowVerification] = useState(false);
+  }, [router]);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormData>();
+  const onLoginSubmit = async (data: LoginFormData) => {
+    console.log(`Login attempt with email: ${data.email}, ${data.password}`);
 
-  const onSubmit = async (data: FormData) => {
-    if (!showVerification) {
-      try {
-        const res = await axios.post(`${process.env.NEXT_PUBLIC_ADMIN_API}/adminLogin`,
-          {adminPassword: data.password, adminEmail: data.username},
-          {withCredentials: true});
-        if(res.status === 200){
-          alert(res.data.message);
-          setShowVerification(true);
+    try {
+      const response = await axios.post(
+        `https://edugrant-express-server-production.up.railway.app/administrator/adminLogin`,
+        {
+          adminEmail: data.email,
+          adminPassword: data.password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
         }
-      } catch (error) {
-        console.log(error)
-        alert("Something Went Wrong!!")
-      }
-    } else {
-      try {
-        const res = await axios.post(`${process.env.NEXT_PUBLIC_ADMIN_API}/adminCodeAuthentication`,
-          {code: data.code, adminPassword: data.password, adminEmail: data.username},
-          {withCredentials: true}
+      );
+
+      console.log("Login successful:", response.data);
+      setCredentials({
+        email: data.email,
+        password: data.password,
+      });
+      setStep("otp");
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error(
+          "Login error:",
+          error.response?.data?.message || error.message
         );
-        if(res.status === 200){
-          setUser(res.data.safeData);
-          router.replace("/administrator/home/dashboard");
-        }
-      } catch (error) {
-        console.log(error);
-        alert("Something Wrong")
+      } else {
+        console.error("Login error:", error);
       }
     }
   };
 
+  const onOtpSubmit = async (data: otpFormData) => {
+    console.log(
+      "sent to backend",
+      credentials.email,
+      credentials.password,
+      data.otp
+    );
+    try {
+      const response = await axios.post(
+        `https://edugrant-express-server-production.up.railway.app/administrator/adminCodeAuthentication`,
+        {
+          adminEmail: credentials.email,
+          adminPassword: credentials.password,
+          code: data.otp,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+
+      console.log("Code verification successful:", response.data);
+      router.push("/administrator/home");
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error(
+          "Verification error:",
+          error.response?.data?.message || error.message
+        );
+      } else {
+        console.error("Verification error:", error);
+      }
+    }
+  };
+
+  const [step, setStep] = useState<"login" | "otp">("login");
+
   return (
-    <div className="min-h-screen w-full grid grid-cols-1 md:grid-cols-2 bg-popover">
-      {/* Branding */}
-      <div className="hidden md:flex items-center justify-center bg-gradient-to-br from-[rgba(30,175,115,0.3)] via-[rgba(30,175,115,0.15)] to-transparent p-12">
-        <div className="text-left space-y-4 max-w-md">
-          <h1 className="text-5xl font-bold tracking-tight leading-tight">
-            Edugrant Admin
-          </h1>
-          <span className="text-lg /80">
-            <BlurText
-              text="Manage everything in one place. Secure. Efficient. Reliable."
-              delay={150}
-              animateBy="words"
-              direction="top"
-              className="text-2xl mb-8"
-            />
-          </span>
-        </div>
-      </div>
-
-      {/* Form */}
-      <div className="flex items-center justify-center p-8">
-        <motion.div
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
-          className="w-full max-w-lg"
-        >
-          <div>
-            <h2 className="text-3xl font-semibold">Sign in to your account</h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Use your admin credentials to continue.
-            </p>
-          </div>
-
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-10 mt-13">
-            {!showVerification ? (
-              <>
-                <div className="space-y-1">
-                  <Label htmlFor="username">Username</Label>
-                  <Input
-                    id="username"
-                    placeholder="admin@example.com"
-                    className="h-11 bg-[#1a1d24] border border-[rgba(30,175,115,0.3)] placeholder-gray-500"
-                    {...register("username", {
-                      required: "Username is required",
-                    })}
-                  />
-                  {errors.username && (
-                    <p className="text-red-500 text-sm">
-                      {errors.username.message}
-                    </p>
-                  )}
-                </div>
-
-                <div className="space-y-1">
-                  <Label htmlFor="password">Password</Label>
-                  <Input
-                    id="password"
-                    type="password"
-                    placeholder="••••••••"
-                    className="h-11 border border-[rgba(30,175,115,0.3)] placeholder-gray-500"
-                    {...register("password", {
-                      required: "Password is required",
-                      minLength: {
-                        value: 6,
-                        message: "Password must be at least 6 characters",
-                      },
-                    })}
-                  />
-                  {errors.password && (
-                    <p className="text-red-500 text-sm">
-                      {errors.password.message}
-                    </p>
-                  )}
-                </div>
-
-                <div className="flex items-center justify-between text-sm text-gray-300">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <Checkbox
-                      className="bg-[#1a1d24] border-[rgba(30,175,115,0.3)]"
-                      {...register("remember")}
+    <div className="h-screen flex justify-center items-center">
+      {step === "login" && (
+        <Form {...LoginForm}>
+          <div className="min-w-md space-y-5">
+            <FormField
+              control={LoginForm.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="email"
+                      placeholder="Enter your email"
+                      {...field}
                     />
-                    Remember me
-                  </label>
-                  <a href="#" className="hover:underline">
-                    Forgot password?
-                  </a>
-                </div>
-              </>
-            ) : (
-              <div className="space-y-1">
-                <Label htmlFor="code">Verification Code</Label>
-                <Input
-                  id="code"
-                  placeholder="Enter the 6-digit code sent to your email"
-                  className="h-11 border border-[rgba(30,175,115,0.3)] placeholder-gray-500"
-                  {...register("code", {
-                    required: "Verification code is required",
-                    minLength: {
-                      value: 6,
-                      message: "Code must be 6 digits",
-                    },
-                  })}
-                />
-                {errors.code && (
-                  <p className="text-red-500 text-sm">{errors.code.message}</p>
-                )}
-              </div>
-            )}
-
-            <Button
-              type="submit"
-              className="h-11 w-full bg-[rgba(30,175,115,0.9)] hover:bg-[rgba(30,175,115,1)] transition-colors font-medium rounded-lg"
-            >
-              {showVerification ? "Verify Code" : "Login"}
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            ></FormField>
+            <FormField
+              control={LoginForm.control}
+              name="password"
+              render={({ field }) => {
+                return (
+                  <FormItem>
+                    <FormLabel onClick={() => setShowPassword(!showPassword)}>
+                      Password
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Enter your password"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
+            ></FormField>
+            <Button onClick={LoginForm.handleSubmit(onLoginSubmit)}>
+              Login
             </Button>
-          </form>
-        </motion.div>
-      </div>
+          </div>
+        </Form>
+      )}
+
+      {step === "otp" && (
+        <Form {...otpForm}>
+          <div className="space-y-5">
+            <FormField
+              control={otpForm.control}
+              name="otp"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Verification</FormLabel>
+                  <FormControl>
+                    <div className="flex items-center gap-3">
+                      <InputOTP
+                        maxLength={6}
+                        value={field.value}
+                        onChange={field.onChange}
+                      >
+                        <InputOTPGroup>
+                          <InputOTPSlot index={0} />
+                          <InputOTPSlot index={1} />
+                          <InputOTPSlot index={2} />
+                          <InputOTPSlot index={3} />
+                          <InputOTPSlot index={4} />
+                          <InputOTPSlot index={5} />
+                        </InputOTPGroup>
+                      </InputOTP>
+
+                      <Button
+                        variant="outline"
+                        onClick={otpForm.handleSubmit(onOtpSubmit)}
+                      >
+                        Verify
+                      </Button>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </Form>
+      )}
     </div>
   );
 }
