@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 
 export async function middleware(request: NextRequest){
-    console.log("Middleware Working")
+    const token = request.cookies.get("token")?.value;
     const { pathname } = request.nextUrl;
     if(pathname.startsWith("/administrator/home")){
         try {
@@ -10,10 +10,9 @@ export async function middleware(request: NextRequest){
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                cookie: request.headers.get("cookie") || "", // Forward user's cookies
+                Cookie: `token=${token}`, // Forward user's cookies
             },
-            body: JSON.stringify({}),
-            credentials: "include"
+            body: JSON.stringify({})
             });
             if(ValidToken.status !== 200){
                 console.log(ValidToken)
