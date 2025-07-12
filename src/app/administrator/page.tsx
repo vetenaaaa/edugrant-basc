@@ -28,6 +28,12 @@ import axios from "axios";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import BlurText from "@/components/ui/blur";
+import {
+  ArrowLeft,
+  CircleAlert,
+  CircleCheckIcon,
+  LoaderCircleIcon,
+} from "lucide-react";
 const loginSchema = z.object({
   email: z
     .string()
@@ -56,6 +62,12 @@ export default function LoginAdmin() {
     email: "",
     password: "",
   });
+  const [loginError, setLoginError] = useState("");
+  const [loginSuccess, setLoginSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [disableInput, setDisableInput] = useState(false);
+  const [otpError, setOtpError] = useState("");
+  const [step, setStep] = useState<"login" | "otp">("login");
   const LoginForm = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
 
@@ -103,6 +115,9 @@ export default function LoginAdmin() {
     console.log(`Login attempt with email: ${data.email}, ${data.password}`);
 
     try {
+      setLoading(true);
+      setDisableInput(true);
+      setLoginError("");
       const response = await axios.post(
         `https://edugrant-express-server-production.up.railway.app/administrator/adminLogin`,
         {
@@ -123,26 +138,46 @@ export default function LoginAdmin() {
         password: data.password,
       });
       setStep("otp");
+      setLoading(false);
+      setDisableInput(false);
+      setLoginError("");
     } catch (error) {
+      setLoading(false);
+      setDisableInput(false);
       if (axios.isAxiosError(error)) {
-        console.error(
-          "Login error:",
-          error.response?.data?.message || error.message
-        );
+        if (error.response?.status === 400) {
+          setLoginError(
+            "Invalid credentials. Please check your email and password."
+          );
+        } else {
+          console.error(
+            "Login error:",
+            error.response?.data?.message || error.message
+          );
+        }
       } else {
         console.error("Login error:", error);
+        setLoginError("An unexpected error occurred. Please try again.");
       }
     }
   };
 
   const onOtpSubmit = async (data: otpFormData) => {
+    if (data.otp.length !== 6) {
+      setOtpError("Please enter the complete 6-digit verification code");
+      return;
+    }
     console.log(
       "sent to backend",
       credentials.email,
       credentials.password,
       data.otp
     );
+
     try {
+      setOtpError("");
+      setDisableInput(true);
+      setLoading(true);
       const response = await axios.post(
         `https://edugrant-express-server-production.up.railway.app/administrator/adminCodeAuthentication`,
         {
@@ -157,22 +192,26 @@ export default function LoginAdmin() {
           withCredentials: true,
         }
       );
-
+      setLoginSuccess("Sucessfully log in...");
       console.log("Code verification successful:", response.data);
       router.push("/administrator/home");
     } catch (error) {
+      setLoading(false);
+      setDisableInput(false);
       if (axios.isAxiosError(error)) {
-        console.error(
-          "Verification error:",
-          error.response?.data?.message || error.message
-        );
+        if (error.response?.status === 400) {
+          setOtpError("Invalid code");
+        } else {
+          console.error(
+            "Verification error:",
+            error.response?.data?.message || error.message
+          );
+        }
       } else {
         console.error("Verification error:", error);
       }
     }
   };
-
-  const [step, setStep] = useState<"login" | "otp">("login");
 
   return (
     <div className="h-screen flex justify-center items-center your-class">
@@ -208,60 +247,86 @@ text-5xl  zxczxc tracking-[-9px] -translate-x-2
           <div>
             <Form {...LoginForm}>
               <h1 className=" text-3xl font-bold">Sign In</h1>
-              <h1 className="text-sm text-muted-foreground mt-2">
+              <h1 className="text-sm text-muted-foreground mt-2 mb-3">
                 Enter your credentials to access your account
               </h1>
-              <div className="min-w-md space-y-5 mt-8">
-                <FormField
-                  control={LoginForm.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="email"
-                          placeholder="Enter your email"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={LoginForm.control}
-                  name="password"
-                  render={({ field }) => {
-                    return (
+
+              <div className="min-w-md space-y-4 mt-8">
+                {loginError && (
+                  <div className="rounded-md border border-red-500/50 px-4 py-3 text-red-600">
+                    <p className="text-sm">
+                      <CircleAlert
+                        className="me-3 -mt-0.5 inline-flex opacity-60"
+                        size={16}
+                        aria-hidden="true"
+                      />
+                      {loginError}
+                    </p>
+                  </div>
+                )}
+
+                <div className="space-y-8">
+                  <FormField
+                    control={LoginForm.control}
+                    name="email"
+                    render={({ field }) => (
                       <FormItem>
-                        <FormLabel
-                          onClick={() => setShowPassword(!showPassword)}
-                        >
-                          Password
-                        </FormLabel>
+                        <FormLabel>Email</FormLabel>
                         <FormControl>
                           <Input
-                            type={showPassword ? "text" : "password"}
-                            placeholder="Enter your password"
+                            type="email"
+                            disabled={disableInput}
+                            placeholder="Enter your email"
                             {...field}
                           />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
-                    );
-                  }}
-                />
+                    )}
+                  />
+                  <FormField
+                    control={LoginForm.control}
+                    name="password"
+                    render={({ field }) => {
+                      return (
+                        <FormItem>
+                          <FormLabel
+                            onClick={() => setShowPassword(!showPassword)}
+                          >
+                            Password
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              disabled={disableInput}
+                              type={showPassword ? "text" : "password"}
+                              placeholder="Enter your password"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      );
+                    }}
+                  />
+                </div>
                 <div>
                   <div className="flex items-center gap-1.5">
-                    <Checkbox />
+                    <Checkbox disabled={disableInput} />
                     <Label> Remember me</Label>
                   </div>
                 </div>
                 <Button
-                  className="w-full mt-5"
+                  className="w-full mt-8"
                   onClick={LoginForm.handleSubmit(onLoginSubmit)}
+                  disabled={disableInput}
                 >
+                  {loading && (
+                    <LoaderCircleIcon
+                      className="-ms-1 animate-spin"
+                      size={16}
+                      aria-hidden="true"
+                    />
+                  )}
                   Login
                 </Button>
               </div>
@@ -270,45 +335,100 @@ text-5xl  zxczxc tracking-[-9px] -translate-x-2
         )}
 
         {step === "otp" && (
-          <Form {...otpForm}>
-            <div className="space-y-5">
-              <FormField
-                control={otpForm.control}
-                name="otp"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Verification</FormLabel>
-                    <FormControl>
-                      <div className="flex items-center gap-3">
-                        <InputOTP
-                          maxLength={6}
-                          value={field.value}
-                          onChange={field.onChange}
-                        >
-                          <InputOTPGroup>
-                            <InputOTPSlot index={0} />
-                            <InputOTPSlot index={1} />
-                            <InputOTPSlot index={2} />
-                            <InputOTPSlot index={3} />
-                            <InputOTPSlot index={4} />
-                            <InputOTPSlot index={5} />
-                          </InputOTPGroup>
-                        </InputOTP>
+          <div>
+            <Form {...otpForm}>
+              <Label>
+                <ArrowLeft size={16} onClick={() => setStep("login")} />
+                Back to login
+              </Label>
+              <h1 className=" text-3xl font-bold mt-5">Verification</h1>
+              <h1 className="text-sm text-muted-foreground mt-1">
+                Enter verification code sent to your email.
+              </h1>
+              <Label className="text-blue-500 mt-1">
+                {credentials.email}Jerometecsonn@gmail.com
+              </Label>
 
-                        <Button
-                          variant="outline"
-                          onClick={otpForm.handleSubmit(onOtpSubmit)}
-                        >
-                          Verify
-                        </Button>
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+              <div className="mt-5 space-y-5">
+                {otpError && (
+                  <div className="rounded-md border border-red-500/50 px-4 py-3 text-red-600">
+                    <p className="text-sm">
+                      <CircleAlert
+                        className="me-3 -mt-0.5 inline-flex opacity-60"
+                        size={16}
+                        aria-hidden="true"
+                      />
+                      {otpError}
+                    </p>
+                  </div>
                 )}
-              />
-            </div>
-          </Form>
+                {loginSuccess && (
+                  <div className="rounded-md border border-emerald-500/50 px-4 py-3 text-emerald-600">
+                    <p className="text-sm">
+                      <CircleCheckIcon
+                        className="me-3 -mt-0.5 inline-flex opacity-60"
+                        size={16}
+                        aria-hidden="true"
+                      />
+                      {loginSuccess}
+                    </p>
+                  </div>
+                )}
+                <FormField
+                  control={otpForm.control}
+                  name="otp"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel></FormLabel>
+                      <FormControl>
+                        <div className="flex items-center">
+                          <InputOTP
+                            maxLength={6}
+                            value={field.value}
+                            onChange={(value) => {
+                              field.onChange(value);
+                              setOtpError("");
+                            }}
+                            disabled={disableInput}
+                          >
+                            <InputOTPGroup>
+                              <InputOTPSlot index={0} />
+                              <InputOTPSlot index={1} />
+                              <InputOTPSlot index={2} />
+                              <InputOTPSlot index={3} />
+                              <InputOTPSlot index={4} />
+                              <InputOTPSlot index={5} />
+                            </InputOTPGroup>
+                          </InputOTP>
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <Button
+                  className="w-full mt-3"
+                  variant="outline"
+                  disabled={disableInput}
+                  onClick={otpForm.handleSubmit(onOtpSubmit)}
+                >
+                  {loading && (
+                    <LoaderCircleIcon
+                      className="-ms-1 animate-spin"
+                      size={16}
+                      aria-hidden="true"
+                    />
+                  )}
+                  Verify
+                </Button>
+                <Label>
+                  Didn't recieved the code?{" "}
+                  <span className="underline">Resend Now</span>{" "}
+                </Label>
+              </div>
+            </Form>
+          </div>
         )}
       </div>
     </div>
