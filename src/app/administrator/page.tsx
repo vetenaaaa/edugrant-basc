@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { motion } from "motion/react";
 import {
   InputOTP,
   InputOTPGroup,
@@ -23,6 +24,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { Separator } from "@/components/ui/separator";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import BlurText from "@/components/ui/blur";
 const loginSchema = z.object({
   email: z
     .string()
@@ -81,7 +86,6 @@ export default function LoginAdmin() {
             withCredentials: true,
           }
         );
-
 
         console.log("token", response.data);
         if (response.status === 200) {
@@ -171,96 +175,142 @@ export default function LoginAdmin() {
   const [step, setStep] = useState<"login" | "otp">("login");
 
   return (
-    <div className="h-screen flex justify-center items-center">
-      {step === "login" && (
-        <Form {...LoginForm}>
-          <div className="min-w-md space-y-5">
-            <FormField
-              control={LoginForm.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="Enter your email"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            ></FormField>
-            <FormField
-              control={LoginForm.control}
-              name="password"
-              render={({ field }) => {
-                return (
+    <div className="h-screen flex justify-center items-center your-class">
+      <div className="flex-1  flex flex-col justify-center items-center">
+        <div>
+          <motion.span
+            className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-green-500/70 
+text-5xl  zxczxc tracking-[-9px] -translate-x-2
+"
+            initial={{ backgroundPosition: "200% 0" }}
+            animate={{ backgroundPosition: "-200% 0" }}
+            transition={{
+              repeat: Infinity,
+              repeatType: "loop",
+              duration: 7,
+              ease: "linear",
+            }}
+          >
+            Edugrant Admin
+          </motion.span>
+          <BlurText
+            text="Manage everything in one place. Secure. Efficient. Reliable."
+            delay={150}
+            animateBy="words"
+            direction="top"
+            className="text-2xl mt-3 text-white"
+          />
+        </div>
+      </div>
+      <div className="border h-[80%]"></div>
+      <div className="flex-1 flex flex-col justify-center items-center">
+        {step === "login" && (
+          <div>
+            <Form {...LoginForm}>
+              <h1 className=" text-3xl font-bold">Sign In</h1>
+              <h1 className="text-sm text-muted-foreground mt-2">
+                Enter your credentials to access your account
+              </h1>
+              <div className="min-w-md space-y-5 mt-8">
+                <FormField
+                  control={LoginForm.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="email"
+                          placeholder="Enter your email"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={LoginForm.control}
+                  name="password"
+                  render={({ field }) => {
+                    return (
+                      <FormItem>
+                        <FormLabel
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          Password
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            type={showPassword ? "text" : "password"}
+                            placeholder="Enter your password"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    );
+                  }}
+                />
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <Checkbox />
+                    <Label> Remember me</Label>
+                  </div>
+                </div>
+                <Button
+                  className="w-full mt-5"
+                  onClick={LoginForm.handleSubmit(onLoginSubmit)}
+                >
+                  Login
+                </Button>
+              </div>
+            </Form>
+          </div>
+        )}
+
+        {step === "otp" && (
+          <Form {...otpForm}>
+            <div className="space-y-5">
+              <FormField
+                control={otpForm.control}
+                name="otp"
+                render={({ field }) => (
                   <FormItem>
-                    <FormLabel onClick={() => setShowPassword(!showPassword)}>
-                      Password
-                    </FormLabel>
+                    <FormLabel>Verification</FormLabel>
                     <FormControl>
-                      <Input
-                        type={showPassword ? "text" : "password"}
-                        placeholder="Enter your password"
-                        {...field}
-                      />
+                      <div className="flex items-center gap-3">
+                        <InputOTP
+                          maxLength={6}
+                          value={field.value}
+                          onChange={field.onChange}
+                        >
+                          <InputOTPGroup>
+                            <InputOTPSlot index={0} />
+                            <InputOTPSlot index={1} />
+                            <InputOTPSlot index={2} />
+                            <InputOTPSlot index={3} />
+                            <InputOTPSlot index={4} />
+                            <InputOTPSlot index={5} />
+                          </InputOTPGroup>
+                        </InputOTP>
+
+                        <Button
+                          variant="outline"
+                          onClick={otpForm.handleSubmit(onOtpSubmit)}
+                        >
+                          Verify
+                        </Button>
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
-                );
-              }}
-            ></FormField>
-            <Button onClick={LoginForm.handleSubmit(onLoginSubmit)}>
-              Login
-            </Button>
-          </div>
-        </Form>
-      )}
-
-      {step === "otp" && (
-        <Form {...otpForm}>
-          <div className="space-y-5">
-            <FormField
-              control={otpForm.control}
-              name="otp"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Verification</FormLabel>
-                  <FormControl>
-                    <div className="flex items-center gap-3">
-                      <InputOTP
-                        maxLength={6}
-                        value={field.value}
-                        onChange={field.onChange}
-                      >
-                        <InputOTPGroup>
-                          <InputOTPSlot index={0} />
-                          <InputOTPSlot index={1} />
-                          <InputOTPSlot index={2} />
-                          <InputOTPSlot index={3} />
-                          <InputOTPSlot index={4} />
-                          <InputOTPSlot index={5} />
-                        </InputOTPGroup>
-                      </InputOTP>
-
-                      <Button
-                        variant="outline"
-                        onClick={otpForm.handleSubmit(onOtpSubmit)}
-                      >
-                        Verify
-                      </Button>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-        </Form>
-      )}
+                )}
+              />
+            </div>
+          </Form>
+        )}
+      </div>
     </div>
   );
 }
