@@ -57,7 +57,6 @@ import {
   Check,
   BadgeIcon as IdCard,
   Shield,
-  Settings,
   Camera,
 } from "lucide-react";
 import { useForm } from "react-hook-form";

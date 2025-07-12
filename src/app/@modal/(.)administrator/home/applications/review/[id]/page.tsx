@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import morty from "@/assets/image.png";
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerDescription,
   DrawerFooter,
@@ -13,7 +12,6 @@ import {
 import useStudentReview from "@/lib/reviewStudent";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -25,10 +23,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
-  Calendar,
-  Folder,
   GraduationCap,
-  LucideThumbsDown,
   ThumbsDown,
   ThumbsUp,
   TriangleAlert,

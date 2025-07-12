@@ -1,9 +1,7 @@
 import {
   Activity,
   CheckCheck,
-  CloudAlert,
   CloudUpload,
-  Plus,
   TrendingUp,
 } from "lucide-react";
 

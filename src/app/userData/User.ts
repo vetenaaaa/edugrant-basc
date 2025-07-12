@@ -1,8 +1,5 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-interface userType {
-  
-}
 
 type User = {}
 

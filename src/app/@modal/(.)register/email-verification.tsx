@@ -22,7 +22,6 @@ type Props = {
 };
 
 export default function EmailVerification({
-  register,
   errors,
   control,
 }: Props) {
