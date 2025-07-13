@@ -1,17 +1,16 @@
-// /app/administrator
-
 "use client";
-import { useEffect, useState } from "react";
-import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
-import { motion } from "motion/react";
-import { ModeToggle } from "@/components/ui/dark-mode";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSlot,
-} from "@/components/ui/input-otp";
+  ArrowLeft,
+  CircleAlert,
+  CircleCheckIcon,
+  LoaderCircleIcon,
+} from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import z from "zod";
 import {
   Form,
   FormControl,
@@ -20,77 +19,77 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-
-import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import BlurText from "@/components/ui/blur";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
 import {
-  ArrowLeft,
-  CircleAlert,
-  CircleCheckIcon,
-  LoaderCircleIcon,
-} from "lucide-react";
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
+
 const loginSchema = z.object({
-  email: z
-    .string()
-    .min(1, "Email is required.")
-    .email({ message: "Please enter a vali email." }),
+  studentId: z.string().min(1, "Student ID is required."),
   password: z
     .string()
     .min(1, "Password is required.")
     .max(20, "Password must be at least 20 characters long."),
 });
 
-const optSchema = z.object({
+const loginOtpSchema = z.object({
   otp: z
     .string()
     .min(6, "OTP must be 6 characters long")
     .max(6, "OTP must be 6 characters long"),
 });
 
-type LoginFormData = z.infer<typeof loginSchema>;
-type otpFormData = z.infer<typeof optSchema>;
+interface LoginProps {
+  setTransition?: (value: boolean) => void;
+}
 
-export default function LoginAdmin() {
+type loginFormData = z.infer<typeof loginSchema>;
+type loginOtpFormData = z.infer<typeof loginOtpSchema>;
+
+export default function Login({ setTransition }: LoginProps) {
   const router = useRouter();
-  const [showPassword, setShowPassword] = useState(false);
-  const [credentials, setCredentials] = useState({
-    email: "",
-    password: "",
-  });
-  const [loginError, setLoginError] = useState("");
-  const [loginSuccess, setLoginSuccess] = useState("");
+  const [step, setStep] = useState<"login" | "otp">("login");
   const [loading, setLoading] = useState(false);
   const [disableInput, setDisableInput] = useState(false);
+  const [loginError, setLoginError] = useState("");
+  const [loginSuccess, setLoginSuccess] = useState("");
+  const [credentials, setCredentials] = useState({
+    studentId: "",
+    password: "",
+  });
   const [otpError, setOtpError] = useState("");
-  const [step, setStep] = useState<"login" | "otp">("login");
-  const LoginForm = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
 
+  const LoginForm = useForm<loginFormData>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "",
+      studentId: "",
       password: "",
     },
   });
 
-  const otpForm = useForm<otpFormData>({
-    resolver: zodResolver(optSchema),
-
+  const loginOtpForm = useForm<loginOtpFormData>({
+    resolver: zodResolver(loginOtpSchema),
     defaultValues: {
       otp: "",
     },
   });
 
+  const handleBackClick = () => {
+    if (setTransition) {
+      setTransition(true);
+    }
+  };
+
   useEffect(() => {
     const checkToken = async () => {
       try {
         const response = await axios.post(
-          `https://edugrant-express-server-production.up.railway.app/administrator/adminTokenAuthentication`,
+          `https://edugrant-express-server-production.up.railway.app/tokenAuthentication`,
           {},
           {
             headers: {
@@ -102,7 +101,7 @@ export default function LoginAdmin() {
 
         console.log("token", response.data);
         if (response.status === 200) {
-          router.push("/administrator/home");
+          router.push("/home");
           console.log("authenticated");
         }
       } catch (error) {
@@ -112,17 +111,19 @@ export default function LoginAdmin() {
     checkToken();
   }, [router]);
 
-  const onLoginSubmit = async (data: LoginFormData) => {
-    console.log(`Login attempt with email: ${data.email}, ${data.password}`);
+  const onLoginSubmit = async (data: loginFormData) => {
+    console.log(
+      `Login attempt with student ID: ${data.studentId}, ${data.password}`
+    );
 
     try {
       setLoading(true);
       setDisableInput(true);
       setLoginError("");
       const response = await axios.post(
-        `https://edugrant-express-server-production.up.railway.app/administrator/adminLogin`,
+        `https://edugrant-express-server-production.up.railway.app/loginAccounts`,
         {
-          adminEmail: data.email,
+          adminEmail: data.studentId,
           adminPassword: data.password,
         },
         {
@@ -135,7 +136,7 @@ export default function LoginAdmin() {
 
       console.log("Login successful:", response.data);
       setCredentials({
-        email: data.email,
+        studentId: data.studentId,
         password: data.password,
       });
       setStep("otp");
@@ -148,13 +149,14 @@ export default function LoginAdmin() {
       if (axios.isAxiosError(error)) {
         if (error.response?.status === 400) {
           setLoginError(
-            "Invalid credentials. Please check your email and password."
+            "Invalid credentials. Please check your student ID and password."
           );
         } else {
           console.error(
             "Login error:",
             error.response?.data?.message || error.message
           );
+          setLoginError("An unexpected error occurred. Please try again.");
         }
       } else {
         console.error("Login error:", error);
@@ -163,14 +165,14 @@ export default function LoginAdmin() {
     }
   };
 
-  const onOtpSubmit = async (data: otpFormData) => {
+  const onOtpSubmit = async (data: loginOtpFormData) => {
     if (data.otp.length !== 6) {
       setOtpError("Please enter the complete 6-digit verification code");
       return;
     }
     console.log(
       "sent to backend",
-      credentials.email,
+      credentials.studentId,
       credentials.password,
       data.otp
     );
@@ -180,9 +182,9 @@ export default function LoginAdmin() {
       setDisableInput(true);
       setLoading(true);
       const response = await axios.post(
-        `https://edugrant-express-server-production.up.railway.app/administrator/adminCodeAuthentication`,
+        `https://edugrant-express-server-production.up.railway.app/sendAuthCodeLogin`,
         {
-          adminEmail: credentials.email,
+          adminEmail: credentials.studentId,
           adminPassword: credentials.password,
           code: data.otp,
         },
@@ -193,10 +195,10 @@ export default function LoginAdmin() {
           withCredentials: true,
         }
       );
-      setLoginSuccess("Sucessfully logged in...");
+      setLoginSuccess("Successfully logged in...");
       console.log("Code verification successful:", response.data);
       setTimeout(() => {
-        router.push("/administrator/home");
+        router.push("/home");
       }, 1000);
     } catch (error) {
       setLoading(false);
@@ -209,55 +211,38 @@ export default function LoginAdmin() {
             "Verification error:",
             error.response?.data?.message || error.message
           );
+          setOtpError("An unexpected error occurred. Please try again.");
         }
       } else {
         console.error("Verification error:", error);
+        setOtpError("An unexpected error occurred. Please try again.");
       }
     }
   };
 
   return (
-    <div className="h-screen flex justify-center items-center your-class">
-      <div className="flex-1  flex flex-col justify-center items-center">
-        <div>
-          <motion.span
-            className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-green-500/70 
-text-5xl  zxczxc tracking-[-9px] -translate-x-2
-"
-            initial={{ backgroundPosition: "200% 0" }}
-            animate={{ backgroundPosition: "-200% 0" }}
-            transition={{
-              repeat: Infinity,
-              repeatType: "loop",
-              duration: 7,
-              ease: "linear",
-            }}
-          >
-            Edugrant Admin
-          </motion.span>
-          <BlurText
-            text="Manage everything in one place. Secure. Efficient. Reliable."
-            delay={150}
-            animateBy="words"
-            direction="top"
-            className="text-2xl mt-3"
-          />
-        </div>
-      </div>
-      <div className="border h-[80%]"></div>
-      <div className="flex-1 flex flex-col justify-center items-center">
-        <div className="absolute top-5 right-5">
-          <ModeToggle />
-        </div>
+    <>
+      <Link
+        href={"/"}
+        prefetch={true}
+        onClick={handleBackClick}
+        className="absolute top-3 left-3"
+      >
+        <Button variant="outline">
+          <ArrowLeft />
+        </Button>
+      </Link>
+      <div className="min-w-sm">
         {step === "login" && (
-          <div>
+          <div className="space-y-5">
+            <div className="text-center space-y-1.5">
+              <h1 className="text-2xl font-semibold">Welcome back</h1>
+              <p className="text-sm text-muted-foreground">
+                Enter your credentials to access your account.
+              </p>
+            </div>
             <Form {...LoginForm}>
-              <h1 className=" text-3xl font-bold">Sign In</h1>
-              <h1 className="text-sm text-muted-foreground mt-2 mb-3">
-                Enter your credentials to access your account
-              </h1>
-
-              <div className="min-w-md space-y-4 mt-8">
+              <div className="space-y-4">
                 {loginError && (
                   <div className="rounded-md border border-red-500/50 px-4 py-3 text-red-600">
                     <p className="text-sm">
@@ -270,59 +255,44 @@ text-5xl  zxczxc tracking-[-9px] -translate-x-2
                     </p>
                   </div>
                 )}
-
-                <div className="space-y-8">
-                  <FormField
-                    control={LoginForm.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="email"
-                            disabled={disableInput}
-                            placeholder="Enter your email"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={LoginForm.control}
-                    name="password"
-                    render={({ field }) => {
-                      return (
-                        <FormItem>
-                          <FormLabel
-                            onClick={() => setShowPassword(!showPassword)}
-                          >
-                            Password
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              disabled={disableInput}
-                              type={showPassword ? "text" : "password"}
-                              placeholder="Enter your password"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      );
-                    }}
-                  />
-                </div>
-                <div>
-                  <div className="flex items-center gap-1.5">
-                    <Checkbox disabled={disableInput} />
-                    <Label> Remember me</Label>
-                  </div>
-                </div>
+                <FormField
+                  control={LoginForm.control}
+                  name="studentId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Student ID</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="text"
+                          disabled={disableInput}
+                          placeholder="Enter your Student ID"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={LoginForm.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Password</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="password"
+                          disabled={disableInput}
+                          placeholder="Enter your Password"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <Button
-                  className="w-full mt-8"
+                  className="w-full"
                   onClick={LoginForm.handleSubmit(onLoginSubmit)}
                   disabled={disableInput}
                 >
@@ -336,24 +306,46 @@ text-5xl  zxczxc tracking-[-9px] -translate-x-2
                   Login
                 </Button>
               </div>
+              <div className="relative flex justify-center items-center gap-3">
+                <div className=" border flex-1"></div>
+                <Label>or continue with</Label>
+                <div className=" border flex-1"></div>
+              </div>
+              <Button
+                variant="secondary"
+                className="w-full"
+                disabled={disableInput}
+              >
+                Google
+              </Button>
             </Form>
+
+            <p className="text-xs text-center">
+              By clicking continue, you agree to our <br />
+              <span className="underline"> Terms of Service </span> and{" "}
+              <span className="underline"> Privacy Policy</span>.
+            </p>
           </div>
         )}
 
         {step === "otp" && (
-          <div>
-            <Form {...otpForm}>
-              <Label>
-                <ArrowLeft size={16} onClick={() => setStep("login")} />
+          <div className="space-y-5">
+            <div className="text-center space-y-1.5">
+              <Label
+                onClick={() => setStep("login")}
+                className="flex items-center gap-2 cursor-pointer"
+              >
+                <ArrowLeft size={16} />
                 Back to login
               </Label>
-              <h1 className=" text-3xl font-bold mt-5">Verification</h1>
-              <h1 className="text-sm text-muted-foreground mt-1">
+              <h1 className="text-2xl font-semibold">Verification</h1>
+              <p className="text-sm text-muted-foreground">
                 Enter verification code sent to your email.
-              </h1>
-              <Label className="text-blue-500 mt-1">{credentials.email}</Label>
-
-              <div className="mt-5 space-y-5">
+              </p>
+              <Label className="text-blue-500">{credentials.studentId}</Label>
+            </div>
+            <Form {...loginOtpForm}>
+              <div className="space-y-4">
                 {otpError && (
                   <div className="rounded-md border border-red-500/50 px-4 py-3 text-red-600">
                     <p className="text-sm">
@@ -379,13 +371,13 @@ text-5xl  zxczxc tracking-[-9px] -translate-x-2
                   </div>
                 )}
                 <FormField
-                  control={otpForm.control}
+                  control={loginOtpForm.control}
                   name="otp"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel></FormLabel>
                       <FormControl>
-                        <div className="flex items-center">
+                        <div className="flex items-center justify-center">
                           <InputOTP
                             maxLength={6}
                             value={field.value}
@@ -412,10 +404,9 @@ text-5xl  zxczxc tracking-[-9px] -translate-x-2
                 />
 
                 <Button
-                  className="w-full mt-3"
-                  variant="outline"
+                  className="w-full"
+                  onClick={loginOtpForm.handleSubmit(onOtpSubmit)}
                   disabled={disableInput}
-                  onClick={otpForm.handleSubmit(onOtpSubmit)}
                 >
                   {loading && (
                     <LoaderCircleIcon
@@ -426,15 +417,17 @@ text-5xl  zxczxc tracking-[-9px] -translate-x-2
                   )}
                   Verify
                 </Button>
-                <Label>
-                  Didn&apos;t recieved the code?{" "}
-                  <span className="underline">Resend Now</span>{" "}
-                </Label>
+                <div className="text-center">
+                  <Label>
+                    Didn&apos;t receive the code?{" "}
+                    <span className="underline cursor-pointer">Resend Now</span>
+                  </Label>
+                </div>
               </div>
             </Form>
           </div>
         )}
       </div>
-    </div>
+    </>
   );
 }
