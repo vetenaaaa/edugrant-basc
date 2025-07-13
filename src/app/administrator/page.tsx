@@ -6,6 +6,7 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
+import { ModeToggle } from "@/components/ui/dark-mode";
 import {
   InputOTP,
   InputOTPGroup,
@@ -42,13 +43,13 @@ const loginSchema = z.object({
   password: z
     .string()
     .min(1, "Password is required")
-    .max(20, "Password must be at least 8 characters long"),
+    .max(20, "Password must be at least 20 characters long"),
 });
 
 const optSchema = z.object({
   otp: z
     .string()
-    .min(1, "One time password is required")
+    .min(6, "OTP must be 6 characters long")
     .max(6, "OTP must be 6 characters long"),
 });
 
@@ -192,9 +193,11 @@ export default function LoginAdmin() {
           withCredentials: true,
         }
       );
-      setLoginSuccess("Sucessfully log in...");
+      setLoginSuccess("Sucessfully logged in...");
       console.log("Code verification successful:", response.data);
-      router.push("/administrator/home");
+      setTimeout(() => {
+        router.push("/administrator/home");
+      }, 1000);
     } catch (error) {
       setLoading(false);
       setDisableInput(false);
@@ -237,12 +240,15 @@ text-5xl  zxczxc tracking-[-9px] -translate-x-2
             delay={150}
             animateBy="words"
             direction="top"
-            className="text-2xl mt-3 text-white"
+            className="text-2xl mt-3"
           />
         </div>
       </div>
       <div className="border h-[80%]"></div>
       <div className="flex-1 flex flex-col justify-center items-center">
+        <div className="absolute top-5 right-5">
+          <ModeToggle />
+        </div>
         {step === "login" && (
           <div>
             <Form {...LoginForm}>
@@ -345,9 +351,7 @@ text-5xl  zxczxc tracking-[-9px] -translate-x-2
               <h1 className="text-sm text-muted-foreground mt-1">
                 Enter verification code sent to your email.
               </h1>
-              <Label className="text-blue-500 mt-1">
-                {credentials.email}Jerometecsonn@gmail.com
-              </Label>
+              <Label className="text-blue-500 mt-1">{credentials.email}</Label>
 
               <div className="mt-5 space-y-5">
                 {otpError && (
