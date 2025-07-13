@@ -16,10 +16,11 @@ import {
   Mail,
   HelpCircle,
   Zap,
+  ArrowLeft,
 } from "lucide-react";
 import bascLogo from "@/assets/basclogo.png";
 import bascImage from "@/assets/BASCjf5989_03 copy.jpg";
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import {
   Accordion,
   AccordionContent,
@@ -28,6 +29,7 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useState } from "react";
 const navItems = [
   { label: "Home", icon: Home },
   { label: "Features", icon: Zap },
@@ -92,93 +94,6 @@ const howItWorks = [
     image: track.src,
   },
 ];
-const HeaderComponent = () => {
-  return (
-    <header className="py-7 w-[95%] mx-auto hidden lg:flex justify-between items-center ">
-      <span className="flex items-center gap-5 h-15 py-3">
-        <span className="flex items-center gap-2">
-          <img className="h-10 w-10" src={bascLogo.src} alt="" />
-          <p className="font-semibold text-xl ">basc edugrant</p>
-        </span>
-        <Separator orientation="vertical" />
-        <ul className="flex gap-2">
-          {navItems.map((item, index) => (
-            <li
-              key={index}
-              onClick={() => {
-                const sectionId = item.label.toLowerCase().replace(/\s+/g, "-");
-                const section = document.getElementById(sectionId);
-                if (section) {
-                  section.scrollIntoView({ behavior: "smooth" });
-                }
-              }}
-              className=" flex items-center"
-            >
-              <Button variant="link" className="cursor-pointer">
-                <item.icon className="w-4 h-4" />
-                {item.label}
-              </Button>
-            </li>
-          ))}
-        </ul>
-      </span>
-      <span className="flex gap-3 items-center">
-        <Link href={"/login"} prefetch={true}>
-          <Button variant="outline">
-            Login <LogInIcon />
-          </Button>
-        </Link>
-        <ModeToggle />
-      </span>
-    </header>
-  );
-};
-const HeroLanding = () => {
-  return (
-    <div className="relative h-[75vh] w-[95%] mx-auto justify-center items-start flex-col border rounded-3xl p-10 overflow-hidden bg-[var(--green)] flex shadow-md">
-      <img
-        className="absolute opacity-3 h-[120%] [mask-image:linear-gradient(to_right,transparent,black_30%)] pointer-events-none"
-        src={bascLogo.src}
-        alt=""
-      />
-      <img
-        className="h-full w-[40%] object-cover absolute right-0 [mask-image:linear-gradient(to_right,transparent,black)] z-10"
-        src={bascImage.src}
-        alt=""
-      />
-
-      <motion.span
-        className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-green-500/70 
-text-6xl  zxczxc tracking-[-8px] -translate-x-2
-"
-        initial={{ backgroundPosition: "200% 0" }}
-        animate={{ backgroundPosition: "-200% 0" }}
-        transition={{
-          repeat: Infinity,
-          repeatType: "loop",
-          duration: 7,
-          ease: "linear",
-        }}
-      >
-        Edugrant
-      </motion.span>
-
-      <BlurText
-        text="Online scholarship application portal for BASC students."
-        delay={150}
-        animateBy="words"
-        direction="top"
-        className="text-2xl mt-3 text-white"
-      />
-
-      <Link href={"/register"} prefetch={true} className="mt-8">
-        <Button variant="outline">
-          Get started <ArrowRight />
-        </Button>
-      </Link>
-    </div>
-  );
-};
 
 const HowitworksComponent = () => {
   return (
@@ -236,11 +151,149 @@ const FaqsComponent = () => {
   );
 };
 export default function LandingPage() {
+  const [transition, setTransition] = useState(true);
+
+  const HeaderComponent = () => {
+    return (
+      <header className="py-7 w-[95%] mx-auto hidden lg:flex justify-between items-center ">
+        <span className="flex items-center gap-5 h-15 py-3">
+          <span className="flex items-center gap-2">
+            <img className="h-10 w-10" src={bascLogo.src} alt="" />
+            <p className="font-semibold text-xl ">basc edugrant</p>
+          </span>
+          <Separator orientation="vertical" />
+          <ul className="flex gap-2">
+            {navItems.map((item, index) => (
+              <li
+                key={index}
+                onClick={() => {
+                  const sectionId = item.label
+                    .toLowerCase()
+                    .replace(/\s+/g, "-");
+                  const section = document.getElementById(sectionId);
+                  if (section) {
+                    section.scrollIntoView({ behavior: "smooth" });
+                  }
+                }}
+                className=" flex items-center"
+              >
+                <Button variant="link" className="cursor-pointer">
+                  <item.icon className="w-4 h-4" />
+                  {item.label}
+                </Button>
+              </li>
+            ))}
+          </ul>
+        </span>
+        <span className="flex gap-3 items-center">
+          <Link
+            href={"/login"}
+            prefetch={true}
+            onClick={() => setTransition(false)}
+          >
+            <Button variant="outline">
+              Login <LogInIcon />
+            </Button>
+          </Link>
+          <ModeToggle />
+        </span>
+      </header>
+    );
+  };
+
+  const HeroLanding = () => {
+    return (
+      <div className="relative h-[75vh] w-[95%] mx-auto justify-center items-start flex-col border rounded-3xl p-10 overflow-hidden bg-[var(--green)] flex shadow-md">
+        <img
+          className="absolute opacity-3 h-[120%] [mask-image:linear-gradient(to_right,transparent,black_30%)] pointer-events-none"
+          src={bascLogo.src}
+          alt=""
+        />
+        <img
+          className="h-full w-[40%] object-cover absolute right-0 [mask-image:linear-gradient(to_right,transparent,black)] z-10"
+          src={bascImage.src}
+          alt=""
+        />
+
+        <motion.span
+          className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-green-500/70 
+text-6xl  zxczxc tracking-[-8px] -translate-x-2
+"
+          initial={{ backgroundPosition: "200% 0" }}
+          animate={{ backgroundPosition: "-200% 0" }}
+          transition={{
+            repeat: Infinity,
+            repeatType: "loop",
+            duration: 7,
+            ease: "linear",
+          }}
+        >
+          Edugrant
+        </motion.span>
+
+        <BlurText
+          text="Online scholarship application portal for BASC students."
+          delay={150}
+          animateBy="words"
+          direction="top"
+          className="text-2xl mt-3 text-white"
+        />
+
+        <Link href={"/register"} prefetch={true} className="mt-8">
+          <Button variant="outline">
+            Get started <ArrowRight />
+          </Button>
+        </Link>
+      </div>
+    );
+  };
+
+  const LoginComponent = () => {
+    return (
+      <div className="relative h-[75vh] w-[95%] mx-auto justify-center items-center  p-10 overflow-hidden flex">
+        <Link
+          href={"/"}
+          prefetch={true}
+          onClick={() => setTransition(true)}
+          className="absolute top-3 left-3"
+        >
+          <Button variant="outline">
+            <ArrowLeft /> Back
+          </Button>
+        </Link>
+      </div>
+    );
+  };
   return (
     <>
-      <div className="relative w-full your-class ">
+      <div className="relative w-full your-class">
         <HeaderComponent />
-        <HeroLanding />
+        <AnimatePresence mode="wait">
+          {transition && (
+            <motion.div
+              key="hero"
+              initial={{ opacity: 0, y: 0 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -100 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+            >
+              <HeroLanding />
+            </motion.div>
+          )}
+          {!transition && (
+            <motion.div
+              key="login"
+              initial={{ opacity: 0, y: 100 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 100 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className=" w-full"
+            >
+              <LoginComponent />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         <HowitworksComponent />
         <FaqsComponent />
       </div>

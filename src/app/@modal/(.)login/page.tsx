@@ -1,3 +1,3 @@
 export default function InterceptedLogin() {
-  return <>LOGIN</>;
+  return null;
 }
