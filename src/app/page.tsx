@@ -206,7 +206,7 @@ export default function LandingPage() {
       <div className="relative w-full your-class">
         <HeaderComponent />
 
-        <div className="relative min-h-[75vh] mx-auto w-[95%]   rounded-3xl overflow-hidden  shadow-md flex items-center">
+        <div className="relative min-h-[75vh] mx-auto w-[95%]   rounded-3xl overflow-hidden  shadow-md flex items-center bg-[var(--green)]">
           <AnimatePresence mode="wait">
             {transition && (
               <motion.div
@@ -214,22 +214,16 @@ export default function LandingPage() {
                 initial={{
                   opacity: 0,
                   y: 0,
-                  backgroundColor: "transparent",
-                  borderWidth: "0px",
                 }}
                 animate={{
                   opacity: 1,
                   y: 0,
-                  backgroundColor: "var(--green)",
-                  borderWidth: "1px",
                 }}
                 exit={{
                   opacity: 0,
                   y: 0,
-                  backgroundColor: "transparent",
-                  borderWidth: "0px",
                 }}
-                transition={{ duration: 0.6, ease: "easeInOut" }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
                 className="absolute inset-0 h-full w-full flex items-center rounded-3xl"
               >
                 <img
@@ -244,13 +238,15 @@ export default function LandingPage() {
                 />
               </motion.div>
             )}
+          </AnimatePresence>
+          <AnimatePresence mode="wait">
             {transition && (
               <motion.div
                 key="text"
                 initial={{ opacity: 0, y: -100 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -100 }}
-                transition={{ duration: 0.6, ease: "easeInOut" }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
                 className="absolute z-10 left-10 h-full w-full flex flex-col justify-center"
               >
                 <motion.span
@@ -282,20 +278,20 @@ export default function LandingPage() {
                 </Link>
               </motion.div>
             )}
-
-            {!transition && (
-              <motion.div
-                key="login"
-                initial={{ opacity: 0, y: 100 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 100 }}
-                transition={{ duration: 0.4, ease: "easeInOut" }}
-                className="absolute h-full w-full flex justify-center items-center"
-              >
-                <Login setTransition={setTransition} />
-              </motion.div>
-            )}
           </AnimatePresence>
+
+          {!transition && (
+            <motion.div
+              key="login"
+              initial={{ opacity: 0, y: 100 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 100 }}
+              transition={{ duration: 0.4, ease: "easeInOut" }}
+              className="absolute h-full w-full flex justify-center items-center"
+            >
+              <Login setTransition={setTransition} />
+            </motion.div>
+          )}
         </div>
 
         {transition && (
