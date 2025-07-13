@@ -16,7 +16,6 @@ import {
   Mail,
   HelpCircle,
   Zap,
-  ArrowLeft,
 } from "lucide-react";
 import bascLogo from "@/assets/basclogo.png";
 import bascImage from "@/assets/BASCjf5989_03 copy.jpg";
