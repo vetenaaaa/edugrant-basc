@@ -276,7 +276,7 @@ export default function LandingPage() {
               transition={{ duration: 0.2, ease: "easeInOut" }}
               className="h-[calc(100vh-116px)] w-[95%] mx-auto"
             >
-              <Login setTransition={setTransition} />
+              <Login setTransition={setTransition} className={true} />
             </motion.div>
           )}
           {transition === "register" && (
@@ -286,9 +286,9 @@ export default function LandingPage() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2, ease: "easeInOut" }}
-              className="h-[calc(100vh-116px)] w-[95%] mx-auto"
+              className=" w-[95%] mx-auto"
             >
-              <Login setTransition={setTransition} />
+              <Login setTransition={setTransition} className={true} />
             </motion.div>
           )}
         </AnimatePresence>
