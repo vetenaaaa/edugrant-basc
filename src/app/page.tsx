@@ -152,7 +152,9 @@ const FaqsComponent = () => {
 import Login from "./login";
 
 export default function LandingPage() {
-  const [transition, setTransition] = useState(true);
+  const [transition, setTransition] = useState<"hero" | "login" | "register">(
+    "hero"
+  );
   const HeaderComponent = () => {
     return (
       <header className="py-7 w-[95%] mx-auto  flex justify-between items-center ">
@@ -189,7 +191,7 @@ export default function LandingPage() {
           <Link
             href={"/login"}
             prefetch={true}
-            onClick={() => setTransition(false)}
+            onClick={() => setTransition("login")}
           >
             <Button variant="outline">
               Login <LogInIcon />
@@ -205,27 +207,17 @@ export default function LandingPage() {
     <>
       <div className="relative w-full your-class">
         <HeaderComponent />
-
-        <div className="relative min-h-[75vh] mx-auto w-[95%]   rounded-3xl overflow-hidden  shadow-md flex items-center bg-[var(--green)]">
-          <AnimatePresence mode="wait">
-            {transition && (
-              <motion.div
-                key="images"
-                initial={{
-                  opacity: 0,
-                  y: 0,
-                }}
-                animate={{
-                  opacity: 1,
-                  y: 0,
-                }}
-                exit={{
-                  opacity: 0,
-                  y: 0,
-                }}
-                transition={{ duration: 0.3, ease: "easeInOut" }}
-                className="absolute inset-0 h-full w-full flex items-center rounded-3xl"
-              >
+        <AnimatePresence mode="wait">
+          {transition === "hero" && (
+            <motion.div
+              key="hero"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2, ease: "easeInOut" }}
+              className="relative min-h-[75vh] mx-auto w-[95%]   rounded-3xl overflow-hidden  shadow-md flex items-center bg-[var(--green)]"
+            >
+              <div className="absolute inset-0 h-full w-full flex items-center rounded-3xl">
                 <img
                   className="absolute opacity-3 h-[120%] [mask-image:linear-gradient(to_right,transparent,black_30%)] pointer-events-none left-10"
                   src={bascLogo.src}
@@ -236,19 +228,9 @@ export default function LandingPage() {
                   src={bascImage.src}
                   alt=""
                 />
-              </motion.div>
-            )}
-          </AnimatePresence>
-          <AnimatePresence mode="wait">
-            {transition && (
-              <motion.div
-                key="text"
-                initial={{ opacity: 0, y: -100 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -100 }}
-                transition={{ duration: 0.5, ease: "easeInOut" }}
-                className="absolute z-10 left-10 h-full w-full flex flex-col justify-center"
-              >
+              </div>
+
+              <div className="absolute z-10 left-10 h-full w-full flex flex-col justify-center">
                 <motion.span
                   className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-green-500/70
   text-6xl  zxczxc tracking-[-8px] -translate-x-2
@@ -271,30 +253,47 @@ export default function LandingPage() {
                   direction="top"
                   className="text-2xl mt-3 text-white"
                 />
-                <Link href={"/register"} prefetch={true} className="mt-8">
+                <Link
+                  href={"/register"}
+                  prefetch={true}
+                  className="mt-8"
+                  onClick={() => setTransition("register")}
+                >
                   <Button variant="outline">
                     Get started <ArrowRight />
                   </Button>
                 </Link>
-              </motion.div>
-            )}
-          </AnimatePresence>
+              </div>
+            </motion.div>
+          )}
 
-          {!transition && (
+          {transition === "login" && (
             <motion.div
               key="login"
-              initial={{ opacity: 0, y: 100 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 100 }}
-              transition={{ duration: 0.4, ease: "easeInOut" }}
-              className="absolute h-full w-full flex justify-center items-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2, ease: "easeInOut" }}
+              className="h-[calc(100vh-116px)] w-[95%] mx-auto"
             >
               <Login setTransition={setTransition} />
             </motion.div>
           )}
-        </div>
+          {transition === "register" && (
+            <motion.div
+              key="register"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2, ease: "easeInOut" }}
+              className="h-[calc(100vh-116px)] w-[95%] mx-auto"
+            >
+              <Login setTransition={setTransition} />
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-        {transition && (
+        {transition === "hero" && (
           <>
             <HowitworksComponent />
             <FaqsComponent />

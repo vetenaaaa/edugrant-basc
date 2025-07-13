@@ -45,7 +45,9 @@ const loginOtpSchema = z.object({
 });
 
 interface LoginProps {
-  setTransition?: (value: boolean) => void;
+  setTransition?: React.Dispatch<
+    React.SetStateAction<"hero" | "login" | "register">
+  >;
 }
 
 type loginFormData = z.infer<typeof loginSchema>;
@@ -81,7 +83,7 @@ export default function Login({ setTransition }: LoginProps) {
 
   const handleBackClick = () => {
     if (setTransition) {
-      setTransition(true);
+      setTransition("hero");
     }
   };
 
@@ -221,7 +223,7 @@ export default function Login({ setTransition }: LoginProps) {
   };
 
   return (
-    <>
+    <div className="relative flex justify-center items-center p-15">
       <Link
         href={"/"}
         prefetch={true}
@@ -232,6 +234,7 @@ export default function Login({ setTransition }: LoginProps) {
           <ArrowLeft />
         </Button>
       </Link>
+
       <div className="min-w-sm">
         {step === "login" && (
           <div className="space-y-5">
@@ -327,7 +330,6 @@ export default function Login({ setTransition }: LoginProps) {
             </p>
           </div>
         )}
-
         {step === "otp" && (
           <div className="space-y-5">
             <div className="text-center space-y-1.5">
@@ -428,6 +430,6 @@ export default function Login({ setTransition }: LoginProps) {
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 }
