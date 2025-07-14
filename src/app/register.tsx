@@ -143,34 +143,7 @@ export default function Register({ setTransition, className }: LoginProps) {
   };
   const handleReviewSubmit = async () => {
     setStepper(4);
-    console.log(
-      "studentFirstName:",
-      personalData.firstName,
-      "studentMiddleName:",
-      personalData.middleName,
-      "studentLastName",
-      personalData.lastName,
-      "studentContact",
-      personalData.contactNumber,
-      "studentGender",
-      personalData.gender,
-      "studentDateofBirth",
-      personalData.dateOfBirth,
-      "studentAddress",
-      personalData.address,
-      "studentId",
-      accountData.studentId,
-      "studentEmail",
-      accountData.email,
-      "studentPassword",
-      accountData.password,
-      "course",
-      accountData.course,
-      "year",
-      accountData.yearLevel,
-      "section",
-      accountData.section
-    );
+
     try {
       const response = await axios.post(
         `https://edugrant-express-server-production.up.railway.app/EduGrant/sendAuthCodeRegister`,
@@ -204,6 +177,35 @@ export default function Register({ setTransition, className }: LoginProps) {
     }
   };
   const handleOtpSubmit = async (data: otpFormData) => {
+    console.log(
+      "studentFirstName:",
+      personalData.firstName,
+      "studentMiddleName:",
+      personalData.middleName,
+      "studentLastName",
+      personalData.lastName,
+      "studentContact",
+      personalData.contactNumber,
+      "studentGender",
+      personalData.gender,
+      "studentDateofBirth",
+      personalData.dateOfBirth,
+      "studentAddress",
+      personalData.address,
+      "studentId",
+      accountData.studentId,
+      "studentEmail",
+      accountData.email,
+      "studentPassword",
+      accountData.password,
+      "course",
+      accountData.course,
+      "year",
+      accountData.yearLevel,
+      "section",
+      accountData.section,
+      data.otp
+    );
     try {
       const response = await axios.post(
         `https://edugrant-express-server-production.up.railway.app/EduGrant/registerAccount`,
