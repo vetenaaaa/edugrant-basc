@@ -41,11 +41,11 @@ export default function Register({ setTransition, className }: LoginProps) {
       setTransition("hero");
     }
   };
-  const handleRegisterClick = () => {
-    if (setTransition) {
-      setTransition("register");
-    }
-  };
+  // const handleRegisterClick = () => {
+  //   if (setTransition) {
+  //     setTransition("register");
+  //   }
+  // };
   return (
     <div
       className={`relative flex justify-center items-center gap-5 ${
