@@ -41,6 +41,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { Calendar } from "@/components/ui/calendar";
+import axios from "axios";
 const steps = [
   {
     step: 1,
@@ -135,17 +136,74 @@ export default function Register({ setTransition, className }: LoginProps) {
   };
 
   const handlePersonalSubmit = () => {
-
     setStepper(2);
   };
   const handleAccountSubmit = () => {
     setStepper(3);
   };
-  const handleReviewSubmit = () => {
+  const handleReviewSubmit = async () => {
     setStepper(4);
+    try {
+      const response = await axios.post(
+        `https://edugrant-express-server-production.up.railway.app/EduGrant/sendAuthCodeRegister`,
+        {
+          studentFirstName: personalData.firstName,
+          studentMiddleName: personalData.middleName,
+          studentLastName: personalData.lastName,
+          studentContact: personalData.contactNumber,
+          studentGender: personalData.gender,
+          studentDateofBirth: personalData.dateOfBirth,
+          studentAddress: personalData.address,
+          studentId: accountData.studentId,
+          studentEmail: accountData.email,
+          studentPassword: accountData.password,
+          course: accountData.course,
+          year: accountData.yearLevel,
+          section: accountData.section,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (response.status === 200) {
+        alert(response.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
-  const handleOtpSubmit = (data: otpFormData) => {
-    alert(`Registration completed! OTP: ${data.otp} ${personalData.firstName}`);
+  const handleOtpSubmit = async (data: otpFormData) => {
+    try {
+      const response = await axios.post(
+        `https://edugrant-express-server-production.up.railway.app/EduGrant/registerAccount`,
+        {
+          verificationCode: data.otp,
+          studentFirstName: personalData.firstName,
+          studentMiddleName: personalData.middleName,
+          studentLastName: personalData.lastName,
+          studentContact: personalData.contactNumber,
+          studentGender: personalData.gender,
+          studentDateofBirth: personalData.dateOfBirth,
+          studentAddress: personalData.address,
+          studentId: accountData.studentId,
+          studentEmail: accountData.email,
+          studentPassword: accountData.password,
+          course: accountData.course,
+          year: accountData.yearLevel,
+          section: accountData.section,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (response.status === 200) {
+        alert(response.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
