@@ -157,9 +157,11 @@ export default function Register({ setTransition, className }: LoginProps) {
           studentId: accountData.studentId,
           studentEmail: accountData.email,
           studentPassword: accountData.password,
-          course: accountData.course,
-          year: accountData.yearLevel,
-          section: accountData.section,
+          studentCourseYearSection: {
+            course: accountData.course,
+            year: accountData.yearLevel,
+            section: accountData.section,
+          }
         },
         {
           withCredentials: true,
