@@ -150,6 +150,7 @@ const FaqsComponent = () => {
 };
 
 import Login from "./login";
+import Register from "./register";
 
 export default function LandingPage() {
   const [transition, setTransition] = useState<"hero" | "login" | "register">(
@@ -189,7 +190,7 @@ export default function LandingPage() {
         </span>
         <span className="flex gap-3 items-center">
           <Link
-            href={"/login"}
+            href={"/EduGrant/login"}
             prefetch={true}
             onClick={() => setTransition("login")}
           >
@@ -274,7 +275,7 @@ export default function LandingPage() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2, ease: "easeInOut" }}
-              className="h-[calc(100vh-116px)] w-[95%] mx-auto"
+              className=" w-[95%] mx-auto"
             >
               <Login setTransition={setTransition} className={true} />
             </motion.div>
@@ -288,7 +289,7 @@ export default function LandingPage() {
               transition={{ duration: 0.2, ease: "easeInOut" }}
               className=" w-[95%] mx-auto"
             >
-              <Login setTransition={setTransition} className={true} />
+              <Register setTransition={setTransition} className={true} />
             </motion.div>
           )}
         </AnimatePresence>

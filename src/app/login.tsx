@@ -7,10 +7,13 @@ import {
   ArrowLeft,
   CircleAlert,
   CircleCheckIcon,
+  IdCard,
   LoaderCircleIcon,
+  LogIn,
 } from "lucide-react";
 import loginImage from "@/assets/undraw_personal-information_gbtc.svg";
 import Link from "next/link";
+import google from "@/assets/image.png";
 import { useRouter } from "next/navigation";
 import z from "zod";
 import {
@@ -84,9 +87,14 @@ export default function Login({ setTransition, className }: LoginProps) {
     },
   });
 
-  const handleBackClick = () => {
+  const handleHeroClick = () => {
     if (setTransition) {
       setTransition("hero");
+    }
+  };
+  const handleRegisterClick = () => {
+    if (setTransition) {
+      setTransition("register");
     }
   };
 
@@ -234,7 +242,7 @@ export default function Login({ setTransition, className }: LoginProps) {
       <Link
         href={"/"}
         prefetch={true}
-        onClick={handleBackClick}
+        onClick={handleHeroClick}
         className="absolute top-3 left-3"
       >
         <Button variant="outline">
@@ -271,7 +279,9 @@ export default function Login({ setTransition, className }: LoginProps) {
                     name="studentId"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Student ID</FormLabel>
+                        <FormLabel>
+                          <IdCard /> Student ID
+                        </FormLabel>
                         <FormControl>
                           <Input
                             type="text"
@@ -315,23 +325,25 @@ export default function Login({ setTransition, className }: LoginProps) {
                       aria-hidden="true"
                     />
                   )}
-                  Login
+                  Login <LogIn />
                 </Button>
                 <div className="relative flex justify-center items-center gap-3">
                   <div className=" border flex-1"></div>
-                  <Label>or continue with</Label>
+                  <Label>Don&apos;t have an account?</Label>
                   <div className=" border flex-1"></div>
                 </div>
-                <Button
-                  variant="secondary"
-                  className="w-full"
-                  disabled={disableInput}
-                >
-                  Google
-                </Button>
+                <Link href={`/register`} prefetch onClick={handleRegisterClick}>
+                  <Button
+                    variant="secondary"
+                    className="w-full"
+                    disabled={disableInput}
+                  >
+                    Register
+                  </Button>
+                </Link>
               </Form>
 
-              <p className="text-xs text-center">
+              <p className="text-xs text-center mt-1">
                 By clicking continue, you agree to our <br />
                 <span className="underline"> Terms of Service </span> and{" "}
                 <span className="underline"> Privacy Policy</span>.
