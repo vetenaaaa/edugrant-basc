@@ -96,31 +96,7 @@ export default function Login({ setTransition, className }: LoginProps) {
     }
   };
 
-  // useEffect(() => {
-  //   const checkToken = async () => {
-  //     try {
-  //       const response = await axios.post(
-  //         `https://edugrant-express-server-production.up.railway.app/EduGrant/tokenAuthentication`,
-  //         {},
-  //         {
-  //           headers: {
-  //             "Content-Type": "application/json",
-  //           },
-  //           withCredentials: true,
-  //         }
-  //       );
-
-  //       console.log("token", response.data);
-  //       if (response.status === 200) {
-  //         router.push("/home");
-  //         console.log("authenticated");
-  //       }
-  //     } catch (error) {
-  //       console.log("No valid token found", error);
-  //     }
-  //   };
-  //   checkToken();
-  // }, [router]);
+  
 
   const onLoginSubmit = async (data: loginFormData) => {
     console.log(
