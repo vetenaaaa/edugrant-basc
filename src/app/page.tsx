@@ -258,7 +258,7 @@ export default function LandingPage() {
                   className="text-2xl mt-3 text-white"
                 />
                 <Link
-                  href={"/register"}
+                  href={"/EduGrant/register"}
                   prefetch={true}
                   className="mt-8"
                   onClick={() => setTransition("register")}
@@ -292,7 +292,7 @@ export default function LandingPage() {
               transition={{ duration: 0.2, ease: "easeInOut" }}
               className=" w-[95%] mx-auto"
             >
-              <Register setTransition={setTransition} className={true} />
+              <Register setTransition={setTransition} className={false} />
             </motion.div>
           )}
         </AnimatePresence>

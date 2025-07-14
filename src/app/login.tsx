@@ -330,7 +330,7 @@ export default function Login({ setTransition, className }: LoginProps) {
                   <Label>Don&apos;t have an account?</Label>
                   <div className=" border flex-1"></div>
                 </div>
-                <Link href={`/register`} prefetch onClick={handleRegisterClick}>
+                <Link href={`/EduGrant/register`} prefetch onClick={handleRegisterClick}>
                   <Button
                     variant="secondary"
                     className="w-full"
@@ -451,14 +451,14 @@ export default function Login({ setTransition, className }: LoginProps) {
           )}
         </div>
       </div>
-      <div className="border h-[80%]"></div>
+      {/* <div className="border h-[80%]"></div>
       <div className="flex-1 flex justify-center items-center">
         <img
           className="h-1/2 w-1/2 brightness-90"
           src={loginImage.src}
           alt=""
         />
-      </div>
+      </div> */}
     </div>
   );
 }

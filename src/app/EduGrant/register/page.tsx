@@ -1,7 +1,9 @@
+import Register from "@/app/register";
+
 export default function DirectRegister() {
   return (
     <div className="h-screen w-full flex justify-center items-center my-class">
-      relgister
-    </div>
+         <Register className={false} />
+       </div>
   );
 }
