@@ -2,17 +2,9 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
-import {
-  ArrowLeft,
-  CircleAlert,
-  CircleCheckIcon,
-  IdCard,
-  LoaderCircleIcon,
-  LogIn,
-} from "lucide-react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { ArrowLeft, IdCard, LogIn } from "lucide-react";
+import Link from "next/link";
 import z from "zod";
 import {
   Form,
@@ -25,7 +17,7 @@ import {
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {  useState } from "react";
+import { useState } from "react";
 import {
   InputOTP,
   InputOTPGroup,
@@ -60,16 +52,6 @@ type loginOtpFormData = z.infer<typeof loginOtpSchema>;
 export default function Login({ setTransition, className }: LoginProps) {
   const router = useRouter();
   const [step, setStep] = useState<"login" | "otp">("login");
-  const [loading, setLoading] = useState(false);
-  const [disableInput, setDisableInput] = useState(false);
-  const [loginError, setLoginError] = useState("");
-  const [loginSuccess, setLoginSuccess] = useState("");
-  const [credentials, setCredentials] = useState({
-    studentId: "",
-    password: "",
-  });
-  const [otpError, setOtpError] = useState("");
-
   const LoginForm = useForm<loginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -77,7 +59,7 @@ export default function Login({ setTransition, className }: LoginProps) {
       password: "",
     },
   });
-
+  const LoginData = LoginForm.watch();
   const loginOtpForm = useForm<loginOtpFormData>({
     resolver: zodResolver(loginOtpSchema),
     defaultValues: {
@@ -96,113 +78,49 @@ export default function Login({ setTransition, className }: LoginProps) {
     }
   };
 
-  
-
-  const onLoginSubmit = async (data: loginFormData) => {
-    console.log(
-      `Login attempt with student ID: ${data.studentId}, ${data.password}`
-    );
-
+  const handleSubmit = async (data: loginOtpFormData) => {
     try {
-      setLoading(true);
-      setDisableInput(true);
-      setLoginError("");
       const response = await axios.post(
         `https://edugrant-express-server-production.up.railway.app/EduGrant/loginAccounts`,
+        {
+          studentId: LoginData.studentId,
+          userPassword: LoginData.password,
+          code: data.otp,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (response.status === 200) {
+        router.push("/EduGrant/home");
+        alert("login success");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleSendCode = async (data: loginFormData) => {
+    console.log("sent to backend", data.studentId, data.password);
+
+    try {
+      const response = await axios.post(
+        `https://edugrant-express-server-production.up.railway.app/EduGrant/sendAuthCodeLogin`,
         {
           studentId: data.studentId,
           userPassword: data.password,
         },
         {
-          headers: {
-            "Content-Type": "application/json",
-          },
           withCredentials: true,
         }
       );
-      console.log("Login successful:", response.data);
-      setCredentials({
-        studentId: data.studentId,
-        password: data.password,
-      });
-      setStep("otp");
-      setLoading(false);
-      setDisableInput(false);
-      setLoginError("");
-    } catch (error) {
-      setLoading(false);
-      setDisableInput(false);
-      if (axios.isAxiosError(error)) {
-        if (error.response?.status === 400) {
-          setLoginError(
-            "Invalid credentials. Please check your student ID and password."
-          );
-        } else {
-          console.error(
-            "Login error:",
-            error.response?.data?.message || error.message
-          );
-          setLoginError("An unexpected error occurred. Please try again.");
-        }
-      } else {
-        console.error("Login error:", error);
-        setLoginError("An unexpected error occurred. Please try again.");
+      if (response.status === 200) {
+        alert("code sent");
+        setStep("otp");
       }
-    }
-  };
-
-  const onOtpSubmit = async (data: loginOtpFormData) => {
-    if (data.otp.length !== 6) {
-      setOtpError("Please enter the complete 6-digit verification code");
-      return;
-    }
-    console.log(
-      "sent to backend",
-      credentials.studentId,
-      credentials.password,
-      data.otp
-    );
-
-    try {
-      setOtpError("");
-      setDisableInput(true);
-      setLoading(true);
-      const response = await axios.post(
-        `https://edugrant-express-server-production.up.railway.app/sendAuthCodeLogin`,
-        {
-          studentId: credentials.studentId,
-          userPassword: credentials.password,
-          code: data.otp,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-        }
-      );
-      setLoginSuccess("Successfully logged in...");
-      console.log("Code verification successful:", response.data);
-      setTimeout(() => {
-        router.push("/home");
-      }, 1000);
     } catch (error) {
-      setLoading(false);
-      setDisableInput(false);
-      if (axios.isAxiosError(error)) {
-        if (error.response?.status === 400) {
-          setOtpError("Invalid code");
-        } else {
-          console.error(
-            "Verification error:",
-            error.response?.data?.message || error.message
-          );
-          setOtpError("An unexpected error occurred. Please try again.");
-        }
-      } else {
-        console.error("Verification error:", error);
-        setOtpError("An unexpected error occurred. Please try again.");
-      }
+      console.log(error);
     }
   };
 
@@ -235,18 +153,6 @@ export default function Login({ setTransition, className }: LoginProps) {
               </div>
               <Form {...LoginForm}>
                 <div className="space-y-10">
-                  {loginError && (
-                    <div className="rounded-md border border-red-500/50 px-4 py-3 text-red-600">
-                      <p className="text-sm">
-                        <CircleAlert
-                          className="me-3 -mt-0.5 inline-flex opacity-60"
-                          size={16}
-                          aria-hidden="true"
-                        />
-                        {loginError}
-                      </p>
-                    </div>
-                  )}
                   <FormField
                     control={LoginForm.control}
                     name="studentId"
@@ -258,7 +164,6 @@ export default function Login({ setTransition, className }: LoginProps) {
                         <FormControl>
                           <Input
                             type="text"
-                            disabled={disableInput}
                             placeholder="Enter your Student ID"
                             {...field}
                           />
@@ -276,7 +181,6 @@ export default function Login({ setTransition, className }: LoginProps) {
                         <FormControl>
                           <Input
                             type="password"
-                            disabled={disableInput}
                             placeholder="Enter your Password"
                             {...field}
                           />
@@ -288,16 +192,8 @@ export default function Login({ setTransition, className }: LoginProps) {
                 </div>
                 <Button
                   className="w-full"
-                  onClick={LoginForm.handleSubmit(onLoginSubmit)}
-                  disabled={disableInput}
+                  onClick={LoginForm.handleSubmit(handleSendCode)}
                 >
-                  {loading && (
-                    <LoaderCircleIcon
-                      className="-ms-1 animate-spin"
-                      size={16}
-                      aria-hidden="true"
-                    />
-                  )}
                   Login <LogIn />
                 </Button>
                 <div className="relative flex justify-center items-center gap-3">
@@ -305,12 +201,12 @@ export default function Login({ setTransition, className }: LoginProps) {
                   <Label>Don&apos;t have an account?</Label>
                   <div className=" border flex-1"></div>
                 </div>
-                <Link href={`/EduGrant/register`} prefetch onClick={handleRegisterClick}>
-                  <Button
-                    variant="secondary"
-                    className="w-full"
-                    disabled={disableInput}
-                  >
+                <Link
+                  href={`/EduGrant/register`}
+                  prefetch
+                  onClick={handleRegisterClick}
+                >
+                  <Button variant="secondary" className="w-full">
                     Register
                   </Button>
                 </Link>
@@ -337,34 +233,10 @@ export default function Login({ setTransition, className }: LoginProps) {
                 <p className="text-sm text-muted-foreground">
                   Enter verification code sent to your email.
                 </p>
-                <Label className="text-blue-500">{credentials.studentId}</Label>
+                <Label className="text-blue-500">{LoginData.studentId}</Label>
               </div>
               <Form {...loginOtpForm}>
                 <div className="space-y-4">
-                  {otpError && (
-                    <div className="rounded-md border border-red-500/50 px-4 py-3 text-red-600">
-                      <p className="text-sm">
-                        <CircleAlert
-                          className="me-3 -mt-0.5 inline-flex opacity-60"
-                          size={16}
-                          aria-hidden="true"
-                        />
-                        {otpError}
-                      </p>
-                    </div>
-                  )}
-                  {loginSuccess && (
-                    <div className="rounded-md border border-emerald-500/50 px-4 py-3 text-emerald-600">
-                      <p className="text-sm">
-                        <CircleCheckIcon
-                          className="me-3 -mt-0.5 inline-flex opacity-60"
-                          size={16}
-                          aria-hidden="true"
-                        />
-                        {loginSuccess}
-                      </p>
-                    </div>
-                  )}
                   <FormField
                     control={loginOtpForm.control}
                     name="otp"
@@ -378,9 +250,7 @@ export default function Login({ setTransition, className }: LoginProps) {
                               value={field.value}
                               onChange={(value) => {
                                 field.onChange(value);
-                                setOtpError("");
                               }}
-                              disabled={disableInput}
                             >
                               <InputOTPGroup>
                                 <InputOTPSlot index={0} />
@@ -400,16 +270,8 @@ export default function Login({ setTransition, className }: LoginProps) {
 
                   <Button
                     className="w-full"
-                    onClick={loginOtpForm.handleSubmit(onOtpSubmit)}
-                    disabled={disableInput}
+                    onClick={loginOtpForm.handleSubmit(handleSubmit)}
                   >
-                    {loading && (
-                      <LoaderCircleIcon
-                        className="-ms-1 animate-spin"
-                        size={16}
-                        aria-hidden="true"
-                      />
-                    )}
                     Verify
                   </Button>
                   <div className="text-center">
@@ -426,7 +288,6 @@ export default function Login({ setTransition, className }: LoginProps) {
           )}
         </div>
       </div>
-    
     </div>
   );
 }
