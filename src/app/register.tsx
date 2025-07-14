@@ -173,7 +173,7 @@ export default function Register({ setTransition, className }: LoginProps) {
     );
     try {
       const response = await axios.post(
-        `http://edugrant-express-server-production.up.railway.app/EduGrant/sendAuthCodeRegister`,
+        `https://edugrant-express-server-production.up.railway.app/EduGrant/sendAuthCodeRegister`,
         {
           origin: "register",
           studentFirstName: personalData.firstName,
