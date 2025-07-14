@@ -11,7 +11,6 @@ import {
   LoaderCircleIcon,
   LogIn,
 } from "lucide-react";
-import loginImage from "@/assets/undraw_personal-information_gbtc.svg";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import z from "zod";
@@ -26,7 +25,7 @@ import {
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import {
   InputOTP,
   InputOTPGroup,
@@ -451,14 +450,7 @@ export default function Login({ setTransition, className }: LoginProps) {
           )}
         </div>
       </div>
-      {/* <div className="border h-[80%]"></div>
-      <div className="flex-1 flex justify-center items-center">
-        <img
-          className="h-1/2 w-1/2 brightness-90"
-          src={loginImage.src}
-          alt=""
-        />
-      </div> */}
+    
     </div>
   );
 }
