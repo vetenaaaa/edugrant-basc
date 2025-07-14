@@ -2,6 +2,7 @@
 import create from "@/assets/create.svg";
 import browse from "@/assets/browse.svg";
 import BlurText from "@/components/ui/blur";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import apply from "@/assets/apply.svg";
 import { ModeToggle } from "@/components/ui/dark-mode";
@@ -153,6 +154,8 @@ import Login from "./login";
 import Register from "./register";
 
 export default function LandingPage() {
+  const pathname = usePathname();
+  console.log(pathname);
   const [transition, setTransition] = useState<"hero" | "login" | "register">(
     "hero"
   );

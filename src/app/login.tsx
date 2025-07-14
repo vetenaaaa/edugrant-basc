@@ -13,7 +13,6 @@ import {
 } from "lucide-react";
 import loginImage from "@/assets/undraw_personal-information_gbtc.svg";
 import Link from "next/link";
-import google from "@/assets/image.png";
 import { useRouter } from "next/navigation";
 import z from "zod";
 import {
@@ -98,31 +97,31 @@ export default function Login({ setTransition, className }: LoginProps) {
     }
   };
 
-  useEffect(() => {
-    const checkToken = async () => {
-      try {
-        const response = await axios.post(
-          `https://edugrant-express-server-production.up.railway.app/EduGrant/tokenAuthentication`,
-          {},
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-            withCredentials: true,
-          }
-        );
+  // useEffect(() => {
+  //   const checkToken = async () => {
+  //     try {
+  //       const response = await axios.post(
+  //         `https://edugrant-express-server-production.up.railway.app/EduGrant/tokenAuthentication`,
+  //         {},
+  //         {
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //           },
+  //           withCredentials: true,
+  //         }
+  //       );
 
-        console.log("token", response.data);
-        if (response.status === 200) {
-          router.push("/home");
-          console.log("authenticated");
-        }
-      } catch (error) {
-        console.log("No valid token found", error);
-      }
-    };
-    checkToken();
-  }, [router]);
+  //       console.log("token", response.data);
+  //       if (response.status === 200) {
+  //         router.push("/home");
+  //         console.log("authenticated");
+  //       }
+  //     } catch (error) {
+  //       console.log("No valid token found", error);
+  //     }
+  //   };
+  //   checkToken();
+  // }, [router]);
 
   const onLoginSubmit = async (data: loginFormData) => {
     console.log(
@@ -136,8 +135,8 @@ export default function Login({ setTransition, className }: LoginProps) {
       const response = await axios.post(
         `https://edugrant-express-server-production.up.railway.app/EduGrant/loginAccounts`,
         {
-          adminEmail: data.studentId,
-          adminPassword: data.password,
+          studentId: data.studentId,
+          userPassword: data.password,
         },
         {
           headers: {
@@ -146,7 +145,6 @@ export default function Login({ setTransition, className }: LoginProps) {
           withCredentials: true,
         }
       );
-
       console.log("Login successful:", response.data);
       setCredentials({
         studentId: data.studentId,
@@ -197,8 +195,8 @@ export default function Login({ setTransition, className }: LoginProps) {
       const response = await axios.post(
         `https://edugrant-express-server-production.up.railway.app/sendAuthCodeLogin`,
         {
-          adminEmail: credentials.studentId,
-          adminPassword: credentials.password,
+          studentId: credentials.studentId,
+          userPassword: credentials.password,
           code: data.otp,
         },
         {
