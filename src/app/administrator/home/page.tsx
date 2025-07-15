@@ -16,7 +16,7 @@ export default function AdminHomePage() {
         {},
         { withCredentials: true }
       );
-      router.push("/administrator");
+      router.replace("/administrator");
     } catch (error) {
       console.error("Logout failed", error);
       // Still redirect even if logout fails

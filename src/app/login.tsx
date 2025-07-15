@@ -3,7 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, IdCard, LogIn } from "lucide-react";
+import {
+  ArrowLeft,
+  CircleAlert,
+  CircleCheckIcon,
+  IdCard,
+  LoaderCircleIcon,
+  LogIn,
+} from "lucide-react";
 import Link from "next/link";
 import z from "zod";
 import {
@@ -33,10 +40,7 @@ const loginSchema = z.object({
 });
 
 const loginOtpSchema = z.object({
-  otp: z
-    .string()
-    .min(6, "OTP must be 6 characters long")
-    .max(6, "OTP must be 6 characters long"),
+  otp: z.string().min(6, "Too short").max(6, "OTP must be 6 characters long"),
 });
 
 interface LoginProps {
@@ -52,6 +56,9 @@ type loginOtpFormData = z.infer<typeof loginOtpSchema>;
 export default function Login({ setTransition, className }: LoginProps) {
   const router = useRouter();
   const [step, setStep] = useState<"login" | "otp">("login");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const LoginForm = useForm<loginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -80,6 +87,7 @@ export default function Login({ setTransition, className }: LoginProps) {
 
   const handleSubmit = async (data: loginOtpFormData) => {
     try {
+      setLoading(true);
       const response = await axios.post(
         `https://edugrant-express-server-production.up.railway.app/user/loginAccounts`,
         {
@@ -93,18 +101,34 @@ export default function Login({ setTransition, className }: LoginProps) {
       );
 
       if (response.status === 200) {
-        router.push("/user/home");
-        alert("login success");
+        setSuccess("Registration successful! Redirecting...");
+        setTimeout(() => {
+          router.push("/user/home");
+        }, 2000);
       }
     } catch (error) {
-      console.log(error);
+      setLoading(false);
+      setSuccess("");
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 401) {
+          setError("Invalid code. Please check your code in your email.");
+        } else {
+          setError("An unexpected error occurred. Please try again.");
+          console.error(
+            "Login error:",
+            error.response?.data?.message || error.message
+          );
+        }
+      } else {
+        console.error("Login error:", error);
+        setError("An unexpected error occurred. Please try again.");
+      }
     }
   };
 
   const handleSendCode = async (data: loginFormData) => {
-    console.log("sent to backend", data.studentId, data.password);
-
     try {
+      setLoading(true);
       const response = await axios.post(
         `https://edugrant-express-server-production.up.railway.app/user/sendAuthCodeLogin`,
         {
@@ -116,17 +140,32 @@ export default function Login({ setTransition, className }: LoginProps) {
         }
       );
       if (response.status === 200) {
-        alert("code sent");
+        setLoading(false);
         setStep("otp");
       }
     } catch (error) {
-      console.log(error);
+      setLoading(false);
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 401) {
+          setError(
+            "Invalid credentials. Please check your email and password."
+          );
+        } else {
+          console.error(
+            "Login error:",
+            error.response?.data?.message || error.message
+          );
+        }
+      } else {
+        console.error("Login error:", error);
+        setError("An unexpected error occurred. Please try again.");
+      }
     }
   };
 
   return (
     <div
-      className={`relative flex justify-center items-center gap-5 ${
+      className={` flex justify-center items-center gap-5 ${
         className ? "h-[calc(100vh-116px)]" : "h-screen"
       }`}
     >
@@ -151,6 +190,30 @@ export default function Login({ setTransition, className }: LoginProps) {
                   Enter your credentials to access your account.
                 </p>
               </div>
+              {error && (
+                <div className="rounded-md border border-red-500/50 px-4 py-3 text-red-600">
+                  <p className="text-sm">
+                    <CircleAlert
+                      className="me-3 -mt-0.5 inline-flex opacity-60"
+                      size={16}
+                      aria-hidden="true"
+                    />
+                    {error}
+                  </p>
+                </div>
+              )}
+              {success && (
+                <div className="rounded-md border border-emerald-500/50 px-4 py-3 text-emerald-600">
+                  <p className="text-sm">
+                    <CircleCheckIcon
+                      className="me-3 -mt-0.5 inline-flex opacity-60"
+                      size={16}
+                      aria-hidden="true"
+                    />
+                    {success}
+                  </p>
+                </div>
+              )}
               <Form {...LoginForm}>
                 <div className="space-y-10">
                   <FormField
@@ -166,6 +229,7 @@ export default function Login({ setTransition, className }: LoginProps) {
                             type="text"
                             placeholder="Enter your Student ID"
                             {...field}
+                            disabled={loading}
                           />
                         </FormControl>
                         <FormMessage />
@@ -183,6 +247,7 @@ export default function Login({ setTransition, className }: LoginProps) {
                             type="password"
                             placeholder="Enter your Password"
                             {...field}
+                            disabled={loading}
                           />
                         </FormControl>
                         <FormMessage />
@@ -193,7 +258,15 @@ export default function Login({ setTransition, className }: LoginProps) {
                 <Button
                   className="w-full"
                   onClick={LoginForm.handleSubmit(handleSendCode)}
+                  disabled={loading}
                 >
+                  {loading && (
+                    <LoaderCircleIcon
+                      className="-ms-1 animate-spin"
+                      size={16}
+                      aria-hidden="true"
+                    />
+                  )}
                   Login <LogIn />
                 </Button>
                 <div className="relative flex justify-center items-center gap-3">
@@ -221,20 +294,36 @@ export default function Login({ setTransition, className }: LoginProps) {
           )}
           {step === "otp" && (
             <div className="space-y-5">
-              <div className="text-center space-y-1.5">
-                <Label
-                  onClick={() => setStep("login")}
-                  className="flex items-center gap-2 cursor-pointer"
-                >
-                  <ArrowLeft size={16} />
-                  Back to login
-                </Label>
+              <div className=" space-y-1.5">
                 <h1 className="text-2xl font-semibold">Verification</h1>
                 <p className="text-sm text-muted-foreground">
                   Enter verification code sent to your email.
                 </p>
-                <Label className="text-blue-500">{LoginData.studentId}</Label>
               </div>
+              {error && (
+                <div className="rounded-md border border-red-500/50 px-4 py-3 text-red-600">
+                  <p className="text-sm">
+                    <CircleAlert
+                      className="me-3 -mt-0.5 inline-flex opacity-60"
+                      size={16}
+                      aria-hidden="true"
+                    />
+                    {error}
+                  </p>
+                </div>
+              )}
+              {success && (
+                <div className="rounded-md border border-emerald-500/50 px-4 py-3 text-emerald-600">
+                  <p className="text-sm">
+                    <CircleCheckIcon
+                      className="me-3 -mt-0.5 inline-flex opacity-60"
+                      size={16}
+                      aria-hidden="true"
+                    />
+                    {success}
+                  </p>
+                </div>
+              )}
               <Form {...loginOtpForm}>
                 <div className="space-y-4">
                   <FormField
@@ -242,7 +331,10 @@ export default function Login({ setTransition, className }: LoginProps) {
                     name="otp"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel></FormLabel>
+                        <FormLabel className="flex justify-between items-center">
+                          Enter 6-digit code
+                          <FormMessage />
+                        </FormLabel>
                         <FormControl>
                           <div className="flex items-center justify-center">
                             <InputOTP
@@ -250,6 +342,7 @@ export default function Login({ setTransition, className }: LoginProps) {
                               value={field.value}
                               onChange={(value) => {
                                 field.onChange(value);
+                                setError("")
                               }}
                             >
                               <InputOTPGroup>
@@ -263,24 +356,28 @@ export default function Login({ setTransition, className }: LoginProps) {
                             </InputOTP>
                           </div>
                         </FormControl>
-                        <FormMessage />
                       </FormItem>
                     )}
                   />
 
-                  <Button
-                    className="w-full"
-                    onClick={loginOtpForm.handleSubmit(handleSubmit)}
-                  >
-                    Verify
-                  </Button>
-                  <div className="text-center">
-                    <Label>
-                      Didn&apos;t receive the code?{" "}
-                      <span className="underline cursor-pointer">
-                        Resend Now
-                      </span>
-                    </Label>
+                  <div className="flex gap-3 mt-8">
+                    <Button variant="outline" className="flex-1" disabled>
+                      Resend (0s)
+                    </Button>
+                    <Button
+                      onClick={loginOtpForm.handleSubmit(handleSubmit)}
+                      className="flex-1"
+                      disabled={loading}
+                    >
+                      {loading && (
+                        <LoaderCircleIcon
+                          className="-ms-1 animate-spin"
+                          size={16}
+                          aria-hidden="true"
+                        />
+                      )}
+                      Verify
+                    </Button>
                   </div>
                 </div>
               </Form>
