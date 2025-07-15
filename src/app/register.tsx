@@ -213,9 +213,9 @@ export default function Register({ setTransition, className }: LoginProps) {
       );
 
       if (response.status === 200) {
-        setSuccess("Registration successful! Redirecting...");
+        setSuccess("Registration successful! Redirecting to login...");
         setTimeout(() => {
-          router.push("/user/home");
+          router.push("/user/login");
         }, 2000);
       }
     } catch (error) {
