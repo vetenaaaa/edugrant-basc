@@ -165,7 +165,7 @@ export default function Login({ setTransition, className }: LoginProps) {
 
   return (
     <div
-      className={` flex justify-center items-center gap-5 ${
+      className={`relative flex justify-center items-center gap-5 w-full ${
         className ? "h-[calc(100vh-116px)]" : "h-screen"
       }`}
     >
@@ -342,7 +342,7 @@ export default function Login({ setTransition, className }: LoginProps) {
                               value={field.value}
                               onChange={(value) => {
                                 field.onChange(value);
-                                setError("")
+                                setError("");
                               }}
                             >
                               <InputOTPGroup>

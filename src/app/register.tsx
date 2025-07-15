@@ -183,7 +183,20 @@ export default function Register({ setTransition, className }: LoginProps) {
         setLoading(false);
       }
     } catch (error) {
-      console.log(error);
+      setLoading(false);
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 400) {
+          setError("Student ID already exist.");
+        } else {
+          console.error(
+            "Login error:",
+            error.response?.data?.message || error.message
+          );
+        }
+      } else {
+        console.error("Login error:", error);
+        setError("An unexpected error occurred. Please try again.");
+      }
     }
   };
   const handleOtpSubmit = async (data: otpFormData) => {
@@ -631,7 +644,18 @@ export default function Register({ setTransition, className }: LoginProps) {
                   Please review your information before submitting
                 </p>
               </div>
-
+              {error && (
+                <div className="rounded-md border border-red-500/50 px-4 py-3 text-red-600">
+                  <p className="text-sm">
+                    <CircleAlert
+                      className="me-3 -mt-0.5 inline-flex opacity-60"
+                      size={16}
+                      aria-hidden="true"
+                    />
+                    {error}
+                  </p>
+                </div>
+              )}
               <div className="space-y-6">
                 <div className="space-y-3">
                   <h3 className="text-2xl font-semibold">
