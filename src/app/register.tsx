@@ -1,7 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ChevronDownIcon, LoaderCircleIcon } from "lucide-react";
+import {
+  ArrowLeft,
+  ChevronDownIcon,
+  CircleAlert,
+  CircleCheckIcon,
+  LoaderCircleIcon,
+} from "lucide-react";
 import Link from "next/link";
 import {
   Popover,
@@ -98,9 +104,9 @@ export default function Register({ setTransition, className }: LoginProps) {
   const [stepper, setStepper] = useState(1);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [disable, setDisable] = useState(false);
-  const [succes, setSuccess] = useState("");
+  const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
+
   const personalForm = useForm<personalFormData>({
     resolver: zodResolver(personalDetailsSchema),
     defaultValues: {
@@ -207,6 +213,7 @@ export default function Register({ setTransition, className }: LoginProps) {
       );
 
       if (response.status === 200) {
+        setSuccess("Registration successful! Redirecting...");
         setTimeout(() => {
           router.push("/user/home");
         }, 2000);
@@ -215,9 +222,7 @@ export default function Register({ setTransition, className }: LoginProps) {
       setLoading(false);
       if (axios.isAxiosError(error)) {
         if (error.response?.status === 400) {
-          setError(
-            "Invalid credentials. Please check your email and password."
-          );
+          setError("Invalid code. Please check your code on email.");
         } else {
           console.error(
             "Login error:",
@@ -709,6 +714,30 @@ export default function Register({ setTransition, className }: LoginProps) {
                       Enter the code we sent to your gmail.
                     </p>
                   </div>
+                  {success && (
+                    <div className="rounded-md border border-emerald-500/50 px-4 py-3 text-emerald-600">
+                      <p className="text-sm">
+                        <CircleCheckIcon
+                          className="me-3 -mt-0.5 inline-flex opacity-60"
+                          size={16}
+                          aria-hidden="true"
+                        />
+                        {success}
+                      </p>
+                    </div>
+                  )}
+                  {error && (
+                    <div className="rounded-md border border-red-500/50 px-4 py-3 text-red-600">
+                      <p className="text-sm">
+                        <CircleAlert
+                          className="me-3 -mt-0.5 inline-flex opacity-60"
+                          size={16}
+                          aria-hidden="true"
+                        />
+                        {error}
+                      </p>
+                    </div>
+                  )}
                   <FormField
                     control={otpForm.control}
                     name="otp"
@@ -722,8 +751,10 @@ export default function Register({ setTransition, className }: LoginProps) {
                           <InputOTP
                             maxLength={6}
                             value={field.value}
+                            disabled={loading}
                             onChange={(value) => {
                               field.onChange(value);
+                              setError("");
                             }}
                           >
                             <InputOTPGroup>
