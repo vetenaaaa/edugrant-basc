@@ -145,6 +145,7 @@ export default function Register({ setTransition, className }: LoginProps) {
   };
   const handlePrevStepper = () => {
     setStepper((prev) => prev - 1);
+    setError("");
   };
 
   const handlePersonalSubmit = () => {
