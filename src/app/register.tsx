@@ -1,13 +1,14 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ChevronDownIcon } from "lucide-react";
+import { ArrowLeft, ChevronDownIcon, LoaderCircleIcon } from "lucide-react";
 import Link from "next/link";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useRouter } from "next/navigation";
 import {
   Select,
   SelectContent,
@@ -93,8 +94,13 @@ type accountFormData = z.infer<typeof accountDetailsSchema>;
 type otpFormData = z.infer<typeof otpSchema>;
 
 export default function Register({ setTransition, className }: LoginProps) {
+  const router = useRouter();
   const [stepper, setStepper] = useState(1);
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [disable, setDisable] = useState(false);
+  const [succes, setSuccess] = useState("");
+  const [error, setError] = useState("");
   const personalForm = useForm<personalFormData>({
     resolver: zodResolver(personalDetailsSchema),
     defaultValues: {
@@ -142,9 +148,8 @@ export default function Register({ setTransition, className }: LoginProps) {
     setStepper(3);
   };
   const handleReviewSubmit = async () => {
-    setStepper(4);
-
     try {
+      setLoading(true);
       const response = await axios.post(
         `https://edugrant-express-server-production.up.railway.app/user/sendAuthCodeRegister`,
         {
@@ -168,43 +173,16 @@ export default function Register({ setTransition, className }: LoginProps) {
       );
 
       if (response.status === 200) {
-        alert("res200");
+        setStepper(4);
+        setLoading(false);
       }
     } catch (error) {
       console.log(error);
     }
   };
   const handleOtpSubmit = async (data: otpFormData) => {
-    console.log(
-      "studentFirstName:",
-      personalData.firstName,
-      "studentMiddleName:",
-      personalData.middleName,
-      "studentLastName",
-      personalData.lastName,
-      "studentContact",
-      personalData.contactNumber,
-      "studentGender",
-      personalData.gender,
-      "studentDateofBirth",
-      personalData.dateOfBirth,
-      "studentAddress",
-      personalData.address,
-      "studentId",
-      accountData.studentId,
-      "studentEmail",
-      accountData.email,
-      "studentPassword",
-      accountData.password,
-      "course",
-      accountData.course,
-      "year",
-      accountData.yearLevel,
-      "section",
-      accountData.section,
-      data.otp
-    );
     try {
+      setLoading(true);
       const response = await axios.post(
         `https://edugrant-express-server-production.up.railway.app/user/registerAccount`,
         {
@@ -229,10 +207,27 @@ export default function Register({ setTransition, className }: LoginProps) {
       );
 
       if (response.status === 200) {
-        alert("res 200");
+        setTimeout(() => {
+          router.push("/user/home");
+        }, 2000);
       }
     } catch (error) {
-      console.log(error);
+      setLoading(false);
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 400) {
+          setError(
+            "Invalid credentials. Please check your email and password."
+          );
+        } else {
+          console.error(
+            "Login error:",
+            error.response?.data?.message || error.message
+          );
+        }
+      } else {
+        console.error("Login error:", error);
+        setError("An unexpected error occurred. Please try again.");
+      }
     }
   };
 
@@ -683,10 +678,22 @@ export default function Register({ setTransition, className }: LoginProps) {
                   onClick={handlePrevStepper}
                   variant="outline"
                   className="flex-1"
+                  disabled={loading}
                 >
                   Previous
                 </Button>
-                <Button onClick={handleReviewSubmit} className="flex-1">
+                <Button
+                  disabled={loading}
+                  onClick={handleReviewSubmit}
+                  className="flex-1"
+                >
+                  {loading && (
+                    <LoaderCircleIcon
+                      className="-ms-1 animate-spin"
+                      size={16}
+                      aria-hidden="true"
+                    />
+                  )}
                   Submit Application
                 </Button>
               </div>
@@ -740,7 +747,15 @@ export default function Register({ setTransition, className }: LoginProps) {
                     <Button
                       onClick={otpForm.handleSubmit(handleOtpSubmit)}
                       className="flex-1"
+                      disabled={loading}
                     >
+                      {loading && (
+                        <LoaderCircleIcon
+                          className="-ms-1 animate-spin"
+                          size={16}
+                          aria-hidden="true"
+                        />
+                      )}
                       Verify
                     </Button>
                   </div>
