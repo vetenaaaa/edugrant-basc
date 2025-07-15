@@ -193,7 +193,7 @@ export default function LandingPage() {
         </span>
         <span className="flex gap-3 items-center">
           <Link
-            href={"/EduGrant/login"}
+            href={"/user/login"}
             prefetch={true}
             onClick={() => setTransition("login")}
           >
@@ -258,7 +258,7 @@ export default function LandingPage() {
                   className="text-2xl mt-3 text-white"
                 />
                 <Link
-                  href={"/EduGrant/register"}
+                  href={"/user/register"}
                   prefetch={true}
                   className="mt-8"
                   onClick={() => setTransition("register")}

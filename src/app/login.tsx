@@ -81,7 +81,7 @@ export default function Login({ setTransition, className }: LoginProps) {
   const handleSubmit = async (data: loginOtpFormData) => {
     try {
       const response = await axios.post(
-        `https://edugrant-express-server-production.up.railway.app/EduGrant/loginAccounts`,
+        `https://edugrant-express-server-production.up.railway.app/user/loginAccounts`,
         {
           studentId: LoginData.studentId,
           userPassword: LoginData.password,
@@ -93,7 +93,7 @@ export default function Login({ setTransition, className }: LoginProps) {
       );
 
       if (response.status === 200) {
-        router.push("/EduGrant/home");
+        router.push("/user/home");
         alert("login success");
       }
     } catch (error) {
@@ -106,7 +106,7 @@ export default function Login({ setTransition, className }: LoginProps) {
 
     try {
       const response = await axios.post(
-        `https://edugrant-express-server-production.up.railway.app/EduGrant/sendAuthCodeLogin`,
+        `https://edugrant-express-server-production.up.railway.app/user/sendAuthCodeLogin`,
         {
           studentId: data.studentId,
           userPassword: data.password,
@@ -202,7 +202,7 @@ export default function Login({ setTransition, className }: LoginProps) {
                   <div className=" border flex-1"></div>
                 </div>
                 <Link
-                  href={`/EduGrant/register`}
+                  href={`/user/register`}
                   prefetch
                   onClick={handleRegisterClick}
                 >

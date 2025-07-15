@@ -146,7 +146,7 @@ export default function Register({ setTransition, className }: LoginProps) {
 
     try {
       const response = await axios.post(
-        `https://edugrant-express-server-production.up.railway.app/EduGrant/sendAuthCodeRegister`,
+        `https://edugrant-express-server-production.up.railway.app/user/sendAuthCodeRegister`,
         {
           studentFirstName: personalData.firstName,
           studentMiddleName: personalData.middleName,
@@ -160,7 +160,7 @@ export default function Register({ setTransition, className }: LoginProps) {
           studentPassword: accountData.password,
           course: accountData.course,
           year: accountData.yearLevel,
-          section: accountData.section
+          section: accountData.section,
         },
         {
           withCredentials: true,
@@ -206,7 +206,7 @@ export default function Register({ setTransition, className }: LoginProps) {
     );
     try {
       const response = await axios.post(
-        `https://edugrant-express-server-production.up.railway.app/EduGrant/registerAccount`,
+        `https://edugrant-express-server-production.up.railway.app/user/registerAccount`,
         {
           verificationCode: data.otp,
           studentFirstName: personalData.firstName,
@@ -221,7 +221,7 @@ export default function Register({ setTransition, className }: LoginProps) {
           studentPassword: accountData.password,
           course: accountData.course,
           year: accountData.yearLevel,
-          section: accountData.section
+          section: accountData.section,
         },
         {
           withCredentials: true,
