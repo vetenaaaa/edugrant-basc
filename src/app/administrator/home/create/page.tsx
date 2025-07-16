@@ -5,10 +5,13 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { MultiSelect } from "@/components/ui/multi-select";
 import {
   Drawer,
+  DrawerClose,
   DrawerContent,
   DrawerDescription,
+  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
+  DrawerTrigger,
 } from "@/components/ui/drawer";
 import {
   Breadcrumb,
@@ -58,10 +61,6 @@ const createScholarshipSchema = z.object({
   detailsImage: z
     .instanceof(File, { message: "Required" })
     .refine((file) => file.size > 0, "Image file is required"),
-
-  sponsorLogo: z
-    .instanceof(File, { message: "Required" })
-    .refine((file) => file.size > 0, "Logo file is required"),
   documents: z
     .array(documentsSchema)
     .min(1, "At least one document is required"),
@@ -87,80 +86,70 @@ export default function Create() {
   });
 
   const formData = form.watch();
-
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "documents",
   });
 
   const onSubmit = async (data: FormData) => {
+    alert("submitted");
     try {
       setLoading(true);
 
-      const documentsData = data.documents.map((doc, index) => ({
-        id: index + 1,
-        label: doc.label,
-        formats: doc.formats,
-        required: true,
-      }));
+      const formDataToSend = new FormData();
 
-      // Create FormData for file uploads
-      const formDataPayload = new FormData();
+      formDataToSend.append("scholarshipTitle", data.scholarshipTitle);
+      console.log("scholarshipTitle:", data.scholarshipTitle);
 
-      // Append text fields
-      formDataPayload.append("scholarshipTitle", data.scholarshipTitle);
-      formDataPayload.append("providerName", data.providerName);
-      formDataPayload.append(
+      formDataToSend.append("providerName", data.providerName);
+      console.log("providerName:", data.providerName);
+
+      formDataToSend.append(
         "scholarshipDescription",
         data.scholarshipDescription
       );
-      formDataPayload.append("applicationStartDate", today);
-      formDataPayload.append("applicationDeadline", data.applicationDeadline);
-      formDataPayload.append("scholarshipAmount", data.scholarshipAmount);
-      formDataPayload.append("scholarshipLimit", data.scholarshipLimit);
-      formDataPayload.append(
-        "requiredDocuments",
-        JSON.stringify(documentsData)
-      );
+      console.log("scholarshipDescription:", data.scholarshipDescription);
 
-      // Append files
-      formDataPayload.append("detailsImage", data.detailsImage);
-      formDataPayload.append("sponsorLogo", data.sponsorLogo);
+      formDataToSend.append("startDate", today);
+      console.log("startDate:", today);
+      formDataToSend.append("applicationDeadline", data.applicationDeadline);
+      console.log("applicationDeadline:", data.applicationDeadline);
 
-      console.log("Payload to send:", {
-        scholarshipTitle: data.scholarshipTitle,
-        providerName: data.providerName,
-        scholarshipDescription: data.scholarshipDescription,
-        applicationStartDate: today,
-        applicationDeadline: data.applicationDeadline,
-        scholarshipAmount: data.scholarshipAmount,
-        scholarshipLimit: data.scholarshipLimit,
-        requiredDocuments: documentsData,
-        detailsImage: data.detailsImage.name,
-        sponsorLogo: data.sponsorLogo.name,
-      });
+      formDataToSend.append("scholarshipAmount", data.scholarshipAmount);
+      console.log("scholarshipAmount:", data.scholarshipAmount);
+
+      formDataToSend.append("scholarshipLimit", data.scholarshipLimit);
+      console.log("scholarshipLimit:", data.scholarshipLimit);
+
+      if (data.detailsImage) {
+        formDataToSend.append("detailsImage", data.detailsImage);
+        console.log("detailsImage file:", data.detailsImage);
+        console.log("Image name:", data.detailsImage.name);
+        console.log("Image type:", data.detailsImage.type);
+        console.log("Image size (bytes):", data.detailsImage.size);
+      } else {
+        console.warn("No image file selected");
+      }
+
+      formDataToSend.append("documents", JSON.stringify(data.documents));
 
       const res = await axios.post(
         `https://edugrant-express-server-production.up.railway.app/user/adminAddScholarships`,
-        formDataPayload, // Send FormData object
+        formDataToSend,
         {
           withCredentials: true,
           headers: {
-            "Content-Type": "multipart/form-data", // Let axios set this automatically
+            "Content-Type": "multipart/form-data",
           },
         }
       );
 
       if (res.status === 200) {
         setOpen(false);
-        form.reset(); // Reset form after successful submission
-        alert("Scholarship created successfully!");
       }
     } catch (error) {
-      console.error("Error creating scholarship:", error);
-      alert("Error creating scholarship. Please try again.");
-    } finally {
-      setLoading(false); // Always reset loading state
+      console.error("Error submitting form:", error);
+      setLoading(false);
     }
   };
 
@@ -267,7 +256,7 @@ export default function Create() {
                       <Input
                         type="file"
                         accept="image/*"
-                        onChange={(e) => onChange(e.target.files?.[0])} // Fixed: get first file
+                        onChange={(e) => onChange(e.target.files?.[0])}
                         {...field}
                       />
                     </FormControl>
@@ -275,25 +264,6 @@ export default function Create() {
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="sponsorLogo"
-                render={({ field: { value, onChange, ...field } }) => (
-                  <FormItem>
-                    <FormLabel className="flex justify-between items-center">
-                      Sponsor Logo <FormMessage />
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => onChange(e.target.files?.[0])} // Fixed: get first file
-                        {...field}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
               <div className="col-span-3">
                 <FormField
                   control={form.control}
@@ -531,24 +501,6 @@ export default function Create() {
               </h1>
               <p className="text-lg font-bold border p-2 rounded flex-1">
                 {getFileDisplayName(formData.detailsImage)}
-              </p>
-            </div>
-
-            <div className="flex gap-3 items-center ">
-              <h1 className="text-muted-foreground font-semibold  w-[120px]">
-                Sponsor Logo
-              </h1>
-              <p className="text-lg font-bold border p-2 rounded flex-1">
-                {getFileDisplayName(formData.sponsorLogo)}
-              </p>
-            </div>
-
-            <div className="flex gap-3 items-center ">
-              <h1 className="text-muted-foreground font-semibold  w-[120px]">
-                Sponsor Logo
-              </h1>
-              <p className="text-lg font-bold border p-2 rounded flex-1">
-                {getFileDisplayName(formData.sponsorLogo)}
               </p>
             </div>
 
