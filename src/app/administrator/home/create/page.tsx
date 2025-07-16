@@ -1,0 +1,598 @@
+"use client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { useForm, useFieldArray } from "react-hook-form";
+import { MultiSelect } from "@/components/ui/multi-select";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/components/ui/drawer";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { ModeToggle } from "@/components/ui/dark-mode";
+import { Separator } from "@/components/ui/separator";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, Plus, X } from "lucide-react";
+import { useState } from "react";
+import axios from "axios";
+
+const options = [
+  { label: "PDF", value: "pdf" },
+  { label: "Word Document", value: "docx" },
+  { label: "JPEG Image", value: "jpg" },
+  { label: "PNG Image", value: "png" },
+];
+
+const documentsSchema = z.object({
+  label: z.string().min(3, "Requireds"),
+  formats: z.array(z.string()).min(1, "Required"),
+});
+
+const createScholarshipSchema = z.object({
+  scholarshipTitle: z.string().min(3, "Required"),
+  providerName: z.string().min(3, "Required"),
+  scholarshipDescription: z.string().min(3, "Required"),
+  applicationDeadline: z.string().min(1, "Required"),
+  scholarshipAmount: z.string().min(1, "Required"),
+  scholarshipLimit: z.string().min(1, "Required"),
+  detailsImage: z
+    .instanceof(File, { message: "Required" })
+    .refine((file) => file.size > 0, "Image file is required"),
+
+  sponsorLogo: z
+    .instanceof(File, { message: "Required" })
+    .refine((file) => file.size > 0, "Logo file is required"),
+  documents: z
+    .array(documentsSchema)
+    .min(1, "At least one document is required"),
+});
+
+type FormData = z.infer<typeof createScholarshipSchema>;
+
+export default function Create() {
+  const today = new Date().toISOString().split("T")[0];
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const form = useForm<FormData>({
+    resolver: zodResolver(createScholarshipSchema),
+    defaultValues: {
+      scholarshipTitle: "",
+      providerName: "",
+      scholarshipDescription: "",
+      applicationDeadline: "",
+      scholarshipAmount: "",
+      scholarshipLimit: "",
+      documents: [{ label: "", formats: [] }],
+    },
+  });
+
+  const formData = form.watch();
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "documents",
+  });
+
+  const onSubmit = async (data: FormData) => {
+    try {
+      setLoading(true);
+
+      const documentsData = data.documents.map((doc, index) => ({
+        id: index + 1,
+        label: doc.label,
+        formats: doc.formats,
+        required: true,
+      }));
+
+      // Create FormData for file uploads
+      const formDataPayload = new FormData();
+
+      // Append text fields
+      formDataPayload.append("scholarshipTitle", data.scholarshipTitle);
+      formDataPayload.append("providerName", data.providerName);
+      formDataPayload.append(
+        "scholarshipDescription",
+        data.scholarshipDescription
+      );
+      formDataPayload.append("applicationStartDate", today);
+      formDataPayload.append("applicationDeadline", data.applicationDeadline);
+      formDataPayload.append("scholarshipAmount", data.scholarshipAmount);
+      formDataPayload.append("scholarshipLimit", data.scholarshipLimit);
+      formDataPayload.append(
+        "requiredDocuments",
+        JSON.stringify(documentsData)
+      );
+
+      // Append files
+      formDataPayload.append("detailsImage", data.detailsImage);
+      formDataPayload.append("sponsorLogo", data.sponsorLogo);
+
+      console.log("Payload to send:", {
+        scholarshipTitle: data.scholarshipTitle,
+        providerName: data.providerName,
+        scholarshipDescription: data.scholarshipDescription,
+        applicationStartDate: today,
+        applicationDeadline: data.applicationDeadline,
+        scholarshipAmount: data.scholarshipAmount,
+        scholarshipLimit: data.scholarshipLimit,
+        requiredDocuments: documentsData,
+        detailsImage: data.detailsImage.name,
+        sponsorLogo: data.sponsorLogo.name,
+      });
+
+      const res = await axios.post(
+        `https://edugrant-express-server-production.up.railway.app/user/adminAddScholarships`,
+        formDataPayload, // Send FormData object
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "multipart/form-data", // Let axios set this automatically
+          },
+        }
+      );
+
+      if (res.status === 200) {
+        setOpen(false);
+        form.reset(); // Reset form after successful submission
+        alert("Scholarship created successfully!");
+      }
+    } catch (error) {
+      console.error("Error creating scholarship:", error);
+      alert("Error creating scholarship. Please try again.");
+    } finally {
+      setLoading(false); // Always reset loading state
+    }
+  };
+
+  const validateAndOpenDrawer = () => {
+    setOpen(true);
+  };
+  const getFileDisplayName = (file: File | undefined) => {
+    if (!file) return "No file selected";
+    return file.name;
+  };
+  const getFormatsDisplay = (formats: string[]) => {
+    if (!formats || formats.length === 0) return "No formats selected";
+    return options
+      .filter((option) => formats.includes(option.value))
+      .map((option) => option.label)
+      .join(", ");
+  };
+
+  return (
+    <div className="pl-1 pr-2 your-class">
+      <header className="flex w-full items-center justify-between your-class2 border-b rounded-md top-2 relative">
+        <div className="flex h-16 shrink-0 items-center gap-2 px-4">
+          <SidebarTrigger className="-ml-1" />
+          <Separator
+            orientation="vertical"
+            className="mr-2 data-[orientation=vertical]:h-4"
+          />
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/">Home</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbLink href="/components">
+                  Scholarship Management
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>Create</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </div>
+        <div className="mr-3">
+          <ModeToggle />
+        </div>
+      </header>
+
+      <div className="mx-auto lg:w-3/4 w-[95%] py-10">
+        <h1 className="text-3xl font-semibold">
+          Create a New Scholarship Opportunity
+        </h1>
+        <p className="text-sm text-gray-500 mt-1">
+          Fill out the form below to add a new scholarship.
+        </p>
+
+        <Form {...form}>
+          <div className="space-y-8">
+            {/* Scholarship Fields */}
+            <div className="grid grid-cols-3 lg:gap-y-10 gap-y-6 gap-x-5 mt-10">
+              <div className="col-span-3">
+                <FormField
+                  control={form.control}
+                  name="scholarshipTitle"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex justify-between items-center">
+                        Scholarship Title <FormMessage />
+                      </FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g. CHED Scholarship" {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="lg:col-span-1 col-span-3">
+                <FormField
+                  control={form.control}
+                  name="providerName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex justify-between items-center">
+                        Provider Name <FormMessage />
+                      </FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g. CHED" {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <FormField
+                control={form.control}
+                name="detailsImage"
+                render={({ field: { value, onChange, ...field } }) => (
+                  <FormItem>
+                    <FormLabel className="flex justify-between items-center">
+                      Backdrop Image <FormMessage />
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => onChange(e.target.files?.[0])} // Fixed: get first file
+                        {...field}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="sponsorLogo"
+                render={({ field: { value, onChange, ...field } }) => (
+                  <FormItem>
+                    <FormLabel className="flex justify-between items-center">
+                      Sponsor Logo <FormMessage />
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => onChange(e.target.files?.[0])} // Fixed: get first file
+                        {...field}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <div className="col-span-3">
+                <FormField
+                  control={form.control}
+                  name="scholarshipDescription"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex justify-between items-center">
+                        Scholarship Description <FormMessage />
+                      </FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Detailed information about the scholarship..."
+                          {...field}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="lg:col-span-1 col-span-3">
+                <FormField
+                  control={form.control}
+                  name="applicationDeadline"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex justify-between items-center">
+                        Application Deadline <FormMessage />
+                      </FormLabel>
+                      <FormControl>
+                        <Input type="date" {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="lg:col-span-1 col-span-3">
+                <FormField
+                  control={form.control}
+                  name="scholarshipAmount"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex justify-between items-center">
+                        Scholarship Amount <FormMessage />
+                      </FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g. ₱50,000" {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="lg:col-span-1 col-span-3">
+                <FormField
+                  control={form.control}
+                  name="scholarshipLimit"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex justify-between items-center">
+                        Scholarship Limit <FormMessage />
+                      </FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g. 100 recipients" {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
+            {/* Dynamic Required Documents */}
+            <div className="w-full flex items-center justify-between mt-10">
+              <h2 className="font-semibold text-lg">Required Documents</h2>
+              <Button
+                type="button"
+                size="sm"
+                onClick={() => append({ label: "", formats: [] })}
+                variant="outline"
+              >
+                <Plus className="w-4 h-4 mr-1" />
+                More requirements
+              </Button>
+            </div>
+
+            <div className="space-y-4 mt-5">
+              {fields.map((field, index) => (
+                <div
+                  key={field.id}
+                  className="grid grid-cols-3 gap-3 items-center"
+                >
+                  {/* Label */}
+                  <div className="lg:col-span-1 col-span-3">
+                    <FormField
+                      control={form.control}
+                      name={`documents.${index}.label`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex justify-between items-center">
+                            Document Label {index + 1} <FormMessage />
+                          </FormLabel>
+                          <FormControl>
+                            <Input placeholder="e.g. COR" {...field} />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  {/* Formats */}
+                  <div className="lg:col-span-1 col-span-3">
+                    <FormField
+                      control={form.control}
+                      name={`documents.${index}.formats`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex justify-between items-center">
+                            Document Formats
+                            <FormMessage />
+                          </FormLabel>
+                          <FormControl>
+                            <MultiSelect
+                              options={options}
+                              selected={field.value || []}
+                              onChange={field.onChange}
+                              placeholder="Choose formats"
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  {/* File + Remove */}
+                  <div className="lg:col-span-1 col-span-3 flex items-end gap-2 lg:mt-6 mt-3">
+                    <Input type="file" disabled />
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      disabled={fields.length === 1}
+                      onClick={() => remove(index)}
+                    >
+                      <X />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <Button
+              onClick={form.handleSubmit(validateAndOpenDrawer)}
+              className="w-full"
+            >
+              Submit
+            </Button>
+          </div>
+        </Form>
+      </div>
+
+      <Drawer open={open} onOpenChange={setOpen}>
+        <DrawerContent className="w-3/4 mx-auto h-[85vh]">
+          <DrawerHeader>
+            <DrawerTitle className="text-xl font-bold">
+              Review & Submit Scholarship
+            </DrawerTitle>
+            <DrawerDescription>
+              Please review the scholarship details before submitting.
+            </DrawerDescription>
+          </DrawerHeader>
+
+          <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm overflow-y-auto">
+            <div className="flex gap-3 items-center">
+              <h1 className="text-muted-foreground font-semibold w-[120px]">
+                Scholarship Title
+              </h1>
+              <p className="text-lg font-bold border p-2 rounded flex-1">
+                {" "}
+                {formData.scholarshipTitle || "Not specified"}
+              </p>
+            </div>
+
+            <div className="flex gap-3 items-center">
+              <h1 className="text-muted-foreground font-semibold  w-[120px]">
+                Provider Name
+              </h1>
+              <p className="text-lg font-bold border p-2 rounded flex-1">
+                {formData.providerName || "Not specified"}
+              </p>
+            </div>
+            <div className="flex gap-3 items-center">
+              <h1 className="text-muted-foreground font-semibold  w-[120px]">
+                Description
+              </h1>
+              <p className="text-lg font-bold border p-2 rounded flex-1">
+                {formData.scholarshipDescription || "No description provided"}
+              </p>
+            </div>
+            <div className="flex gap-3 items-center ">
+              <h1 className="text-muted-foreground font-semibold  w-[120px]">
+                Amount
+              </h1>
+              <p className="text-lg font-bold border p-2 rounded flex-1">
+                {formData.scholarshipAmount || "Not specified"}
+              </p>
+            </div>
+            <div className="flex gap-3 items-center">
+              <h1 className="text-muted-foreground font-semibold  w-[120px]">
+                Start Date
+              </h1>
+              <p className="text-lg font-bold border p-2 rounded flex-1">
+                {today}
+              </p>
+            </div>
+
+            <div className="flex gap-3 items-center ">
+              <h1 className="text-muted-foreground font-semibold  w-[120px]">
+                Deadline
+              </h1>
+              <p className="text-lg font-bold border p-2 rounded flex-1">
+                {formData.applicationDeadline || "Not specified"}
+              </p>
+            </div>
+
+            <div className="flex gap-3 items-center ">
+              <h1 className="text-muted-foreground font-semibold  w-[120px]">
+                Limit
+              </h1>
+              <p className="text-lg font-bold border p-2 rounded flex-1">
+                {formData.scholarshipLimit || "Not specified"}
+              </p>
+            </div>
+
+            <div className="flex gap-3 items-center ">
+              <h1 className="text-muted-foreground font-semibold  w-[120px]">
+                Backdrop Image
+              </h1>
+              <p className="text-lg font-bold border p-2 rounded flex-1">
+                {getFileDisplayName(formData.detailsImage)}
+              </p>
+            </div>
+
+            <div className="flex gap-3 items-center ">
+              <h1 className="text-muted-foreground font-semibold  w-[120px]">
+                Sponsor Logo
+              </h1>
+              <p className="text-lg font-bold border p-2 rounded flex-1">
+                {getFileDisplayName(formData.sponsorLogo)}
+              </p>
+            </div>
+
+            <div className="flex gap-3 items-center ">
+              <h1 className="text-muted-foreground font-semibold  w-[120px]">
+                Sponsor Logo
+              </h1>
+              <p className="text-lg font-bold border p-2 rounded flex-1">
+                {getFileDisplayName(formData.sponsorLogo)}
+              </p>
+            </div>
+
+            <div className="col-span-2 grid grid-cols-2 gap-3 mt-5">
+              <h1 className="col-span-2 text-xl font-mono">
+                Required Documents
+              </h1>
+              {formData.documents && formData.documents.length > 0 ? (
+                formData.documents.map((doc, index) => (
+                  <div className="flex gap-3 items-center " key={index}>
+                    <h1 className="text-muted-foreground font-semibold  w-[120px]">
+                      Document {index + 1}
+                    </h1>
+                    <div className=" border p-2 rounded flex-1 space-y-1">
+                      <div className="font-semibold">
+                        {doc.label || "Untitled Document"}
+                      </div>
+                      <p className="text-green-600">
+                        Formats: {getFormatsDisplay(doc.formats)}
+                      </p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-sm text-gray-500">No documents specified</p>
+              )}
+            </div>
+          </div>
+
+          <div className="flex justify-end gap-3 p-4 border-t">
+            <Button onClick={form.handleSubmit(onSubmit)} disabled={loading}>
+              <ArrowLeft /> Back
+            </Button>
+            <Button
+              onClick={form.handleSubmit(onSubmit)}
+              disabled={loading}
+              className=""
+              variant="outline"
+            >
+              {loading ? "Submitting..." : "Submit Scholarship"}
+            </Button>
+          </div>
+        </DrawerContent>
+      </Drawer>
+    </div>
+  );
+}
