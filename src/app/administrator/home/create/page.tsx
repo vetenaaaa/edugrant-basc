@@ -56,8 +56,13 @@ const createScholarshipSchema = z.object({
   scholarshipAmount: z.string().min(1, "Required"),
   scholarshipLimit: z.string().min(1, "Required"),
   detailsImage: z
-    .instanceof(File, { message: "Required" })
-    .refine((file) => file.size > 0, "Image file is required"),
+    .any()
+    .refine(
+      (file) =>
+        typeof File !== "undefined" && file instanceof File && file.size > 0,
+      { message: "Image file is required" }
+    ),
+
   documents: z
     .array(documentsSchema)
     .min(1, "At least one document is required"),
