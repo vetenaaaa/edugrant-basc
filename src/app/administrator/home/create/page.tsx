@@ -136,7 +136,7 @@ export default function Create() {
         scholarshipAmount: data.scholarshipAmount,
         scholarshipLimit: data.scholarshipLimit,
         requiredDocuments: documentsData,
-        detailsImage: data.detailsImage.name,
+        coverImg: data.detailsImage.name,
         sponsorLogo: data.sponsorLogo.name,
       });
 
