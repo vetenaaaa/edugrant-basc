@@ -5,13 +5,10 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { MultiSelect } from "@/components/ui/multi-select";
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerDescription,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
 } from "@/components/ui/drawer";
 import {
   Breadcrumb,
@@ -257,6 +254,7 @@ export default function Create() {
                         type="file"
                         accept="image/*"
                         onChange={(e) => onChange(e.target.files?.[0])}
+                        // Don't spread `value` into file input
                         {...field}
                       />
                     </FormControl>
