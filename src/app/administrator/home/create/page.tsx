@@ -62,6 +62,13 @@ const createScholarshipSchema = z.object({
         typeof File !== "undefined" && file instanceof File && file.size > 0,
       { message: "Image file is required" }
     ),
+  sponsorImage: z
+    .any()
+    .refine(
+      (file) =>
+        typeof File !== "undefined" && file instanceof File && file.size > 0,
+      { message: "Image file is required" }
+    ),
 
   documents: z
     .array(documentsSchema)
@@ -129,6 +136,15 @@ export default function Create() {
         console.log("Image name:", data.detailsImage.name);
         console.log("Image type:", data.detailsImage.type);
         console.log("Image size (bytes):", data.detailsImage.size);
+      } else {
+        console.warn("No image file selected");
+      }
+      if (data.sponsorImage) {
+        formDataToSend.append("detailsImage", data.sponsorImage);
+        console.log("sponsorImage file:", data.sponsorImage);
+        console.log("Image name:", data.sponsorImage.name);
+        console.log("Image type:", data.sponsorImage.type);
+        console.log("Image size (bytes):", data.sponsorImage.size);
       } else {
         console.warn("No image file selected");
       }
@@ -253,6 +269,27 @@ export default function Create() {
                   <FormItem>
                     <FormLabel className="flex justify-between items-center">
                       Backdrop Image <FormMessage />
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        name={name}
+                        onBlur={onBlur}
+                        ref={ref}
+                        onChange={(e) => onChange(e.target.files?.[0])}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="sponsorImage"
+                render={({ field: { onChange, onBlur, name, ref } }) => (
+                  <FormItem>
+                    <FormLabel className="flex justify-between items-center">
+                      Sponsor Image <FormMessage />
                     </FormLabel>
                     <FormControl>
                       <Input
