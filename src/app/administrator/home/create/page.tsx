@@ -258,7 +258,7 @@ export default function Create() {
               <FormField
                 control={form.control}
                 name="detailsImage"
-                render={({ field: { value, onChange, ...field } }) => (
+                render={({ field: { onChange, ...field } }) => (
                   <FormItem>
                     <FormLabel className="flex justify-between items-center">
                       Backdrop Image <FormMessage />
@@ -278,7 +278,7 @@ export default function Create() {
               <FormField
                 control={form.control}
                 name="sponsorLogo"
-                render={({ field: { value, onChange, ...field } }) => (
+                render={({ field: { onChange, ...field } }) => (
                   <FormItem>
                     <FormLabel className="flex justify-between items-center">
                       Sponsor Logo <FormMessage />
