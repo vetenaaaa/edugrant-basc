@@ -244,7 +244,7 @@ export default function Create() {
               <FormField
                 control={form.control}
                 name="detailsImage"
-                render={({ field: { value, onChange, ...field } }) => (
+                render={({ field: { onChange, onBlur, name, ref } }) => (
                   <FormItem>
                     <FormLabel className="flex justify-between items-center">
                       Backdrop Image <FormMessage />
@@ -253,9 +253,10 @@ export default function Create() {
                       <Input
                         type="file"
                         accept="image/*"
+                        name={name}
+                        onBlur={onBlur}
+                        ref={ref}
                         onChange={(e) => onChange(e.target.files?.[0])}
-                        // Don't spread `value` into file input
-                        {...field}
                       />
                     </FormControl>
                   </FormItem>
