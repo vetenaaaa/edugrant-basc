@@ -1,14 +1,12 @@
 "use client";
 
 import * as React from "react";
-import { TrendingUp } from "lucide-react";
 import { Label, Pie, PieChart, Sector } from "recharts";
 
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
+
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -50,12 +48,12 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export default function ChartPieDonutText() {
-  const totalApplications = React.useMemo(() => {
-    return chartData.reduce((acc, curr) => acc + curr.value, 0);
-  }, []);
+  // const totalApplications = React.useMemo(() => {
+  //   return chartData.reduce((acc, curr) => acc + curr.value, 0);
+  // }, []);
 
   return (
-    <Card className="bg-background/40 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:scale-[1.01]">
+    <Card className="bg-backgrousnd/40 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:scale-[1.01]">
       <CardHeader>
         <CardTitle>Application Status Overview</CardTitle>
       </CardHeader>

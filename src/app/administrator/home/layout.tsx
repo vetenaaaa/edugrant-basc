@@ -1,6 +1,6 @@
 import { AppSidebar } from "@/components/ui/app-side";
 import { ReactNode } from "react";
-
+import { Toaster } from "@/components/ui/sonner";
 interface DashboardLayoutProps {
   children: ReactNode;
 }
@@ -11,6 +11,16 @@ export default function Home({ children }: DashboardLayoutProps) {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>{children}</SidebarInset>
+      <Toaster
+        richColors
+        toastOptions={{
+          style: {
+            background: "#000000",
+            color: "#ffffff", 
+          },
+          className: "my-toast",
+        }}
+      />
     </SidebarProvider>
   );
 }

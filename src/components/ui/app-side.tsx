@@ -32,7 +32,7 @@ const sidebarData = {
       items: [
         {
           title: "Dashboard",
-          url: "/administrator/home/dashboard",
+          url: "/administrator/home",
           icon: Home,
         },
       ],

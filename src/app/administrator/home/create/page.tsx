@@ -3,10 +3,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useForm, useFieldArray } from "react-hook-form";
 import { MultiSelect } from "@/components/ui/multi-select";
+import { toast } from "sonner";
 import {
   Drawer,
   DrawerContent,
   DrawerDescription,
+  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
@@ -32,7 +34,7 @@ import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Plus, X } from "lucide-react";
+import { ArrowLeft, LoaderCircleIcon, Plus, X } from "lucide-react";
 import { useState } from "react";
 import axios from "axios";
 
@@ -60,14 +62,14 @@ const createScholarshipSchema = z.object({
     .refine(
       (file) =>
         typeof File !== "undefined" && file instanceof File && file.size > 0,
-      { message: "Image file is required" }
+      { message: "Image is required" }
     ),
   sponsorImage: z
     .any()
     .refine(
       (file) =>
         typeof File !== "undefined" && file instanceof File && file.size > 0,
-      { message: "Image file is required" }
+      { message: "Image is required" }
     ),
 
   documents: z
@@ -101,7 +103,6 @@ export default function Create() {
   });
 
   const onSubmit = async (data: FormData) => {
-    alert("submitted");
     try {
       setLoading(true);
 
@@ -163,6 +164,25 @@ export default function Create() {
       );
 
       if (res.status === 200) {
+        form.reset({
+          scholarshipTitle: "",
+          providerName: "",
+          scholarshipDescription: "",
+          applicationDeadline: "",
+          scholarshipAmount: "",
+          scholarshipLimit: "",
+          detailsImage: undefined,
+          sponsorImage: undefined,
+          documents: [{ label: "", formats: [] }],
+        });
+
+        console.log("Scholarship created successfully!");
+        toast("Scholarship has been created", {
+          description:
+            "The scholarship opportunity has been successfully added to the system.",
+        });
+
+        setLoading(false);
         setOpen(false);
       }
     } catch (error) {
@@ -351,7 +371,11 @@ export default function Create() {
                         Scholarship Amount <FormMessage />
                       </FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g. ₱50,000" {...field} />
+                        <Input
+                          type="number"
+                          placeholder="e.g. 5,000"
+                          {...field}
+                        />
                       </FormControl>
                     </FormItem>
                   )}
@@ -364,10 +388,14 @@ export default function Create() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="flex justify-between items-center">
-                        Scholarship Limit <FormMessage />
+                        Scholarship Limit (0 = unlimited) <FormMessage />
                       </FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g. 100 recipients" {...field} />
+                        <Input
+                          type="number"
+                          placeholder="e.g. 100"
+                          {...field}
+                        />
                       </FormControl>
                     </FormItem>
                   )}
@@ -570,20 +598,34 @@ export default function Create() {
               )}
             </div>
           </div>
-
-          <div className="flex justify-end gap-3 p-4 border-t">
-            <Button onClick={form.handleSubmit(onSubmit)} disabled={loading}>
-              <ArrowLeft /> Back
-            </Button>
-            <Button
-              onClick={form.handleSubmit(onSubmit)}
-              disabled={loading}
-              className=""
-              variant="outline"
-            >
-              {loading ? "Submitting..." : "Submit Scholarship"}
-            </Button>
-          </div>
+          <DrawerFooter>
+            <div className="w-full flex justify-end">
+              <div className="flex gap-3 w-1/2 justify-end">
+                <Button
+                  className="flex-1"
+                  onClick={() => setOpen(false)}
+                  disabled={loading}
+                >
+                  <ArrowLeft /> Back
+                </Button>
+                <Button
+                  onClick={form.handleSubmit(onSubmit)}
+                  disabled={loading}
+                  className="flex-1"
+                  variant="outline"
+                >
+                  {loading && (
+                    <LoaderCircleIcon
+                      className="-ms-1 animate-spin"
+                      size={16}
+                      aria-hidden="true"
+                    />
+                  )}
+                  {loading ? "Submitting..." : "Submit Scholarship"}
+                </Button>
+              </div>
+            </div>
+          </DrawerFooter>
         </DrawerContent>
       </Drawer>
     </div>
