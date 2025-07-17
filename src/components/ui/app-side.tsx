@@ -47,7 +47,7 @@ const sidebarData = {
         },
         {
           title: "Manage Scholarships",
-          url: "/administrator/home/scholarships/manage",
+          url: "/administrator/home/manage",
           icon: Layers,
         },
         {
@@ -131,12 +131,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <div className=" text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+              <div className=" text-sidebar-primary-foreground flex aspect-square size-6 items-center justify-center rounded-lg">
                 <img src={logo.src} alt="" />
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="flex gap-1">
-                  <p className="truncate font-medium text-2xl zxczxc tracking-[-5px]">
+                  <p className="truncate  text-xl zxczxc tracking-[-3px]">
                     Edugrant
                   </p>
                   <p className="font-light mt-1">Admin</p>
