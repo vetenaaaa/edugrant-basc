@@ -10,7 +10,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import useDashboardData from "@/lib/useDashboard";
 import useScholarshipData from "@/lib/scholarship-data";
 
 export const description = "A multiple bar chart";
