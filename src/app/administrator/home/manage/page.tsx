@@ -40,6 +40,9 @@ export default function Manage() {
     "scholars"
   );
 
+  const HandleClickDetails = () => {
+    setIntercept("details");
+  };
   return (
     <div className="pl-1 pr-2 your-class  h-screen">
       <header className="flex w-full items-center justify-between your-class2 border-b rounded-md top-2 relative">
@@ -108,7 +111,7 @@ export default function Manage() {
                         <Link
                           href={`/administrator/home/manage/${row.scholarshipId}`}
                           prefetch={true}
-                          onClick={() => setIntercept("details")}
+                          onClick={HandleClickDetails}
                         >
                           {index + 1}. {row.scholarshipTitle}
                         </Link>
