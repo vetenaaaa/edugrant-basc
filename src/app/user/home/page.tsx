@@ -17,7 +17,7 @@ export default function HomeClient() {
       }
     } catch (error) {
       console.error("Logout failed", error);
-      // Still redirect even if logout fails
+    
       router.push("/");
     }
   };
