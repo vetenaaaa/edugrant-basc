@@ -108,9 +108,8 @@ export default function AdminDashboard() {
       if (res.status === 200) {
         router.replace("/administrator");
       }
-    } catch (error: any) {
+    } catch (error) {
       console.log(error);
-      alert(error.response.data.message);
     }
   };
   return (
@@ -150,7 +149,8 @@ export default function AdminDashboard() {
                   src={morty.src}
                   alt=""
                 />
-                Admin<ChevronDown />
+                Admin
+                <ChevronDown />
               </Button>
             </PopoverTrigger>
             <PopoverContent>
