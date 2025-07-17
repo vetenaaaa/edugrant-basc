@@ -107,21 +107,21 @@ export default function Create() {
 
       const formDataToSend = new FormData();
 
-      formDataToSend.append("scholarshipTitle", data.scholarshipTitle);
+      formDataToSend.append("newScholarTitle", data.scholarshipTitle);
       console.log("scholarshipTitle:", data.scholarshipTitle);
 
-      formDataToSend.append("providerName", data.providerName);
+      formDataToSend.append("newScholarProvider", data.providerName);
       console.log("providerName:", data.providerName);
 
       formDataToSend.append(
-        "scholarshipDescription",
+        "newScholarDescription",
         data.scholarshipDescription
       );
       console.log("scholarshipDescription:", data.scholarshipDescription);
 
-      formDataToSend.append("startDate", today);
+      formDataToSend.append("applicationStartDate", today);
       console.log("startDate:", today);
-      formDataToSend.append("applicationDeadline", data.applicationDeadline);
+      formDataToSend.append("newScholarDeadline", data.applicationDeadline);
       console.log("applicationDeadline:", data.applicationDeadline);
 
       formDataToSend.append("scholarshipAmount", data.scholarshipAmount);
@@ -131,7 +131,7 @@ export default function Create() {
       console.log("scholarshipLimit:", data.scholarshipLimit);
 
       if (data.detailsImage) {
-        formDataToSend.append("detailsImage", data.detailsImage);
+        formDataToSend.append("coverImg", data.detailsImage);
         console.log("detailsImage file:", data.detailsImage);
         console.log("Image name:", data.detailsImage.name);
         console.log("Image type:", data.detailsImage.type);
@@ -140,7 +140,7 @@ export default function Create() {
         console.warn("No image file selected");
       }
       if (data.sponsorImage) {
-        formDataToSend.append("detailsImage", data.sponsorImage);
+        formDataToSend.append("sponsorLogo", data.sponsorImage);
         console.log("sponsorImage file:", data.sponsorImage);
         console.log("Image name:", data.sponsorImage.name);
         console.log("Image type:", data.sponsorImage.type);
@@ -149,7 +149,7 @@ export default function Create() {
         console.warn("No image file selected");
       }
 
-      formDataToSend.append("documents", JSON.stringify(data.documents));
+      formDataToSend.append("requirements", JSON.stringify(data.documents));
 
       const res = await axios.post(
         `https://edugrant-express-server-production.up.railway.app/administrator/adminAddScholarships`,
