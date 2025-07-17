@@ -45,6 +45,9 @@ export default function Manage() {
   const [query, setQuery] = useState("");
   const [searchData, setSearchData] = useState<Scholarship[]>([]);
   console.log(query);
+
+
+  //fetch data api
   useEffect(function () {
     async function fetchScholarships() {
       try {
@@ -65,6 +68,29 @@ export default function Manage() {
 
     fetchScholarships();
   }, []);
+
+
+  //search data api
+   useEffect(function () {
+     async function seachScholarships() {
+       try {
+         const res = await axios.post(
+           `https://edugrant-express-server-production.up.railway.app/administrator/searchScholarships`,
+           {},
+           { withCredentials: true }
+         );
+         if (res.status === 200) {
+           setSearchData(res.data);
+         }
+       } catch (error) {
+         console.error(error);
+       } finally {
+         setLoading(false);
+       }
+     }
+
+     seachScholarships();
+   }, [query]);
 
   return (
     <div className="pl-1 pr-2 your-class  h-screen">

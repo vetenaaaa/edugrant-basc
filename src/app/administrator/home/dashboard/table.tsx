@@ -1,10 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+
 import {
   Table,
   TableBody,
@@ -16,7 +10,7 @@ import {
 import useDashboardData from "@/lib/useDashboard";
 
 export default function TableDashboard() {
-  const { data, loading } = useDashboardData();
+  const { data } = useDashboardData();
   return (
     <Table>
       <TableHeader>
