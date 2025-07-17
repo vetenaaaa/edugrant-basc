@@ -23,74 +23,22 @@ import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useState } from "react";
+
 import { Input } from "@/components/ui/input";
+import useScholarshipData from "@/lib/scholarship-data";
+import useScholarshipSearch from "@/lib/scholarship-search";
 const headers = [
   { label: "Scholarship" },
   { label: "Provider" },
   { label: "Status" },
   { label: "Deadline" },
 ];
-type Scholarship = {
-  scholarshipId: string;
-  scholarshipTitle: string;
-  scholarshipProvider: string;
-  status: "active" | "closed" | "upcoming";
-  scholarshipDealine: string;
-};
+
 export default function Manage() {
-  const [data, setData] = useState<Scholarship[]>([]);
-  const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
-  const [searchData, setSearchData] = useState<Scholarship[]>([]);
-  console.log(query);
-
-
-  //fetch data api
-  useEffect(function () {
-    async function fetchScholarships() {
-      try {
-        const res = await axios.post(
-          `https://edugrant-express-server-production.up.railway.app/administrator/getScholarships`,
-          {},
-          { withCredentials: true }
-        );
-        if (res.status === 200) {
-          setData(res.data);
-        }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchScholarships();
-  }, []);
-
-
-  //search data api
-   useEffect(function () {
-     async function seachScholarships() {
-       try {
-         const res = await axios.post(
-           `https://edugrant-express-server-production.up.railway.app/administrator/searchScholarships`,
-           {},
-           { withCredentials: true }
-         );
-         if (res.status === 200) {
-           setSearchData(res.data);
-         }
-       } catch (error) {
-         console.error(error);
-       } finally {
-         setLoading(false);
-       }
-     }
-
-     seachScholarships();
-   }, [query]);
+  const { data, loading } = useScholarshipData();
+  const { searchData } = useScholarshipSearch();
 
   return (
     <div className="pl-1 pr-2 your-class  h-screen">
@@ -172,22 +120,21 @@ export default function Manage() {
                     </TableCell>
                     <TableCell className="">
                       <Badge className="bg-green-900 text-gray-300">
-                        {row.status}
+                        Active
                       </Badge>
                     </TableCell>
                     <TableCell className="">{row.scholarshipDealine}</TableCell>
                   </TableRow>
                 ))
               ) : (
-                data.map((row) => (
+                data.map((row, index) => (
                   <TableRow key={row.scholarshipId}>
                     <TableCell className="font-medium underline">
                       <Link
                         href={`/administrator/home/scholarships/manage/${row.scholarshipId}`}
                         prefetch={true}
                       >
-                        {" "}
-                        {row.scholarshipTitle}
+                        {index + 1}. {row.scholarshipTitle}
                       </Link>
                     </TableCell>
                     <TableCell className="">
@@ -195,10 +142,13 @@ export default function Manage() {
                     </TableCell>
                     <TableCell className="">
                       <Badge className="bg-green-900 text-gray-300">
-                        {row.status}
+                        Active
                       </Badge>
                     </TableCell>
-                    <TableCell className="">{row.scholarshipDealine}</TableCell>
+                    <TableCell className="">
+                      {" "}
+                      {new Date(row.scholarshipDealine).toLocaleDateString()}
+                    </TableCell>
                   </TableRow>
                 ))
               )}

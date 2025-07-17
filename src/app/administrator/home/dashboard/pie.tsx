@@ -3,13 +3,7 @@
 import * as React from "react";
 import { Label, Pie, PieChart, Sector } from "recharts";
 
-import {
-  Card,
-  CardContent,
-
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
@@ -20,6 +14,7 @@ import {
 } from "@/components/ui/chart";
 
 import { PieSectorDataItem } from "recharts/types/polar/Pie";
+import useScholarshipData from "@/lib/scholarship-data";
 
 export const description = "A donut chart with text";
 
@@ -48,12 +43,11 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export default function ChartPieDonutText() {
-  // const totalApplications = React.useMemo(() => {
-  //   return chartData.reduce((acc, curr) => acc + curr.value, 0);
-  // }, []);
-
+  const { data } = useScholarshipData();
+  const filterApproved = data.filter((meow) => meow.totalApproved);
+  console.log(filterApproved);
   return (
-    <Card className="bg-backgrousnd/40 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:scale-[1.01]">
+    <Card className="bg-backgrousnd/40">
       <CardHeader>
         <CardTitle>Application Status Overview</CardTitle>
       </CardHeader>

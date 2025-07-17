@@ -1,12 +1,7 @@
 "use client";
 
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
@@ -16,6 +11,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import useDashboardData from "@/lib/useDashboard";
+import useScholarshipData from "@/lib/scholarship-data";
 
 export const description = "A multiple bar chart";
 
@@ -31,12 +27,11 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function ChartBarMultiple() {
-  const { data } = useDashboardData();
+  const { data } = useScholarshipData();
   return (
     <Card className="bg-background/40 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:scale-[1.01]">
       <CardHeader>
         <CardTitle>Scholarship Application Summary</CardTitle>
-       
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
@@ -44,9 +39,9 @@ export function ChartBarMultiple() {
             accessibilityLayer
             data={
               data?.map((item) => ({
-                name: item.scholarshipName,
-                applicationsReceived: item.applicationsReceived,
-                applicationsApproved: item.applicationsApproved,
+                name: item.scholarshipTitle,
+                applicationsReceived: item.totalApplicants,
+                applicationsApproved: item.totalApproved,
               })) ?? []
             }
           >

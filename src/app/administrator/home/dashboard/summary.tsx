@@ -1,12 +1,12 @@
-import {
-  Activity,
-  CheckCheck,
-  CloudUpload,
-
-  TrendingUp,
-} from "lucide-react";
-
+import useScholarshipData from "@/lib/scholarship-data";
+import { Activity, CheckCheck, CloudUpload, TrendingUp } from "lucide-react";
+import { Ring } from "ldrs/react";
+import "ldrs/react/Ring.css";
 export default function ApplicationSummary() {
+  const { data, loading } = useScholarshipData();
+  const filterApproved = data.filter((meow) => meow.totalApproved);
+  const filterApplication = data.filter((meow) => meow.totalApplicants);
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
       <div className="space-y-2 bg-background/40 flex flex-col justify-center px-3 py-3 rounded-xl border shadow-sm">
@@ -20,7 +20,19 @@ export default function ApplicationSummary() {
         </div>
         <div className="flex justify-between items-end">
           <p className="text-sm text-muted-foreground">Total Application</p>
-          <p className="text-3xl font-semibold text-blue-600">500</p>
+          <span className="text-3xl font-semibold text-blue-600">
+            {loading ? (
+              <Ring
+                size={25}
+                stroke={2}
+                speed={2}
+                bgOpacity={0}
+                color="yellow"
+              />
+            ) : (
+              filterApplication.length
+            )}
+          </span>
         </div>
       </div>
       <div className="space-y-2 bg-background/40 flex flex-col justify-center px-3 py-3 rounded-xl border shadow-sm">
@@ -34,7 +46,19 @@ export default function ApplicationSummary() {
         </div>
         <div className="flex justify-between items-end">
           <p className="text-sm text-muted-foreground">Approved</p>
-          <p className="text-3xl font-semibold text-green-600">500</p>
+          <span className="text-3xl font-semibold text-green-600">
+            {loading ? (
+              <Ring
+                size={25}
+                stroke={2}
+                speed={2}
+                bgOpacity={0}
+                color="yellow"
+              />
+            ) : (
+              filterApproved.length
+            )}
+          </span>
         </div>
       </div>
       <div className="space-y-2 bg-background/40 flex flex-col justify-center px-3 py-3 rounded-xl border shadow-sm">
@@ -48,7 +72,20 @@ export default function ApplicationSummary() {
         </div>
         <div className="flex justify-between items-end">
           <p className="text-sm text-muted-foreground">Submitted</p>
-          <p className="text-3xl font-semibold text-yellow-500">500</p>
+          <span className="text-3xl font-semibold text-yellow-500">
+            {" "}
+            {loading ? (
+              <Ring
+                size={25}
+                stroke={2}
+                speed={2}
+                bgOpacity={0}
+                color="yellow"
+              />
+            ) : (
+              500
+            )}
+          </span>
         </div>
       </div>
       <div className="space-y-2 bg-background/40 flex flex-col justify-center px-3 py-3 rounded-xl border shadow-sm">
@@ -62,7 +99,19 @@ export default function ApplicationSummary() {
         </div>
         <div className="flex justify-between items-end">
           <p className="text-sm text-muted-foreground">Active Scholarships</p>
-          <p className="text-3xl font-semibold text-green-600">3</p>
+          <span className="text-3xl font-semibold text-green-600">
+            {loading ? (
+              <Ring
+                size={25}
+                stroke={2}
+                speed={2}
+                bgOpacity={0}
+                color="yellow"
+              />
+            ) : (
+              data.length
+            )}
+          </span>
         </div>
       </div>
     </div>
