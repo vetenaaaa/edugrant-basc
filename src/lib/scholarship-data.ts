@@ -29,7 +29,7 @@ export default function useScholarshipData() {
       } catch (error) {
         console.error(error);
       } finally {
-        setLoading(true);
+        setLoading(false);
       }
     }
 
