@@ -27,6 +27,8 @@ import { useState } from "react";
 
 import { Input } from "@/components/ui/input";
 import useScholarshipData from "@/lib/scholarship-data";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 const headers = [
   { label: "Scholarship" },
   { label: "Provider" },
@@ -40,9 +42,17 @@ export default function Manage() {
     "scholars"
   );
 
-  const HandleClickDetails = () => {
-    setIntercept("details");
+  const [selectedScholar, setSelectedScholar] = useState("");
+
+  const selected = data.filter(
+    (meow) => meow.scholarshipId === selectedScholar
+  );
+
+  console.log(selected);
+  const HandleClickScholarhip = () => {
+    setIntercept("scholars");
   };
+
   return (
     <div className="pl-1 pr-2 your-class  h-screen">
       <header className="flex w-full items-center justify-between your-class2 border-b rounded-md top-2 relative">
@@ -111,7 +121,10 @@ export default function Manage() {
                         <Link
                           href={`/administrator/home/manage/${row.scholarshipId}`}
                           prefetch={true}
-                          onClick={HandleClickDetails}
+                          onClick={() => {
+                            setIntercept("details");
+                            setSelectedScholar(row.scholarshipId);
+                          }}
                         >
                           {index + 1}. {row.scholarshipTitle}
                         </Link>
@@ -136,7 +149,21 @@ export default function Manage() {
           </div>
         </div>
       )}
-      {intercept === "details" && <>meow</>}
+      {intercept === "details" && (
+        <div className="relative mx-auto lg:w-3/4 w-[95%] py-10 ">
+          <Link
+            href={`/administrator/home/manage`}
+            prefetch={true}
+            onClick={HandleClickScholarhip}
+            className="absolute left-0 top-10"
+          >
+            <Button variant="outline">
+              <ArrowLeft />
+            </Button>
+          </Link>
+          <div></div>
+        </div>
+      )}
     </div>
   );
 }
