@@ -149,8 +149,8 @@ export default function AdminDashboard() {
                   className="h-full w-full aspect-square object-cover rounded-full"
                   src={morty.src}
                   alt=""
-                />{" "}
-                Admin "" <ChevronDown />
+                />
+                Admin<ChevronDown />
               </Button>
             </PopoverTrigger>
             <PopoverContent>
