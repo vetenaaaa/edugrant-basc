@@ -48,6 +48,7 @@ import {
   TimelineItem,
 } from "@/components/ui/timeline";
 import { useEffect, useState } from "react";
+import DynamicHeaderAdmin from "./dynamic-header";
 const announcements = [
   {
     id: 1,
@@ -103,83 +104,9 @@ export default function AdminDashboard() {
   }, []);
   const router = useRouter();
 
-  const HandleLogout = async () => {
-    try {
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_ADMIN_API}/adminLogout`,
-        {},
-        { withCredentials: true }
-      );
-      console.log(res);
-      if (res.status === 200) {
-        router.replace("/administrator");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
   return (
     <div className="pl-1 pr-2 your-class h-screen">
-      <header className="flex w-full items-center justify-between bg-background/50 border-b rounded-md top-2 relative">
-        <div className="flex h-16 shrink-0 items-center gap-5 px-4">
-          <SidebarTrigger className="-ml-1" />
-
-          <Separator
-            orientation="vertical"
-            className="mr-2 data-[orientation=vertical]:h-4"
-          />
-
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink href="/">Home</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbLink href="/components">Main</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Dashboard</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-
-        <div className="mr-3 flex  items-center gap-3">
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="ghost">
-                <img
-                  className="h-full w-full aspect-square object-cover rounded-full"
-                  src={morty.src}
-                  alt=""
-                />
-                Admin
-                <ChevronDown />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent>
-              <Button
-                variant="ghost"
-                className="w-full"
-                size="sm"
-                onClick={HandleLogout}
-              >
-                <LogOut />
-                Logout
-              </Button>
-            </PopoverContent>
-          </Popover>
-          <span className="p-2.5 border rounded-sm">
-            <Megaphone className="h-4 w-4" />
-          </span>
-          <span className="p-2.5 border rounded-sm">
-            <Bell className="h-4 w-4" />
-          </span>
-          <ModeToggle />
-        </div>
-      </header>
+      <DynamicHeaderAdmin first="Home" />
 
       <div className=" grid grid-cols-3  gap-5 px-5 ">
         <div className=" flex justify-between items-start py-10 col-span-2">

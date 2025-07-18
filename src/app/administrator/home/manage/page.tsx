@@ -29,6 +29,7 @@ import { Input } from "@/components/ui/input";
 import useScholarshipData from "@/lib/scholarship-data";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
+import DynamicHeaderAdmin from "../dynamic-header";
 const headers = [
   { label: "Scholarship" },
   { label: "Provider" },
@@ -55,38 +56,7 @@ export default function Manage() {
 
   return (
     <div className="pl-1 pr-2 your-class  h-screen">
-      <header className="flex w-full items-center justify-between your-class2 border-b rounded-md top-2 relative">
-        <div className="flex h-16 shrink-0 items-center gap-2 px-4">
-          <SidebarTrigger className="-ml-1" />
-
-          <Separator
-            orientation="vertical"
-            className="mr-2 data-[orientation=vertical]:h-4"
-          />
-
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink href="/">Home</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbLink href="/components">
-                  Scholarship Management
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Manage</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-
-        <div className="mr-3">
-          <ModeToggle />
-        </div>
-      </header>
+      <DynamicHeaderAdmin first="Scholarship" second="Manage"/>
       {intercept === "scholars" && (
         <div className="mx-auto lg:w-3/4 w-[95%] py-10">
           <h1 className="text-3xl font-semibold">Manage Scholarships</h1>

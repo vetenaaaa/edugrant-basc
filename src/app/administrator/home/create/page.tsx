@@ -37,6 +37,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, LoaderCircleIcon, Plus, X } from "lucide-react";
 import { useState } from "react";
 import axios from "axios";
+import DynamicHeaderAdmin from "../dynamic-header";
 
 const options = [
   { label: "PDF", value: "pdf" },
@@ -208,35 +209,7 @@ export default function Create() {
 
   return (
     <div className="pl-1 pr-2 your-class">
-      <header className="flex w-full items-center justify-between your-class2 border-b rounded-md top-2 relative">
-        <div className="flex h-16 shrink-0 items-center gap-2 px-4">
-          <SidebarTrigger className="-ml-1" />
-          <Separator
-            orientation="vertical"
-            className="mr-2 data-[orientation=vertical]:h-4"
-          />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink href="/">Home</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbLink href="/components">
-                  Scholarship Management
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Create</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-        </div>
-        <div className="mr-3">
-          <ModeToggle />
-        </div>
-      </header>
+      <DynamicHeaderAdmin first="Scholarship" second="Create" />
 
       <div className="mx-auto lg:w-3/4 w-[95%] py-10">
         <h1 className="text-3xl font-semibold">
