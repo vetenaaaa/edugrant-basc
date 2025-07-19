@@ -30,7 +30,6 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { createScholarshipSchema } from "../../../create/page";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
@@ -47,6 +46,36 @@ const options = [
   { label: "JPEG Image", value: "jpg" },
   { label: "PNG Image", value: "png" },
 ];
+const documentsSchema = z.object({
+  label: z.string().min(3, "Requireds"),
+  formats: z.array(z.string()).min(1, "Required"),
+});
+const createScholarshipSchema = z.object({
+  scholarshipTitle: z.string().min(3, "Required"),
+  providerName: z.string().min(3, "Required"),
+  scholarshipDescription: z.string().min(3, "Required"),
+  applicationDeadline: z.string().min(1, "Required"),
+  scholarshipAmount: z.string().min(1, "Required"),
+  scholarshipLimit: z.string().min(1, "Required"),
+  detailsImage: z
+    .any()
+    .refine(
+      (file) =>
+        typeof File !== "undefined" && file instanceof File && file.size > 0,
+      { message: "Image is required" }
+    ),
+  sponsorImage: z
+    .any()
+    .refine(
+      (file) =>
+        typeof File !== "undefined" && file instanceof File && file.size > 0,
+      { message: "Image is required" }
+    ),
+
+  documents: z
+    .array(documentsSchema)
+    .min(1, "At least one document is required"),
+});
 export default function InterceptManageScholarship() {
   const { data } = useScholarshipData();
   const router = useRouter();
@@ -68,18 +97,17 @@ export default function InterceptManageScholarship() {
       documents: [{ label: "", formats: [] }],
     },
   });
-useEffect(() => {
-  if (selected) {
-    form.reset({
-      scholarshipTitle: selected.scholarshipTitle || "",
-      providerName: selected.scholarshipProvider || "",
-      scholarshipDescription: selected.scholarshipDescription || "",
-      applicationDeadline: selected.scholarshipDealine || "",
-      scholarshipAmount: selected.scholarshipAmount?.toString() || "",
-   
-    });
-  }
-}, [selected, form]);
+  useEffect(() => {
+    if (selected) {
+      form.reset({
+        scholarshipTitle: selected.scholarshipTitle || "",
+        providerName: selected.scholarshipProvider || "",
+        scholarshipDescription: selected.scholarshipDescription || "",
+        applicationDeadline: selected.scholarshipDealine || "",
+        scholarshipAmount: selected.scholarshipAmount?.toString() || "",
+      });
+    }
+  }, [selected, form]);
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "documents",

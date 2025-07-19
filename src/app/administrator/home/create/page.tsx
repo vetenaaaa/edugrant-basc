@@ -40,7 +40,7 @@ const documentsSchema = z.object({
   formats: z.array(z.string()).min(1, "Required"),
 });
 
-export const createScholarshipSchema = z.object({
+ const createScholarshipSchema = z.object({
   scholarshipTitle: z.string().min(3, "Required"),
   providerName: z.string().min(3, "Required"),
   scholarshipDescription: z.string().min(3, "Required"),
