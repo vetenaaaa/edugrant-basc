@@ -20,7 +20,6 @@ import {
   SquarePen,
 } from "lucide-react";
 
-import { useRouter } from "next/navigation";
 import {
   Timeline,
   TimelineContent,
