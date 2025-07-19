@@ -18,28 +18,16 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { ModeToggle } from "@/components/ui/dark-mode";
 import ApplicationSummary from "./dashboard/summary";
 import { Button } from "@/components/ui/button";
 import {
   Activity,
   ArrowRight,
-  Bell,
-  ChevronDown,
-  LogOut,
+  
   Megaphone,
   SquarePen,
 } from "lucide-react";
 
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import {
   Timeline,
