@@ -13,14 +13,6 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer";
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import {
   Form,
   FormControl,
   FormField,
@@ -29,9 +21,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { ModeToggle } from "@/components/ui/dark-mode";
-import { Separator } from "@/components/ui/separator";
-import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, LoaderCircleIcon, Plus, X } from "lucide-react";
@@ -51,7 +40,7 @@ const documentsSchema = z.object({
   formats: z.array(z.string()).min(1, "Required"),
 });
 
-const createScholarshipSchema = z.object({
+export const createScholarshipSchema = z.object({
   scholarshipTitle: z.string().min(3, "Required"),
   providerName: z.string().min(3, "Required"),
   scholarshipDescription: z.string().min(3, "Required"),

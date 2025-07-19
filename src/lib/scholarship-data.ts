@@ -1,6 +1,15 @@
 "use client";
 import axios from "axios";
 import { useEffect, useState } from "react";
+type FormatTypes = {
+  formats: string;
+};
+
+type scholarshipDocumentTypes = {
+  label: string;
+  formats: FormatTypes[];
+};
+
 type Scholarship = {
   scholarshipId: string;
   scholarshipTitle: string;
@@ -8,10 +17,14 @@ type Scholarship = {
   status: string;
   scholarshipDealine: string;
   totalApplicants: number;
-  totalApproved: string;
+  totalApproved: number;
   scholarshipLogo: string;
   scholarshipCover: string;
+  scholarshipDescription: string;
+  scholarshipAmount: number;
+  scholarshipDocuments: scholarshipDocumentTypes[];
 };
+
 export default function useScholarshipData() {
   const [data, setData] = useState<Scholarship[]>([]);
   const [loading, setLoading] = useState(true);

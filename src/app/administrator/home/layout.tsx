@@ -12,8 +12,10 @@ export default function Home({ children, modal }: DashboardLayoutProps) {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        {children}
-        {modal}
+        <div className="relative">
+          {children}
+          {modal}
+        </div>
       </SidebarInset>
       <Toaster
         richColors
