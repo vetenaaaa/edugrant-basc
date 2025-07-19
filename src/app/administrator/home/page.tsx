@@ -1,14 +1,6 @@
 "use client";
 import ChartPieDonutText from "./dashboard/pie";
 import { ChartBarMultiple } from "./dashboard/bar";
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Separator } from "@/components/ui/separator";
-import morty from "@/assets/image.png";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import {
   Card,
   CardContent,
