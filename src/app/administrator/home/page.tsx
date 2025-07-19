@@ -82,7 +82,6 @@ export default function AdminDashboard() {
     const interval = setInterval(updateDate, 1000);
     return () => clearInterval(interval);
   }, []);
-  const router = useRouter();
 
   return (
     <div className="pl-1 pr-2 your-class h-screen">
