@@ -26,7 +26,7 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function ChartBarMultiple() {
-  const { data } = useScholarshipData();
+   const { data } = useScholarshipData({ currentPage: 1, rowsPerPage: 100, sort: "" });
   return (
     <Card className="bg-background/40 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:scale-[1.01]">
       <CardHeader>

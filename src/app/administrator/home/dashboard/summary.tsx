@@ -3,7 +3,11 @@ import { Activity, CheckCheck, CloudUpload, TrendingUp } from "lucide-react";
 import { Ring } from "ldrs/react";
 import "ldrs/react/Ring.css";
 export default function ApplicationSummary() {
-  const { data, loading } = useScholarshipData();
+  const { data, loading } = useScholarshipData({
+    currentPage: 1,
+    rowsPerPage: 100,
+    sort: "",
+  });
   const filterApproved = data.filter((meow) => meow.totalApproved);
   const filterApplication = data.filter((meow) => meow.totalApplicants);
 
@@ -117,3 +121,5 @@ export default function ApplicationSummary() {
     </div>
   );
 }
+
+

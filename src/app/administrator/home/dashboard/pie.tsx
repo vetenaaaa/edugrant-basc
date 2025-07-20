@@ -43,7 +43,7 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export default function ChartPieDonutText() {
-  const { data } = useScholarshipData();
+  const { data } = useScholarshipData({ currentPage: 1, rowsPerPage: 100, sort: "" });
   const filterApproved = data.filter((meow) => meow.totalApproved);
   console.log(filterApproved);
   return (

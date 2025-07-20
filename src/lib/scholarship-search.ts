@@ -1,35 +1,47 @@
 "use client";
 import axios from "axios";
 import { useEffect, useState } from "react";
-type Scholarship = {
+
+type SearchTypes = {
   scholarshipId: string;
   scholarshipTitle: string;
   scholarshipProvider: string;
   status: string;
   scholarshipDealine: string;
 };
-export default function useScholarshipSearch() {
-  const [searchData, setData] = useState<Scholarship[]>([]);
-  const [searchLoading, setLoading] = useState(true);
-  useEffect(function () {
-    async function fetchScholarships() {
+
+export default function useScholarshipSearch({ query }: { query: string }) {
+  const [searchData, setSearchData] = useState<SearchTypes[]>([]);
+  const [searchLoading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const trimmedQuery = query.trim();
+    if (!trimmedQuery) {
+      setSearchData([]);
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    const delayDebounce = setTimeout(async () => {
       try {
         const res = await axios.post(
-          `https://edugrant-express-server-production.up.railway.app/administrator/searchScholarships`,
-          {},
+          `https://edugrant-express-server-production.up.railway.app/administrator/searchScholarship`,
+          { search: trimmedQuery },
           { withCredentials: true }
         );
+
         if (res.status === 200) {
-          setData(res.data);
+          setSearchData(res.data.dataSearch);
         }
       } catch (error) {
         console.error(error);
       } finally {
         setLoading(false);
       }
-    }
+    }, 500); // Adjust delay time as needed
 
-    fetchScholarships();
-  }, []);
+    return () => clearTimeout(delayDebounce);
+  }, [query]);
+
   return { searchData, searchLoading };
 }

@@ -2,7 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useForm, useFieldArray } from "react-hook-form";
-import { MultiSelect } from "@/components/ui/multi-select";
+import MultipleSelector, { Option } from "@/components/ui/multi-select";
 import { toast } from "sonner";
 import {
   Drawer,
@@ -28,7 +28,7 @@ import { useState } from "react";
 import axios from "axios";
 import DynamicHeaderAdmin from "../dynamic-header";
 
-const options = [
+const options: Option[] = [
   { label: "PDF", value: "pdf" },
   { label: "Word Document", value: "docx" },
   { label: "JPEG Image", value: "jpg" },
@@ -40,7 +40,7 @@ const documentsSchema = z.object({
   formats: z.array(z.string()).min(1, "Required"),
 });
 
- const createScholarshipSchema = z.object({
+const createScholarshipSchema = z.object({
   scholarshipTitle: z.string().min(3, "Required"),
   providerName: z.string().min(3, "Required"),
   scholarshipDescription: z.string().min(3, "Required"),
@@ -415,11 +415,27 @@ export default function Create() {
                             <FormMessage />
                           </FormLabel>
                           <FormControl>
-                            <MultiSelect
-                              options={options}
-                              selected={field.value || []}
-                              onChange={field.onChange}
+                            <MultipleSelector
+                              commandProps={{
+                                label: "Select document formats",
+                              }}
+                              value={options.filter((option) =>
+                                field.value?.includes(option.value)
+                              )}
+                              defaultOptions={options}
                               placeholder="Choose formats"
+                              hideClearAllButton
+                              hidePlaceholderWhenSelected
+                              emptyIndicator={
+                                <p className="text-center text-sm">
+                                  No results found
+                                </p>
+                              }
+                              onChange={(selected) => {
+                                field.onChange(
+                                  selected.map((option) => option.value)
+                                );
+                              }}
                             />
                           </FormControl>
                         </FormItem>

@@ -10,7 +10,7 @@ type scholarshipDocumentTypes = {
   formats: FormatTypes[];
 };
 
-type Scholarship = {
+export type ScholarshipTypes = {
   scholarshipId: string;
   scholarshipTitle: string;
   scholarshipProvider: string;
@@ -25,28 +25,44 @@ type Scholarship = {
   scholarshipDocuments: scholarshipDocumentTypes[];
 };
 
-export default function useScholarshipData() {
-  const [data, setData] = useState<Scholarship[]>([]);
+export default function useScholarshipData({
+  currentPage,
+  rowsPerPage,
+  sort,
+}: {
+  currentPage: number;
+  rowsPerPage: number;
+  sort: string;
+}) {
+  const [data, setData] = useState<ScholarshipTypes[]>([]);
   const [loading, setLoading] = useState(true);
-  useEffect(function () {
-    async function fetchScholarships() {
-      try {
-        const res = await axios.post(
-          `https://edugrant-express-server-production.up.railway.app/administrator/getScholarships`,
-          {},
-          { withCredentials: true }
-        );
-        if (res.status === 200) {
-          setData(res.data);
+  const [totalPages, setTotalPages] = useState(1);
+  useEffect(
+    function () {
+      async function fetchScholarships() {
+        setLoading(true);
+        try {
+          const res = await axios.post(
+            `https://edugrant-express-server-production.up.railway.app/administrator/getScholarships`,
+            { page: currentPage, dataPerPage: rowsPerPage, sortBy: sort },
+            { withCredentials: true }
+          );
+          if (res.status === 200) {
+            console.log("API response:", res.data);
+            setData(res.data.getScholarshipsData);
+            setTotalPages(res.data.totalPages);
+          }
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setLoading(false);
         }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
       }
-    }
 
-    fetchScholarships();
-  }, []);
-  return { data, loading };
+      fetchScholarships();
+    },
+    [currentPage, rowsPerPage, sort]
+  );
+
+  return { data, loading, totalPages };
 }
