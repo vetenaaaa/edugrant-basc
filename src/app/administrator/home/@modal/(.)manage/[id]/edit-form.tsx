@@ -146,7 +146,7 @@ export default function EditScholarship({ data }: EditScholarshipProps) {
     }
   }, [data, form]);
 
-  const onSubmit = async (data: FormData) => {};
+  // const onSubmit = async (data: FormData) => {};
 
   return (
     <div className="p-4">
