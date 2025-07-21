@@ -8,6 +8,7 @@ type SearchTypes = {
   scholarshipProvider: string;
   status: string;
   scholarshipDealine: string;
+  totalApproved: string;
 };
 
 export default function useScholarshipSearch({ query }: { query: string }) {

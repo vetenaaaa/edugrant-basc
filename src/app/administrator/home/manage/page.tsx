@@ -20,7 +20,8 @@ import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import useScholarshipData from "@/lib/scholarship-data";
 import DynamicHeaderAdmin from "../dynamic-header";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   ChevronDown,
   ChevronFirstIcon,
@@ -29,6 +30,7 @@ import {
   ChevronRightIcon,
   ChevronsUpDown,
   ChevronUp,
+  Grid2x2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -43,9 +45,11 @@ const headers = [
   { label: "Provider" },
   { label: "Status" },
   { label: "Deadline" },
+  { label: "Approved" },
 ];
 import { useScholarshipStore } from "@/store/scholarshipStore";
 export default function Manage() {
+  const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const { refreshTrigger, deletedScholarshipIds } = useScholarshipStore();
@@ -80,19 +84,24 @@ export default function Manage() {
           modify or remove entries.
         </p>
         <div className="container mx-auto py-10 space-y-3">
-          <div>
+          <div className="flex gap-3">
             <Input
               placeholder="Search Scholarship Title..."
               onChange={(e) => setQuery(e.target.value)}
             />
+            <Button variant="outline">
+              <Grid2x2 />
+            </Button>
+            <Button variant="outline">Export CSV</Button>
           </div>
           <Table>
             {/* <TableCaption>A list of active scholarships.</TableCaption> */}
             <TableHeader>
               <TableRow>
+                <TableHead>ID</TableHead>
                 <TableHead>
                   <div
-                    className="flex items-center  gap-3"
+                    className="flex items-center  gap-2 cursor-pointer"
                     onClick={() => {
                       if (sort === "") {
                         setSort("asc");
@@ -104,14 +113,25 @@ export default function Manage() {
                       setCurrentPage(1); // Reset to first page when sorting changes
                     }}
                   >
-                    Scholarship Title{" "}
-                    {sort === "" && <ChevronsUpDown size={20} />}
-                    {sort === "asc" && <ChevronDown size={20} />}
-                    {sort === "desc" && <ChevronUp size={20} />}
+                    Title{" "}
+                    {sort === "" && (
+                      <ChevronsUpDown size={18} className="text-white/50" />
+                    )}
+                    {sort === "asc" && (
+                      <ChevronDown size={18} className="text-white/50" />
+                    )}
+                    {sort === "desc" && (
+                      <ChevronUp size={18} className="text-white/50" />
+                    )}
                   </div>
                 </TableHead>
                 {headers.map((header) => (
-                  <TableHead key={header.label}>{header.label}</TableHead>
+                  <TableHead
+                    className={header.label === "Approved" ? "text-center" : ""}
+                    key={header.label}
+                  >
+                    {header.label}
+                  </TableHead>
                 ))}
               </TableRow>
             </TableHeader>
@@ -119,7 +139,7 @@ export default function Manage() {
               {loading ? (
                 <TableRow>
                   <TableCell
-                    colSpan={headers.length + 1}
+                    colSpan={headers.length + 2}
                     className="text-center"
                   >
                     <Ring size={40} speed={2} bgOpacity={0} color="yellow" />
@@ -128,14 +148,23 @@ export default function Manage() {
               ) : !query ? (
                 filteredData.length > 0 ? (
                   filteredData.map((row, index) => (
-                    <TableRow key={row.scholarshipId}>
-                      <TableCell className="font-medium underline">
-                        <Link
+                    <TableRow
+                      key={row.scholarshipId}
+                      onClick={() =>
+                        router.push(
+                          `/administrator/home/manage/${row.scholarshipId}`
+                        )
+                      }
+                      className="cursor-pointer"
+                    >
+                      <TableCell className="">{row.scholarshipId}</TableCell>
+                      <TableCell className="font-medium">
+                        {/* <Link
                           href={`/administrator/home/manage/${row.scholarshipId}`}
                           prefetch={true}
-                        >
-                          {index + 1}. {row.scholarshipTitle}
-                        </Link>
+                        > */}
+                        {row.scholarshipTitle}
+                        {/* </Link> */}
                       </TableCell>
                       <TableCell className="">
                         {row.scholarshipProvider}
@@ -146,15 +175,17 @@ export default function Manage() {
                         </Badge>
                       </TableCell>
                       <TableCell className="">
-                        {" "}
                         {new Date(row.scholarshipDealine).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {row.totalApproved}
                       </TableCell>
                     </TableRow>
                   ))
                 ) : (
                   <TableRow>
                     <TableCell
-                      colSpan={headers.length + 1}
+                      colSpan={headers.length + 2}
                       className="text-center"
                     >
                       No result found.
@@ -164,7 +195,7 @@ export default function Manage() {
               ) : searchLoading ? (
                 <TableRow>
                   <TableCell
-                    colSpan={headers.length + 1}
+                    colSpan={headers.length + 2}
                     className="text-center"
                   >
                     <Ring size={40} speed={2} bgOpacity={0} color="yellow" />
@@ -172,14 +203,22 @@ export default function Manage() {
                 </TableRow>
               ) : filteredSearchData.length > 0 ? (
                 filteredSearchData.map((row, index) => (
-                  <TableRow key={row.scholarshipId}>
-                    <TableCell className="font-medium underline">
-                      <Link
+                  <TableRow
+                    key={row.scholarshipId}
+                    onClick={() =>
+                      router.push(
+                        `/administrator/home/manage/${row.scholarshipId}`
+                      )
+                    }
+                  >
+                    <TableCell className="">{row.scholarshipId}</TableCell>
+                    <TableCell className="font-medium">
+                      {/* <Link
                         href={`/administrator/home/manage/${row.scholarshipId}`}
                         prefetch={true}
-                      >
-                        {index + 1}. {row.scholarshipTitle}
-                      </Link>
+                      > */}
+                      {row.scholarshipTitle}
+                      {/* </Link> */}
                     </TableCell>
                     <TableCell className="">
                       {row.scholarshipProvider}
@@ -193,12 +232,15 @@ export default function Manage() {
                       {" "}
                       {new Date(row.scholarshipDealine).toLocaleDateString()}
                     </TableCell>
+                    <TableCell className="text-center">
+                      {row.totalApproved}
+                    </TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
                   <TableCell
-                    colSpan={headers.length + 1}
+                    colSpan={headers.length + 2}
                     className="text-center"
                   >
                     No result found.
