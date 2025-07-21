@@ -16,11 +16,10 @@ import {
 } from "@/components/ui/pagination";
 import { Badge } from "@/components/ui/badge";
 import useScholarshipSearch from "@/lib/scholarship-search";
-import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import useScholarshipData from "@/lib/scholarship-data";
 import DynamicHeaderAdmin from "../dynamic-header";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   ChevronDown,
@@ -147,7 +146,7 @@ export default function Manage() {
                 </TableRow>
               ) : !query ? (
                 filteredData.length > 0 ? (
-                  filteredData.map((row, index) => (
+                  filteredData.map((row) => (
                     <TableRow
                       key={row.scholarshipId}
                       onClick={() =>
@@ -202,7 +201,7 @@ export default function Manage() {
                   </TableCell>
                 </TableRow>
               ) : filteredSearchData.length > 0 ? (
-                filteredSearchData.map((row, index) => (
+                filteredSearchData.map((row) => (
                   <TableRow
                     key={row.scholarshipId}
                     onClick={() =>

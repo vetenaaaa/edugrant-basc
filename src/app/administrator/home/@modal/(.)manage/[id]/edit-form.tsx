@@ -92,7 +92,6 @@ interface EditScholarshipProps {
 type FormData = z.infer<typeof createScholarshipSchema>;
 
 export default function EditScholarship({ data }: EditScholarshipProps) {
-  const [isEdit, setIsEdit] = useState(true);
   const form = useForm<FormData>({
     resolver: zodResolver(createScholarshipSchema),
     defaultValues: {
@@ -153,7 +152,7 @@ export default function EditScholarship({ data }: EditScholarshipProps) {
                       Scholarship Title <FormMessage />
                     </FormLabel>
                     <FormControl>
-                      <Input disabled={isEdit} {...field} />
+                      <Input {...field} />
                     </FormControl>
                   </FormItem>
                 )}
@@ -169,7 +168,7 @@ export default function EditScholarship({ data }: EditScholarshipProps) {
                       Provider Name <FormMessage />
                     </FormLabel>
                     <FormControl>
-                      <Input disabled={isEdit} {...field} />
+                      <Input {...field} />
                     </FormControl>
                   </FormItem>
                 )}
@@ -185,7 +184,6 @@ export default function EditScholarship({ data }: EditScholarshipProps) {
                   </FormLabel>
                   <FormControl>
                     <Input
-                      disabled={isEdit}
                       type="file"
                       accept="image/*"
                       name={name}
@@ -207,7 +205,6 @@ export default function EditScholarship({ data }: EditScholarshipProps) {
                   </FormLabel>
                   <FormControl>
                     <Input
-                      disabled={isEdit}
                       type="file"
                       accept="image/*"
                       name={name}
@@ -230,7 +227,7 @@ export default function EditScholarship({ data }: EditScholarshipProps) {
                       Scholarship Description <FormMessage />
                     </FormLabel>
                     <FormControl>
-                      <Textarea disabled={isEdit} {...field} />
+                      <Textarea {...field} />
                     </FormControl>
                   </FormItem>
                 )}
@@ -247,7 +244,7 @@ export default function EditScholarship({ data }: EditScholarshipProps) {
                       Application Deadline <FormMessage />
                     </FormLabel>
                     <FormControl>
-                      <Input disabled={isEdit} type="date" {...field} />
+                      <Input type="date" {...field} />
                     </FormControl>
                   </FormItem>
                 )}
@@ -263,7 +260,7 @@ export default function EditScholarship({ data }: EditScholarshipProps) {
                       Scholarship Amount <FormMessage />
                     </FormLabel>
                     <FormControl>
-                      <Input disabled={isEdit} type="number" {...field} />
+                      <Input type="number" {...field} />
                     </FormControl>
                   </FormItem>
                 )}
@@ -279,7 +276,7 @@ export default function EditScholarship({ data }: EditScholarshipProps) {
                       Scholarship Limit (0 = unlimited) <FormMessage />
                     </FormLabel>
                     <FormControl>
-                      <Input disabled={isEdit} type="number" {...field} />
+                      <Input type="number" {...field} />
                     </FormControl>
                   </FormItem>
                 )}
@@ -293,7 +290,6 @@ export default function EditScholarship({ data }: EditScholarshipProps) {
             <Button
               type="button"
               size="sm"
-              disabled={isEdit}
               onClick={() => append({ label: "", formats: [] })}
               variant="outline"
             >
@@ -319,7 +315,7 @@ export default function EditScholarship({ data }: EditScholarshipProps) {
                           Document Label {index + 1} <FormMessage />
                         </FormLabel>
                         <FormControl>
-                          <Input disabled={isEdit} {...field} />
+                          <Input {...field} />
                         </FormControl>
                       </FormItem>
                     )}
@@ -339,7 +335,6 @@ export default function EditScholarship({ data }: EditScholarshipProps) {
                         </FormLabel>
                         <FormControl>
                           <MultipleSelector
-                            disabled={isEdit}
                             commandProps={{
                               label: "Select document formats",
                             }}
@@ -373,7 +368,7 @@ export default function EditScholarship({ data }: EditScholarshipProps) {
                   <Button
                     type="button"
                     variant="destructive"
-                    disabled={fields.length === 1 || isEdit}
+                    disabled={fields.length === 1 }
                     onClick={() => remove(index)}
                   >
                     <X />
