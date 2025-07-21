@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Plus, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { ScholarshipTypes } from "@/lib/scholarship-data";
 
 const options: Option[] = [
