@@ -1,50 +1,113 @@
 "use client";
 import {
-
   CheckCheck,
-
+  Edit,
+  LoaderCircleIcon,
   PhilippinePeso,
-
+  Trash2,
   Users2,
+  X,
 } from "lucide-react";
-
-
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
 import {
   Drawer,
   DrawerContent,
   DrawerDescription,
-
+  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
-
-
+import { Ring } from "ldrs/react";
+import "ldrs/react/Ring.css";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import useScholarshipData from "@/lib/scholarship-data";
-
 import { useState } from "react";
-
-import EditScholarship from "./edit-form";
+import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { useScholarshipStore } from "@/store/scholarshipStore";
+import { Skeleton } from "@/components/ui/skeleton";
+import axios from "axios";
+import { toast } from "sonner";
 
 export default function InterceptManageScholarship() {
-  const { data } = useScholarshipData({
+  const { triggerRefresh, markScholarshipDeleted } = useScholarshipStore();
+  const { data, loading } = useScholarshipData({
     currentPage: 1,
     rowsPerPage: 100,
     sort: "",
   });
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [openAlert, setOpenAlert] = useState(false);
   const router = useRouter();
   const params = useParams();
   const [open, setOpen] = useState(true);
-  const id = params.id;
+  const id = params.id as string;
   const selected = data.find((meow) => meow.scholarshipId == id);
-  console.log(selected);
+  const title = selected?.scholarshipTitle;
+  const deadline = selected?.scholarshipDealine;
+  const readable = deadline
+    ? new Date(deadline).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : "No deadline set";
 
+  const provider = selected?.scholarshipProvider;
+  const description = selected?.scholarshipDescription;
+  const scholarshipId = selected?.scholarshipId;
+  const scholarshipCover = selected?.scholarshipCover;
+  const scholarshipLogo = selected?.scholarshipLogo;
   const HandleCloseDrawer = (value: boolean) => {
     setOpen(value);
     if (!value) {
+      router.back();
+    }
+  };
+
+  const onSubmit = async () => {
+    try {
+      setDeleteLoading(true);
+
+      const res = await axios.post(
+        `https://edugrant-express-server-production.up.railway.app/administrator/deleteScholarship`,
+        {
+          scholarshipId: scholarshipId,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (res.status === 200) {
+        console.log("Scholarship deleted successfully!");
+        toast("Scholarship has been deleted", {
+          description:
+            "The scholarship opportunity has been successfully deleted to the system.",
+        });
+        if (scholarshipId) {
+          markScholarshipDeleted(scholarshipId);
+          triggerRefresh();
+        }
+        setDeleteLoading(false);
+        setOpenAlert(false);
+        setOpen(false);
+        router.back();
+      }
+    } catch (error) {
+      console.error(error);
+      setDeleteLoading(false);
+      setOpenAlert(false);
+      setOpen(false);
       router.back();
     }
   };
@@ -60,142 +123,104 @@ export default function InterceptManageScholarship() {
           <DrawerTitle>Are you absolutely sure?</DrawerTitle>
           <DrawerDescription>This action cannot be undone.</DrawerDescription>
         </DrawerHeader>
-        <div className=" overflow-auto pt-3 h-full">
-          <Tabs defaultValue="tab-1">
-            <TabsList className="before:bg-border relative h-auto w-full gap-0.5 bg-transparent p-0 before:absolute before:inset-x-0 before:bottom-0 before:h-px">
-              <TabsTrigger
-                value="tab-1"
-                className="bg-muted overflow-hidden rounded-b-none border-x border-t py-2 data-[state=active]:z-10 data-[state=active]:shadow-none"
-              >
-                Overview
-              </TabsTrigger>
-              <TabsTrigger
-                value="tab-2"
-                className="bg-muted overflow-hidden rounded-b-none border-x border-t py-2 data-[state=active]:z-10 data-[state=active]:shadow-none"
-              >
-                Edit / Delete
-              </TabsTrigger>
-              <TabsTrigger
-                value="tab-3"
-                className="bg-muted overflow-hidden rounded-b-none border-x border-t py-2 data-[state=active]:z-10 data-[state=active]:shadow-none"
-              >
-                Report
-              </TabsTrigger>
-            </TabsList>
-            <TabsContent value="tab-1">
-              <div className="relative h-48 md:h-64 ">
-                <img
-                  src={selected?.scholarshipCover}
-                  alt="Scholarship Cover"
-                  className="w-full h-full object-cover mask-gradient"
-                />
-                <div className="absolute flex items-end gap-3 -bottom-10 left-4 right-4">
-                  <div className="size-35 rounded-full overflow-hidden border-2 border-white">
-                    <img
-                      src={selected?.scholarshipLogo}
-                      alt=""
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div>
-                    <h1 className="text-2xl md:text-3xl font-bold text-white mb-1">
-                      {selected?.scholarshipTitle}
-                    </h1>
-                    <p className="text-white/90 flex items-center gap-1">
-                      by {selected?.scholarshipProvider}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="p-4 mt-16 space-y-10">
-                <div className="grid grid-cols-3 gap-3">
-                  <div className="border p-5 rounded-sm flex items-end">
-                    <div className="flex-1 space-y-2">
-                      <Users2 />
-                      <h1 className="text-sm">Total Application</h1>
-                    </div>
-                    <p className="text-4xl font-semibold">0</p>
-                  </div>
-                  <div className="border p-5 rounded-sm flex items-end">
-                    <div className="flex-1 space-y-2">
-                      <CheckCheck />
-                      <h1 className="text-sm">Total Approved</h1>
-                    </div>
-                    <p className="text-4xl font-semibold">0</p>
-                  </div>{" "}
-                  <div className="border p-5 rounded-sm flex items-end">
-                    <div className="flex-1 space-y-2">
-                      <PhilippinePeso />
-                      <h1 className="text-sm">Amount</h1>
-                    </div>
-                    <p className="text-4xl font-semibold">3000</p>
-                  </div>
-                </div>
-                <div className="space-y-3">
-                  <h1 className="pl-3  border-l-2 border-amber-400">Details</h1>
-                  <p>{selected?.scholarshipDescription}</p>
-                </div>
+        <div className=" overflow-auto h-full no-scrollbar">
+          <div className="relative h-48 md:h-64 flex justify-center items-center ">
+            {loading ? (
+              <Skeleton className="h-full w-full" />
+            ) : (
+              <img
+                src={scholarshipCover}
+                alt="Scholarship Cover"
+                className="w-full h-full object-cover mask-gradient"
+              />
+            )}
 
-                <div className="space-y-3">
-                  <h1 className="font-semibold pl-3  border-l-2 border-amber-400">
-                    Required Documents ({selected?.scholarshipDocuments.length})
-                  </h1>
-                  {selected?.scholarshipDocuments.map((docs) => (
-                    <div
-                      key={docs.label}
-                      className="flex border justify-between items-center p-4 gap-5 rounded-sm"
-                    >
-                      <h1>{docs.label}</h1>
-
-                      <p>{docs.formats.map((format) => format).join(", ")}</p>
-                    </div>
-                  ))}
-                </div>
+            <div className="absolute flex items-end gap-3 -bottom-10 left-4">
+              <div className="size-35 rounded-full overflow-hidden border-2 border-white">
+                {loading ? (
+                  <Skeleton className="h-full w-full" />
+                ) : (
+                  <img
+                    src={scholarshipLogo}
+                    alt=""
+                    className="w-full h-full object-cover"
+                  />
+                )}
               </div>
-            </TabsContent>
-            <TabsContent value="tab-2">
-             <EditScholarship data={selected}/>
-            </TabsContent>
-            <TabsContent value="tab-3">
-              <p className="text-muted-foreground p-4 text-center text-xs">
-                Content for Tab 3
-              </p>
-            </TabsContent>
-          </Tabs>
+              <div>
+                <h1 className="text-2xl md:text-3xl font-bold text-white mb-1">
+                  {title}
+                </h1>
+                <p className="text-white/90 flex items-center gap-1">
+                  by {provider}
+                </p>
+              </div>
+            </div>
+
+            <div className="absolute flex items-end gap-3 -bottom-10 right-4">
+              Until {readable}
+            </div>
+          </div>
+          <div className="p-4 mt-16 space-y-10">
+            <div className="grid grid-cols-3 gap-3">
+              <div className="border p-3 rounded-md flex items-end bg-card">
+                <div className="flex-1 space-y-2">
+                  <Users2 className="border p-2 rounded-sm h-10 w-10 bg-background text-gray-300" />
+                  <h1 className="text-sm text-gray-300">Total Application</h1>
+                </div>
+                <p className="text-4xl font-semibold text-blue-700">0</p>
+              </div>
+              <div className="border p-3 rounded-md flex items-end bg-card">
+                <div className="flex-1 space-y-2">
+                  <CheckCheck className="border p-2 rounded-sm h-10 w-10 bg-background text-gray-300" />
+                  <h1 className="text-sm text-gray-300">Total Approved</h1>
+                </div>
+                <p className="text-4xl font-semibold text-green-700">0</p>
+              </div>{" "}
+              <div className="border p-3 rounded-md flex items-end bg-card">
+                <div className="flex-1 space-y-2">
+                  <PhilippinePeso className="border p-2 rounded-sm h-10 w-10 bg-background text-gray-300" />
+                  <h1 className="text-sm text-gray-300">Amount</h1>
+                </div>
+                <p className="text-4xl font-semibold text-amber-500">3000</p>
+              </div>
+            </div>
+            <div className="space-y-3">
+              <h1 className="pl-3  border-l-2 border-amber-400">Details</h1>
+              <p>{description}</p>
+            </div>
+
+            <div className="space-y-3">
+              <h1 className="font-semibold pl-3  border-l-2 border-amber-400">
+                Required Documents ({selected?.scholarshipDocuments.length})
+              </h1>
+              {selected?.scholarshipDocuments.map((docs) => (
+                <div
+                  key={docs.label}
+                  className="flex border justify-between items-center p-4 gap-5 rounded-sm"
+                >
+                  <h1>{docs.label}</h1>
+
+                  <p>{docs.formats.map((format) => format).join(", ")}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-
-     
-      </DrawerContent>
-    </Drawer>
-  );
-}
-
-
-   {
-     /* <DrawerFooter>
-          <div className="flex gap-4">
-            <Button className="flex-1" variant="secondary">
+        <DrawerFooter>
+          <div className="flex gap-3">
+            <Button className="flex-1 bg-blue-700 text-white hover:bg-blue-500">
               <Edit /> Edit
             </Button>
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button className="flex-1" variant="destructive">
-                  <Trash2 /> Delete
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This action cannot be undone. This will permanently delete.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction>Continue</AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+            {scholarshipId && (
+              <Button
+                className="flex-1"
+                variant="destructive"
+                onClick={() => setOpenAlert(true)}
+              >
+                <Trash2 /> Delete
+              </Button>
+            )}
             <Button
               className="flex-1"
               variant="outline"
@@ -204,5 +229,35 @@ export default function InterceptManageScholarship() {
               <X /> Close
             </Button>
           </div>
-        </DrawerFooter> */
-   }
+
+          <AlertDialog open={openAlert} onOpenChange={setOpenAlert}>
+            <AlertDialogTrigger asChild></AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently delete.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel disabled={deleteLoading}>
+                  Cancel
+                </AlertDialogCancel>
+                <Button onClick={onSubmit} disabled={deleteLoading}>
+                  {deleteLoading && (
+                    <LoaderCircleIcon
+                      className="-ms-1 animate-spin"
+                      size={16}
+                      aria-hidden="true"
+                    />
+                  )}{" "}
+                  Continue
+                </Button>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
+  );
+}

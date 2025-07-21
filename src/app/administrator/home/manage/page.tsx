@@ -44,21 +44,31 @@ const headers = [
   { label: "Status" },
   { label: "Deadline" },
 ];
-
+import { useScholarshipStore } from "@/store/scholarshipStore";
 export default function Manage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const { refreshTrigger, deletedScholarshipIds } = useScholarshipStore();
   const [sort, setSort] = useState<"asc" | "desc" | "">("");
   const { data, loading, totalPages } = useScholarshipData({
     currentPage,
     rowsPerPage,
     sort,
+    refreshKey: refreshTrigger,
   });
 
   const [query, setQuery] = useState<string>("");
   console.log(query);
   const { searchData, searchLoading } = useScholarshipSearch({ query });
-  console.log(searchData.map((meow) => meow.scholarshipTitle));
+
+  const filteredData = data.filter(
+    (scholarship) => !deletedScholarshipIds.has(scholarship.scholarshipId)
+  );
+
+  const filteredSearchData = searchData.filter(
+    (scholarship) => !deletedScholarshipIds.has(scholarship.scholarshipId)
+  );
+
   return (
     <div className="pl-1 pr-2 your-class  h-screen">
       <DynamicHeaderAdmin first="Scholarship" second="Manage" />
@@ -108,43 +118,60 @@ export default function Manage() {
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={headers.length + 1} className="text-center">
+                  <TableCell
+                    colSpan={headers.length + 1}
+                    className="text-center"
+                  >
                     <Ring size={40} speed={2} bgOpacity={0} color="yellow" />
                   </TableCell>
                 </TableRow>
               ) : !query ? (
-                data.map((row, index) => (
-                  <TableRow key={row.scholarshipId}>
-                    <TableCell className="font-medium underline">
-                      <Link
-                        href={`/administrator/home/manage/${row.scholarshipId}`}
-                        prefetch={true}
-                      >
-                        {index + 1}. {row.scholarshipTitle}
-                      </Link>
-                    </TableCell>
-                    <TableCell className="">
-                      {row.scholarshipProvider}
-                    </TableCell>
-                    <TableCell className="">
-                      <Badge className="bg-green-900 text-gray-300">
-                        Active
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="">
-                      {" "}
-                      {new Date(row.scholarshipDealine).toLocaleDateString()}
+                filteredData.length > 0 ? (
+                  filteredData.map((row, index) => (
+                    <TableRow key={row.scholarshipId}>
+                      <TableCell className="font-medium underline">
+                        <Link
+                          href={`/administrator/home/manage/${row.scholarshipId}`}
+                          prefetch={true}
+                        >
+                          {index + 1}. {row.scholarshipTitle}
+                        </Link>
+                      </TableCell>
+                      <TableCell className="">
+                        {row.scholarshipProvider}
+                      </TableCell>
+                      <TableCell className="">
+                        <Badge className="bg-green-900 text-gray-300">
+                          Active
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="">
+                        {" "}
+                        {new Date(row.scholarshipDealine).toLocaleDateString()}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan={headers.length + 1}
+                      className="text-center"
+                    >
+                      No result found.
                     </TableCell>
                   </TableRow>
-                ))
+                )
               ) : searchLoading ? (
                 <TableRow>
-                  <TableCell colSpan={headers.length + 1} className="text-center">
+                  <TableCell
+                    colSpan={headers.length + 1}
+                    className="text-center"
+                  >
                     <Ring size={40} speed={2} bgOpacity={0} color="yellow" />
                   </TableCell>
                 </TableRow>
-              ) : searchData.length > 0 ? (
-                searchData.map((row, index) => (
+              ) : filteredSearchData.length > 0 ? (
+                filteredSearchData.map((row, index) => (
                   <TableRow key={row.scholarshipId}>
                     <TableCell className="font-medium underline">
                       <Link
@@ -170,14 +197,17 @@ export default function Manage() {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={headers.length + 1} className="text-center">
+                  <TableCell
+                    colSpan={headers.length + 1}
+                    className="text-center"
+                  >
                     No result found.
                   </TableCell>
                 </TableRow>
               )}
             </TableBody>
           </Table>
-          {!query && (
+          {!query && filteredData.length !== 0 && (
             <div className="flex items-center justify-between gap-8">
               {/* Results per page */}
               <div className="flex items-center gap-3">
@@ -190,7 +220,7 @@ export default function Manage() {
                   value={rowsPerPage.toString()}
                 >
                   <SelectTrigger size="sm" className="w-fit whitespace-nowrap">
-                    <SelectValue  placeholder="Select number of results" />
+                    <SelectValue placeholder="Select number of results" />
                   </SelectTrigger>
                   <SelectContent className="[&_*[role=option]]:ps-2 [&_*[role=option]]:pe-8 [&_*[role=option]>span]:start-auto [&_*[role=option]>span]:end-2">
                     {[1, 5, 10, 25, 50].map((pageSize) => (

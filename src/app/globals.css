@@ -35,6 +35,14 @@
   z-index: 50;
   background: linear-gradient(90deg, black, transparent);
 }
+/* Hide scrollbar but keep scroll functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
 .mask-gradient {
   mask-image: linear-gradient(
     to bottom,
