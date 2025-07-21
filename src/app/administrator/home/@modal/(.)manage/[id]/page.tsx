@@ -16,8 +16,6 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
-import { Ring } from "ldrs/react";
-import "ldrs/react/Ring.css";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import useScholarshipData from "@/lib/scholarship-data";
