@@ -1,67 +1,15 @@
 "use client";
-
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import morty from "@/assets/image.png";
 import { Separator } from "@/components/ui/separator";
-import { SidebarTrigger } from "@/components/ui/sidebar";
+
 import { usePathname } from "next/navigation";
 import DynamicHeader from "../dynamic-header";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import {
-  Info,
-  Send,
-  Check,
-  ChevronsUpDown,
-  Search,
-  Clock,
-  FileText,
-  Sun,
-  Moon,
-} from "lucide-react";
-import { useState } from "react";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import Link from "next/link";
 
-const sortOptions = [
-  {
-    value: "deadline",
-    label: "Deadline",
-  },
-  {
-    value: "amount-high",
-    label: "Amount (High to Low)",
-  },
-  {
-    value: "amount-low",
-    label: "Amount (Low to High)",
-  },
-  {
-    value: "name",
-    label: "Name (A-Z)",
-  },
-];
+import { Button } from "@/components/ui/button";
+
+import { Info, Send, Clock } from "lucide-react";
+
+import Link from "next/link";
 
 const scholarships = [
   {
@@ -101,98 +49,30 @@ const scholarships = [
     status: "urgent",
   },
 ];
-
+import useScholarshipUserData from "@/lib/client-scholarship";
 export default function ClientScholarship() {
   const path = usePathname();
   const segmentedPath = path.split("/");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [sortBy, setSortBy] = useState("");
-  const [open, setOpen] = useState(false);
-
+  const { data, loading } = useScholarshipUserData();
   return (
     <div className="bg-background min-h-screen">
       <DynamicHeader first={segmentedPath[2]} second={segmentedPath[3]} />
-      
-      <div className="container mx-auto max-w-6xl px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight">
-            Explore Available Scholarships
-          </h1>
-          <p className="mt-2 text-muted-foreground">
-            Discover scholarship opportunities tailored to your academic goals.
-            Browse, filter, and apply for financial aid that supports your
-            education.
-          </p>
-        </div>
 
-        {/* Search and Sort Section */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-8">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-            <Input
-              placeholder="Search scholarships..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
-            />
-          </div>
-          <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                role="combobox"
-                aria-expanded={open}
-                className="w-full sm:w-[200px] justify-between"
-              >
-                {sortBy
-                  ? sortOptions.find((option) => option.value === sortBy)?.label
-                  : "Sort by..."}
-                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-[200px] p-0">
-              <Command>
-                <CommandInput placeholder="Search sort options..." />
-                <CommandList>
-                  <CommandEmpty>No sort option found.</CommandEmpty>
-                  <CommandGroup>
-                    {sortOptions.map((option) => (
-                      <CommandItem
-                        key={option.value}
-                        value={option.value}
-                        onSelect={(currentValue) => {
-                          setSortBy(
-                            currentValue === sortBy ? "" : currentValue
-                          );
-                          setOpen(false);
-                        }}
-                      >
-                        <Check
-                          className={cn(
-                            "mr-2 h-4 w-4",
-                            sortBy === option.value
-                              ? "opacity-100"
-                              : "opacity-0"
-                          )}
-                        />
-                        {option.label}
-                      </CommandItem>
-                    ))}
-                  </CommandGroup>
-                </CommandList>
-              </Command>
-            </PopoverContent>
-          </Popover>
-        </div>
+      <div className="mx-auto lg:w-3/4 w-[95%] py-10">
+        <h1 className="text-3xl font-semibold">Available Scholarships</h1>
+        <p className="text-sm text-gray-500 mt-1">
+          Discover scholarship opportunities. Browse, filter, and apply for
+          financial aid that supports your education..
+        </p>
 
-        <div className="space-y-6">
+        <div className="space-y-3 py-10 ">
           {scholarships.map((scholarship) => (
             <div
               key={scholarship.id}
               className="rounded-lg border bg-card shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden"
             >
-              <div className="flex flex-col md:flex-row">
-                <div className="md:w-68 w-full h-48 md:h-auto flex-shrink-0 bg-muted">
+              <div className="flex gap-5 p-4">
+                <div className="md:w-68 bg-card rounded-md overflow-hidden border-1 border-black">
                   <img
                     src={morty.src}
                     alt={`${scholarship.name} logo`}
@@ -200,75 +80,64 @@ export default function ClientScholarship() {
                   />
                 </div>
 
-                <div className="flex flex-col justify-between p-6 w-full">
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-start">
-                      <div className="space-y-1">
-                        <h3 className="text-xl font-semibold">
-                          {scholarship.name}
-                        </h3>
-                        <p className="text-sm text-muted-foreground">
-                          by {scholarship.provider}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <div className="flex items-center gap-1 text-sm text-muted-foreground mb-1">
-                          <Clock className="h-4 w-4" />
-                          {scholarship.daysLeft} days left
-                        </div>
-                        <Badge
-                          variant={
-                            scholarship.status === "urgent"
-                              ? "destructive"
-                              : "secondary"
-                          }
-                          className={cn(
-                            "uppercase",
-                            scholarship.status === "active" &&
-                              "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-                          )}
-                        >
-                          {scholarship.status === "urgent"
-                            ? "URGENT"
-                            : "ACTIVE"}
-                        </Badge>
+                <div className="flex-1 flex flex-col justify-between">
+                  <div className="w-full">
+                    <div className="flex justify-between items-center">
+                      <h3 className="text-xl font-semibold">
+                        {scholarship.name}
+                      </h3>
+
+                      <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                        <Clock size={15} />
+                        {scholarship.daysLeft} days left
                       </div>
                     </div>
+                    <p className="text-sm text-muted-foreground">
+                      by {scholarship.provider}
+                    </p>
 
-                    <p className="text-sm text-muted-foreground line-clamp-2">
+                    <p className="text-sm text-muted-foreground line-clamp-2 mt-3">
                       {scholarship.description}
                     </p>
                   </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 pt-4 border-t">
-                    <div>
-                      <span className="text-xs text-muted-foreground uppercase tracking-wide">
+                  <Separator />
+                  <div className="flex items-center gap-3">
+                    <div className="flex-1">
+                      <h1 className="text-xs text-muted-foreground uppercase ">
                         Amount
-                      </span>
-                      <div className="text-lg font-bold text-green-600 mt-1">
-                        ₱{scholarship.amount.toLocaleString()}
+                      </h1>
+                      <div className="text-lg font-bold text-green-600 ">
+                        ₱{scholarship.amount}
                       </div>
                     </div>
-                    <div>
-                      <span className="text-xs text-muted-foreground uppercase tracking-wide">
+                    <div className="flex-1">
+                      <h1 className="text-xs text-muted-foreground uppercase ">
                         Required Documents
-                      </span>
-                      <div className="flex items-center gap-1 mt-1">
-                        <FileText className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm font-medium">
-                          {scholarship.documents}
-                        </span>
+                      </h1>
+                      <div className="text-lg font-bold text-green-600 ">
+                        {scholarship.documents}
                       </div>
                     </div>
-                    <div className="flex gap-2 items-end  md:justify-end">
-                      <Link href={`/home/scholarships/${scholarship.id}/form`}>
-                        <Button size="sm" className="gap-2">
+
+                    <div className="flex gap-2 items-end flex-1">
+                      <Link
+                        href={`/home/scholarships/${scholarship.id}/form`}
+                        className="flex-1"
+                      >
+                        <Button size="sm" className="gap-2 w-full">
                           <Send className="h-4 w-4" />
                           Apply Now
                         </Button>
                       </Link>
-                      <Link href={`/home/scholarships/${scholarship.id}`}>
-                        <Button size="sm" variant="outline" className="gap-2">
+                      <Link
+                        href={`/home/scholarships/${scholarship.id}`}
+                        className="flex-1"
+                      >
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="gap-2 w-full"
+                        >
                           <Info className="h-4 w-4" />
                           More Info
                         </Button>
@@ -279,13 +148,6 @@ export default function ClientScholarship() {
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Load More Button */}
-        <div className="text-center mt-8">
-          <Button variant="outline" size="lg">
-            Load More Scholarships
-          </Button>
         </div>
       </div>
     </div>
