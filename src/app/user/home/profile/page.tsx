@@ -2,13 +2,6 @@
 import React, { useState } from "react";
 import { usePathname } from "next/navigation";
 import {
-  User,
-  Mail,
-  Phone,
-  Calendar,
-  BookOpen,
-  GraduationCap,
-  Users,
   Edit3,
   Eye,
   EyeOff,
