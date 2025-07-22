@@ -392,7 +392,7 @@ export default function Create() {
                 <FormField
                   control={form.control}
                   name="detailsImage"
-                  render={({ field: { onChange, value, ...field } }) => (
+                  render={({ field: { onChange } }) => (
                     <FormItem>
                       <FormLabel className="font-semibold text-lg flex justify-between">
                         Backdrop Image <FormMessage />
@@ -491,11 +491,11 @@ export default function Create() {
                 <FormField
                   control={form.control}
                   name="sponsorImage"
-                  render={({ field: { onChange, value, ...field } }) => (
+                  render={({ field: { onChange } }) => (
                     <FormItem>
                       <FormLabel className="font-semibold text-lg flex justify-between">
                         Logo Image
-                        <FormMessage/>
+                        <FormMessage />
                       </FormLabel>
                       <FormControl>
                         <div className="relative">
@@ -570,7 +570,7 @@ export default function Create() {
                           )}
                         </div>
                       </FormControl>
-                    
+
                       {sponsorErrors.length > 0 && (
                         <div
                           className="text-destructive flex items-center gap-1 text-xs"
@@ -829,7 +829,6 @@ export default function Create() {
             </DrawerFooter>
           </DrawerContent>
         </Drawer>
-        
       </div>
     </div>
   );
