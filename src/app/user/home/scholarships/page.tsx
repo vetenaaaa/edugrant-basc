@@ -54,6 +54,7 @@ export default function ClientScholarship() {
   const path = usePathname();
   const segmentedPath = path.split("/");
   const { data, loading } = useScholarshipUserData();
+  console.log(data, loading);
   return (
     <div className="bg-background min-h-screen">
       <DynamicHeader first={segmentedPath[2]} second={segmentedPath[3]} />
