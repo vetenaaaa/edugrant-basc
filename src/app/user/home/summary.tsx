@@ -3,7 +3,7 @@ import { Activity, CheckCheck, CloudUpload, TrendingUp } from "lucide-react";
 export default function SummaryClient() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-      <div className="space-y-2 bg-background/40 flex flex-col justify-center px-3 py-3 rounded-xl border shadow-sm">
+      <div className="space-y-2 bg-card flex flex-col justify-center px-3 py-2 rounded-lg border shadow-sm">
         <div className="flex justify-between items-start ">
           <span className="border p-2 rounded-md">
             <TrendingUp />
@@ -17,7 +17,7 @@ export default function SummaryClient() {
           <p className="text-3xl font-semibold text-blue-600">2</p>
         </div>
       </div>
-      <div className="space-y-2 bg-background/40 flex flex-col justify-center px-3 py-3 rounded-xl border shadow-sm">
+      <div className="space-y-2 bg-card flex flex-col justify-center px-3 py-2 rounded-lg border shadow-sm">
         <div className="flex justify-between items-start ">
           <span className="border p-2 rounded-md">
             <CheckCheck />
@@ -31,7 +31,7 @@ export default function SummaryClient() {
           <p className="text-3xl font-semibold text-green-600">0</p>
         </div>
       </div>
-      <div className="space-y-2 bg-background/40 flex flex-col justify-center px-3 py-3 rounded-xl border shadow-sm">
+      <div className="space-y-2 bg-card flex flex-col justify-center px-3 py-2 rounded-lg border shadow-sm">
         <div className="flex justify-between items-start ">
           <span className="border p-2 rounded-md">
             <CloudUpload />
@@ -45,7 +45,7 @@ export default function SummaryClient() {
           <p className="text-3xl font-semibold text-yellow-500">0</p>
         </div>
       </div>
-      <div className="space-y-2 bg-background/40 flex flex-col justify-center px-3 py-3 rounded-xl border shadow-sm">
+      <div className="space-y-2 bg-card flex flex-col justify-center px-3 py-2 rounded-lg border shadow-sm">
         <div className="flex justify-between items-start ">
           <span className="border p-2 rounded-md">
             <Activity />

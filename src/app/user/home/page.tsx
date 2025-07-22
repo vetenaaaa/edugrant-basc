@@ -46,11 +46,11 @@ export default function ClientDashboard() {
   const path = usePathname();
   const segmentedPath = path.split("/");
   return (
-    <div className="pl-1 pr-2 your-class min-h-screen">
+    <div className="pl-1 pr-2  min-h-screen">
       <DynamicHeader first={segmentedPath[2]} />
       <div className=" grid grid-cols-3  gap-5 px-5 mt-5">
         <div className="col-span-2 space-y-3">
-          <div className="flex justify-between py-10">
+          <div className="flex justify-between py-8">
             <div className="flex gap-5">
               <img
                 className="h-15 w-15 aspect-square object-cover rounded-full"

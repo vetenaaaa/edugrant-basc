@@ -68,7 +68,7 @@ import { Badge } from "@/components/ui/badge";
 export default function TabsClient() {
   return (
     <Tabs defaultValue="tab-1">
-      <TabsList className="bg-background/40 mb-1 h-auto -space-x-px p-0 shadow-xs rtl:space-x-reverse w-full">
+      <TabsList className="bg-card mb-1 h-auto -space-x-px p-0 shadow-xs rtl:space-x-reverse w-full">
         <TabsTrigger
           value="tab-1"
           className="data-[state=active]:bg-muted dark:data-[state=active]:bg-muted  relative overflow-hidden border py-2 rounded flex-1"
@@ -104,7 +104,7 @@ export default function TabsClient() {
         </TabsTrigger>
       </TabsList>
       <TabsContent value="tab-1">
-        <Card className="bg-background/40 flex-1">
+        <Card className="bg-card flex-1">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Megaphone className="h-5 w-5" />
@@ -137,7 +137,7 @@ export default function TabsClient() {
       </TabsContent>
 
       <TabsContent value="tab-2">
-        <Card className="bg-background/40">
+        <Card className="bg-card">
           <CardHeader>
             <CardTitle>Recent Applications</CardTitle>
             <CardDescription>
@@ -191,7 +191,7 @@ export default function TabsClient() {
       </TabsContent>
 
       <TabsContent value="tab-3">
-        <Card className="bg-background/40">
+        <Card className="bg-card">
           <CardHeader>
             <CardTitle>Track Applications</CardTitle>
             <CardDescription>

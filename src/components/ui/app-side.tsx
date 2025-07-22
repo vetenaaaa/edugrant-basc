@@ -4,8 +4,6 @@ import { usePathname } from "next/navigation";
 import {
   Home,
   FilePlus,
-  BarChart2,
-
   Layers,
   Eye,
   Users,
@@ -50,11 +48,7 @@ const sidebarData = {
           url: "/administrator/home/manage",
           icon: Layers,
         },
-        {
-          title: "Analytics & Reports",
-          url: "/administrator/home/scholarships/analytics&reports",
-          icon: BarChart2,
-        },
+       
       ],
     },
     {
@@ -67,7 +61,7 @@ const sidebarData = {
         // },
         {
           title: "Review Applications",
-          url: "/administrator/home/applications/review",
+          url: "/administrator/home/application/",
           icon: Eye,
         },
         // {
