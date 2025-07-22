@@ -1,19 +1,5 @@
 "use client";
-//
-
-//
-
-// export default function ClientAnnouncement() {
-//   const path = usePathname();
-//   const segmentedPath = path.split("/");
-//   return (
-//     <div className="pl-1 pr-2 your-class min-h-screen">
-//       <DynamicHeader first={segmentedPath[2]} second={segmentedPath[3]} />
-//     </div>
-//   );
-// }
 import React, { useState } from "react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
 import DynamicHeader from "../dynamic-header";
