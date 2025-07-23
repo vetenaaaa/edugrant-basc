@@ -50,10 +50,18 @@ const scholarships = [
   },
 ];
 import useScholarshipUserData from "@/lib/client-scholarship";
+import { useState } from "react";
 export default function ClientScholarship() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [sort, setSort] = useState<"asc" | "desc" | "">("");
   const path = usePathname();
   const segmentedPath = path.split("/");
-  const { data, loading } = useScholarshipUserData();
+  const { data, loading } = useScholarshipUserData({
+    currentPage,
+    rowsPerPage,
+    sort,
+  });
   console.log(data, loading);
   return (
     <div className="bg-background min-h-screen">

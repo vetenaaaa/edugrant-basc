@@ -51,8 +51,9 @@ export default function Manage() {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+   const [sort, setSort] = useState<"asc" | "desc" | "">("");
   const { refreshTrigger, deletedScholarshipIds } = useScholarshipStore();
-  const [sort, setSort] = useState<"asc" | "desc" | "">("");
+ 
   const { data, loading, totalPages } = useScholarshipData({
     currentPage,
     rowsPerPage,
