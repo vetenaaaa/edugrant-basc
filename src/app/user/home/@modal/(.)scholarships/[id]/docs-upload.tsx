@@ -1,18 +1,8 @@
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { ScholarshipTypes } from "@/lib/client-scholarship";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { useForm, useFieldArray } from "react-hook-form";
-const documentsSchema = z.object({});
+
+
 
 type Meow = {
   selected: ScholarshipTypes | undefined;
