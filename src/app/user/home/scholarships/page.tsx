@@ -140,7 +140,7 @@ export default function ClientScholarship() {
                         </Button>
                       </Link>
                       <Link
-                        href={`/home/scholarships/${scholarship.scholarshipId}`}
+                        href={`/user/home/scholarships/${scholarship.scholarshipId}`}
                         className="flex-1"
                       >
                         <Button
