@@ -5,7 +5,7 @@ type FormatTypes = {
   formats: string;
 };
 
-type scholarshipDocumentTypes = {
+export type scholarshipDocumentTypes = {
   label: string;
   formats: FormatTypes[];
 };

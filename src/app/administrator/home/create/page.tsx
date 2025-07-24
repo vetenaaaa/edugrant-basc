@@ -38,10 +38,10 @@ import DynamicHeaderAdmin from "../dynamic-header";
 import { useFileUpload } from "@/lib/use-file-upload";
 
 const options: Option[] = [
-  { label: "PDF", value: "pdf" },
-  { label: "Word Document", value: "docx" },
-  { label: "JPEG Image", value: "jpg" },
-  { label: "PNG Image", value: "png" },
+  { label: "PDF", value: ".pdf" },
+  { label: "Word Document", value: ".docx" },
+  { label: "JPEG Image", value: ".jpg" },
+  { label: "PNG Image", value: ".png" },
 ];
 
 const documentsSchema = z.object({
