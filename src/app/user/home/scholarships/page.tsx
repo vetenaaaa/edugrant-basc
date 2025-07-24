@@ -1,5 +1,5 @@
 "use client";
-import morty from "@/assets/image.png";
+
 import { Separator } from "@/components/ui/separator";
 
 import { usePathname } from "next/navigation";
@@ -11,44 +11,7 @@ import { Info, Send, Clock } from "lucide-react";
 
 import Link from "next/link";
 
-const scholarships = [
-  {
-    id: 1,
-    name: "Academic Excellence Scholarship",
-    description:
-      "Merit-based scholarship for outstanding academic performance and leadership potential.",
-    deadline: "2025-03-15",
-    amount: 15000,
-    provider: "Bulacan Agricultural State College",
-    documents: "3/3",
-    daysLeft: 45,
-    status: "active",
-  },
-  {
-    id: 2,
-    name: "STEM Innovation Grant",
-    description:
-      "For students in Science, Technology, Engineering, or Mathematics pursuing innovative research.",
-    deadline: "2025-04-01",
-    amount: 10000,
-    provider: "Department of Science and Technology",
-    documents: "2/3",
-    daysLeft: 62,
-    status: "active",
-  },
-  {
-    id: 3,
-    name: "Financial Aid for Farmers' Children",
-    description:
-      "Supporting students from agricultural families to pursue higher education.",
-    deadline: "2025-02-20",
-    amount: 8000,
-    provider: "Department of Agriculture",
-    documents: "1/2",
-    daysLeft: 22,
-    status: "urgent",
-  },
-];
+
 import useScholarshipUserData from "@/lib/client-scholarship";
 import { useState } from "react";
 export default function ClientScholarship() {

@@ -21,7 +21,6 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import useScholarshipUserData from "@/lib/client-scholarship";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import UploadDocs from "./docs-upload";
 
@@ -48,7 +47,6 @@ export default function InterceptManageScholarshipClient() {
       })
     : "No deadline available";
   const provider = selected?.scholarshipProvider;
-  const description = selected?.scholarshipDescription;
   const amount = selected?.scholarshipAmount;
   const scholarshipId = selected?.scholarshipId;
   const scholarshipCover = selected?.scholarshipCover;
