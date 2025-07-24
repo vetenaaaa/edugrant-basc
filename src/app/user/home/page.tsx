@@ -46,7 +46,7 @@ export default function ClientDashboard() {
   const path = usePathname();
   const segmentedPath = path.split("/");
   return (
-    <div className="pl-1 pr-2  min-h-screen">
+    <div className="pl-1 pr-2  min-h-screen your-class">
       <DynamicHeader first={segmentedPath[2]} />
       <div className=" grid grid-cols-3  gap-5 px-5 mt-5">
         <div className="col-span-2 space-y-3">
