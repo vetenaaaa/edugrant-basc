@@ -46,7 +46,6 @@ export default function useScholarshipUserData({
           { withCredentials: true }
         );
         if (res.status === 200) {
-          console.log("API response:", res.data);
           setData(res.data.getScholarshipsData);
         }
       } catch (error) {

@@ -14,35 +14,37 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
+import { ScholarshipTypes } from "@/lib/get-scholar-by-id";
 
-// Schema for required documents
-const documentsRequired = [
-  {
-    label: "PNG",
-    format: [".jpg", ".docx", ".png"],
-  },
-  { label: "JPG", format: [".jpg", ".docx", ".png"] },
-];
+export default function UploadDocs({ data }: { data: ScholarshipTypes }) {
+  const formSchema = z.object({
+    documents: z
+      .array(
+        z
+          .instanceof(File, { message: "Please upload a file" })
+          .refine((file) => file.size > 0, "File cannot be empty")
+      )
+      .length(data.scholarshipDocuments.length, {
+        message: `Please upload all ${data.scholarshipDocuments.length} required documents`,
+      }),
+  });
 
-const formSchema = z.object({
-  documents: z
-    .array(z.instanceof(File).optional())
-    .length(documentsRequired.length),
-});
+  type FormSchemaType = z.infer<typeof formSchema>;
+  console.log(data);
 
-type FormSchemaType = z.infer<typeof formSchema>;
-
-export default function UploadDocs() {
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      documents: Array(documentsRequired.length).fill(undefined),
+      documents: [],
     },
   });
 
   const onSubmit = (values: FormSchemaType) => {
     console.log("Uploaded docs:", values.documents);
   };
+
+  // Helper function to get uploaded files count
+  const uploadedCount = form.watch("documents").filter(Boolean).length;
 
   return (
     <Form {...form}>
@@ -62,11 +64,11 @@ export default function UploadDocs() {
           <div className="flex justify-between items-center">
             <h1>Required Documents</h1>
             <h1>
-              {documentsRequired.length}/{documentsRequired.length}
+              {uploadedCount}/{data.scholarshipDocuments.length}
             </h1>
           </div>
 
-          {documentsRequired.map((doc, index) => (
+          {data.scholarshipDocuments.map((doc, index) => (
             <FormField
               key={doc.label}
               control={form.control}
@@ -78,16 +80,22 @@ export default function UploadDocs() {
                       {index + 1}. {doc.label}
                     </FormLabel>
                     <p className="text-sm text-muted-foreground">
-                      {doc.format}
+                      {doc.formats.join(", ")}
                     </p>
                   </div>
                   <FormControl>
                     <Input
                       type="file"
-                      accept={doc.format.join(",")}
+                      accept={doc.formats.join(",")}
                       onChange={(e) => {
                         const file = e.target.files?.[0];
-                        form.setValue(`documents.${index}`, file);
+                        if (file) {
+                          // Update the documents array at the specific index
+                          const currentDocs = form.getValues("documents") || [];
+                          currentDocs[index] = file;
+                          form.setValue("documents", currentDocs);
+                          form.trigger(`documents.${index}`);
+                        }
                       }}
                     />
                   </FormControl>
@@ -97,7 +105,12 @@ export default function UploadDocs() {
             />
           ))}
         </div>
-        <Button type="submit">Submit</Button>
+        <Button
+          type="submit"
+          disabled={uploadedCount !== data.scholarshipDocuments.length}
+        >
+          Submit Application
+        </Button>
       </form>
     </Form>
   );

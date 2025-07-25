@@ -1,13 +1,10 @@
 "use client";
 import axios from "axios";
 import { useEffect, useState } from "react";
-type FormatTypes = {
-  formats: string;
-};
 
 export type scholarshipDocumentTypes = {
   label: string;
-  formats: FormatTypes[];
+  formats: string[];
 };
 
 export type ScholarshipTypes = {
@@ -25,31 +22,36 @@ export type ScholarshipTypes = {
   scholarshipDocuments: scholarshipDocumentTypes[];
 };
 
-export default function useScholarshipUserById({ id }: { id: string }) {
+export default function useScholarshipUserById(id: string) {
   const [data, setData] = useState<ScholarshipTypes | null>(null);
   const [loading, setLoading] = useState(true);
-  useEffect(function () {
-    async function fetchScholarships() {
-      setLoading(true);
-      try {
-        const res = await axios.post(
-          `https://edugrant-express-server-production.up.railway.app/user/getScholarshipsbyId`,
-          { scholarshipId: id },
-          { withCredentials: true }
-        );
-        if (res.status === 200) {
-          console.log("API response:", res.data);
-          setData(res.data.getScholarshipsData);
-        }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    }
 
-    fetchScholarships();
-  }, []);
+  useEffect(
+    function () {
+      async function fetchScholarships() {
+        setLoading(true);
+        try {
+          const res = await axios.post<{
+            scholarship: ScholarshipTypes;
+          }>(
+            `https://edugrant-express-server-production.up.railway.app/user/getScholarshipsbyId`,
+            { scholarshipId: id },
+            { withCredentials: true }
+          );
+          if (res.status === 200) {
+            setData(res.data.scholarship);
+          }
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      fetchScholarships();
+    },
+    [id]
+  );
 
   return { data, loading };
 }

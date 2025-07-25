@@ -30,7 +30,9 @@ export default function InterceptManageScholarshipClient() {
   const params = useParams();
   const [open, setOpen] = useState(true);
   const id = params.id as string;
-  const { data, loading } = useScholarshipUserById({ id });
+  const { data, loading } = useScholarshipUserById(id);
+  // console.log(data?.scholarshipTitle);
+  // console.log(data);
   const title = data?.scholarshipTitle;
   const deadline = data?.scholarshipDealine;
   const formatted = deadline
@@ -42,6 +44,7 @@ export default function InterceptManageScholarshipClient() {
     : "No deadline available";
   const provider = data?.scholarshipProvider;
   const amount = data?.scholarshipAmount;
+  const description = data?.scholarshipDescription;
   const scholarshipId = data?.scholarshipId;
   const scholarshipCover = data?.scholarshipCover;
   const scholarshipLogo = data?.scholarshipLogo;
@@ -67,7 +70,7 @@ export default function InterceptManageScholarshipClient() {
 
         <div className=" overflow-auto h-full no-scrollbar">
           {isApply ? (
-            <UploadDocs />
+            data && <UploadDocs data={data} />
           ) : (
             <>
               <div className="relative h-48 md:h-64 flex justify-center items-center pointer-events-none">
@@ -130,7 +133,7 @@ export default function InterceptManageScholarshipClient() {
                       <h1 className="text-sm text-gray-300">Required Docs</h1>
                     </div>
                     <p className="text-4xl font-semibold text-green-700">
-                      {selected?.scholarshipDocuments.length}
+                      {data?.scholarshipDocuments.length}
                     </p>
                   </div>
                 </div>
@@ -150,21 +153,20 @@ export default function InterceptManageScholarshipClient() {
                     </div>
                   ) : (
                     <p className="text-muted-foreground leading-relaxed">
-                      {selected?.scholarshipDescription ||
-                        "No description available."}
+                      {description}
                     </p>
                   )}
                 </div>
 
                 {/* Required Documents */}
-                {selected?.scholarshipDocuments &&
-                  selected.scholarshipDocuments.length > 0 && (
+                {data?.scholarshipDocuments &&
+                  data.scholarshipDocuments.length > 0 && (
                     <div className="space-y-3">
                       <h2 className="text-xl font-semibold">
                         Required Documents
                       </h2>
                       <div className="grid gap-2">
-                        {selected?.scholarshipDocuments.map((docs) => (
+                        {data?.scholarshipDocuments.map((docs) => (
                           <div
                             key={docs.label}
                             className="flex border justify-between border-l-4 border-l-green-800 items-center p-4 gap-5 rounded-sm bg-card"
