@@ -43,7 +43,16 @@ export default function UploadDocs({ data }: { data: ScholarshipTypes }) {
   const onSubmit = async (values: FormSchemaType) => {
     console.log("Uploaded docs:", values.documents);
     try {
-      const res = await axios.post(`https://edugrant-express-server-production.up.railway.app/user/applyScholarship`,values.documents,{withCredentials: true})
+      const res = await axios.post(`
+        https://edugrant-express-server-production.up.railway.app/user/applyScholarship`,
+        {},
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      )
       console.log(res)
     } catch (error) {
       console.log(error)
