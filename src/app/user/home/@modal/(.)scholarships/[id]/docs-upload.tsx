@@ -45,7 +45,7 @@ export default function UploadDocs({ data }: { data: ScholarshipTypes }) {
     try {
       const res = await axios.post(`
         https://edugrant-express-server-production.up.railway.app/user/applyScholarship`,
-        values.documents,
+        {},
         {
           withCredentials: true,
           headers: {
