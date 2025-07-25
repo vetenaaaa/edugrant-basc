@@ -30,7 +30,7 @@ export default function EditScholarship({
 }) {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date | undefined>(undefined);
-  const { form, schema } = useEditScholarshipForm(data);
+  const { form } = useEditScholarshipForm(data);
   const { handleSubmit } = useScholarshipSubmission();
 
   return (
