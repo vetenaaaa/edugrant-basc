@@ -19,7 +19,7 @@ import useScholarshipSearch from "@/lib/scholarship-search";
 import { Input } from "@/components/ui/input";
 import useScholarshipData from "@/lib/scholarship-data";
 import DynamicHeaderAdmin from "../dynamic-header";
-import {  useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   ChevronDown,
@@ -51,9 +51,9 @@ export default function Manage() {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-   const [sort, setSort] = useState<"asc" | "desc" | "">("");
+  const [sort, setSort] = useState<"asc" | "desc" | "">("");
   const { refreshTrigger, deletedScholarshipIds } = useScholarshipStore();
- 
+
   const { data, loading, totalPages } = useScholarshipData({
     currentPage,
     rowsPerPage,
@@ -98,7 +98,6 @@ export default function Manage() {
             {/* <TableCaption>A list of active scholarships.</TableCaption> */}
             <TableHeader>
               <TableRow>
-                <TableHead>ID</TableHead>
                 <TableHead>
                   <div
                     className="flex items-center  gap-2 cursor-pointer"
@@ -113,7 +112,7 @@ export default function Manage() {
                       setCurrentPage(1); // Reset to first page when sorting changes
                     }}
                   >
-                    Title{" "}
+                    Scholarship Title{" "}
                     {sort === "" && (
                       <ChevronsUpDown size={18} className="text-white/50" />
                     )}
@@ -157,12 +156,16 @@ export default function Manage() {
                       }
                       className="cursor-pointer"
                     >
-                      <TableCell className="">{row.scholarshipId}</TableCell>
-                      <TableCell className="font-medium">
+                      <TableCell className="font-medium flex items-center gap-3">
                         {/* <Link
                           href={`/administrator/home/manage/${row.scholarshipId}`}
                           prefetch={true}
                         > */}
+                        <img
+                          className="size-13 object-cover rounded-full"
+                          src={row.scholarshipLogo}
+                          alt=""
+                        />{" "}
                         {row.scholarshipTitle}
                         {/* </Link> */}
                       </TableCell>

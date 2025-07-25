@@ -20,7 +20,6 @@ import {
 } from "@/components/ui/drawer";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import useScholarshipData from "@/lib/scholarship-data";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -38,24 +37,23 @@ import { useScholarshipStore } from "@/store/scholarshipStore";
 import { Skeleton } from "@/components/ui/skeleton";
 import axios from "axios";
 import { toast } from "sonner";
+import useScholarshipUserById from "@/lib/get-scholar-by-id";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 
 export default function InterceptManageScholarship() {
   const [editMode, setEditMode] = useState(false);
   const { triggerRefresh, markScholarshipDeleted } = useScholarshipStore();
-  const { data, loading } = useScholarshipData({
-    currentPage: 1,
-    rowsPerPage: 100,
-    sort: "",
-  });
+
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [openAlert, setOpenAlert] = useState(false);
   const router = useRouter();
   const params = useParams();
   const [open, setOpen] = useState(true);
   const id = params.id as string;
-  const selected = data.find((meow) => meow.scholarshipId == id);
-  const title = selected?.scholarshipTitle;
-  const deadline = selected?.scholarshipDealine;
+  const { data, loading } = useScholarshipUserById(id);
+  const title = data?.scholarshipTitle;
+  const deadline = data?.scholarshipDealine;
   const readable = deadline
     ? new Date(deadline).toLocaleDateString("en-US", {
         year: "numeric",
@@ -64,11 +62,11 @@ export default function InterceptManageScholarship() {
       })
     : "No deadline set";
 
-  const provider = selected?.scholarshipProvider;
-  const description = selected?.scholarshipDescription;
-  const scholarshipId = selected?.scholarshipId;
-  const scholarshipCover = selected?.scholarshipCover;
-  const scholarshipLogo = selected?.scholarshipLogo;
+  const provider = data?.scholarshipProvider;
+  const description = data?.scholarshipDescription;
+  const scholarshipId = data?.scholarshipId;
+  const scholarshipCover = data?.scholarshipCover;
+  const scholarshipLogo = data?.scholarshipLogo;
   const HandleCloseDrawer = (value: boolean) => {
     setOpen(value);
     if (!value) {
@@ -127,7 +125,7 @@ export default function InterceptManageScholarship() {
         </DrawerHeader>
         {editMode ? (
           <div className=" overflow-auto h-full no-scrollbar">
-            <EditScholarship data={selected} />
+            {data && <EditScholarship data={data} />}
           </div>
         ) : (
           <div className=" overflow-auto h-full no-scrollbar">
@@ -168,7 +166,8 @@ export default function InterceptManageScholarship() {
                 Until {readable}
               </div>
             </div>
-            <div className="p-4 mt-16 space-y-10">
+            <div className="px-6 pt-16 pb-6 space-y-6">
+              {/* Stats Cards */}
               <div className="grid grid-cols-3 gap-3">
                 <div className="border p-3 rounded-md flex items-end bg-card">
                   <div className="flex-1 space-y-2">
@@ -192,25 +191,56 @@ export default function InterceptManageScholarship() {
                   <p className="text-4xl font-semibold text-amber-500">3000</p>
                 </div>
               </div>
+
+              <Separator />
+
+              {/* Description */}
               <div className="space-y-3">
-                <h1 className="pl-3  border-l-2 border-amber-400">Details</h1>
-                <p className="p-4 bg-card rounded-sm border">{description}</p>
+                <h2 className="text-xl font-semibold">
+                  About this Scholarship
+                </h2>
+                {loading ? (
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-3/4" />
+                  </div>
+                ) : (
+                  <p className="text-muted-foreground leading-relaxed">
+                    {description}
+                  </p>
+                )}
               </div>
 
-              <div className="space-y-3">
-                <h1 className="font-semibold pl-3  border-l-2 border-amber-400">
-                  Required Documents ({selected?.scholarshipDocuments.length})
-                </h1>
-                {selected?.scholarshipDocuments.map((docs) => (
-                  <div
-                    key={docs.label}
-                    className="flex border justify-between items-center p-4 gap-5 rounded-sm bg-card"
-                  >
-                    <h1>{docs.label}</h1>
+              {/* Required Documents */}
+              {data?.scholarshipDocuments &&
+                data.scholarshipDocuments.length > 0 && (
+                  <div className="space-y-3">
+                    <h2 className="text-xl font-semibold">
+                      Required Documents
+                    </h2>
+                    <div className="grid gap-2">
+                      {data?.scholarshipDocuments.map((docs) => (
+                        <div
+                          key={docs.label}
+                          className="flex border justify-between border-l-4 border-l-green-800 items-center p-4 gap-5 rounded-sm bg-card"
+                        >
+                          <h1>Document: {docs.label}</h1>
 
-                    <p>{docs.formats.map((format) => format).join(", ")}</p>
+                          <p>
+                            Format:{" "}
+                            {docs.formats.map((format) => format).join(", ")}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                ))}
+                )}
+
+              {/* Status */}
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground">Status:</span>
+                <Badge>Active</Badge>
               </div>
             </div>
           </div>

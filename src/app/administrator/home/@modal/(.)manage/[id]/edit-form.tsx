@@ -1,8 +1,15 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useForm, useFieldArray } from "react-hook-form";
-import MultipleSelector, { Option } from "@/components/ui/multi-select";
+import { useForm } from "react-hook-form";
+import { ChevronDownIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 import {
   Form,
@@ -14,51 +21,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { Plus, X } from "lucide-react";
-import { useEffect } from "react";
-import { ScholarshipTypes } from "@/lib/scholarship-data";
-
-const options: Option[] = [
-  { label: "PDF", value: "pdf" },
-  { label: "Word Document", value: "docx" },
-  { label: "JPEG Image", value: "jpg" },
-  { label: "PNG Image", value: "png" },
-];
-
-const documentsSchema = z.object({
-  label: z.string().min(3, "Requireds"),
-  formats: z.array(z.string()).min(1, "Required"),
-});
-
-const convertToDateInputFormat = (dateString: string): string => {
-  if (!dateString) return "";
-
-  try {
-    // Handle ISO date format (e.g., "2025-08-08T00:00:00.000Z")
-    if (dateString.includes("T") || dateString.includes("Z")) {
-      const date = new Date(dateString);
-      if (isNaN(date.getTime())) return "";
-
-      // Format as YYYY-MM-DD
-      return date.toISOString().split("T")[0];
-    }
-
-    // Handle MM/DD/YYYY format (fallback)
-    const [month, day, year] = dateString.split("/");
-    if (!month || !day || !year) return "";
-
-    // Pad month and day with leading zeros if needed
-    const paddedMonth = month.padStart(2, "0");
-    const paddedDay = day.padStart(2, "0");
-
-    return `${year}-${paddedMonth}-${paddedDay}`;
-  } catch (error) {
-    console.error("Date conversion error:", error);
-    return "";
-  }
-};
-
+import { Separator } from "@/components/ui/separator";
+import { useState } from "react";
 const createScholarshipSchema = z.object({
   scholarshipTitle: z.string().min(3, "Required"),
   providerName: z.string().min(3, "Required"),
@@ -66,318 +30,166 @@ const createScholarshipSchema = z.object({
   applicationDeadline: z.string().min(1, "Required"),
   scholarshipAmount: z.string().min(1, "Required"),
   scholarshipLimit: z.string().min(1, "Required"),
-  detailsImage: z
-    .any()
-    .refine(
-      (file) =>
-        typeof File !== "undefined" && file instanceof File && file.size > 0,
-      { message: "Image is required" }
-    ),
-  sponsorImage: z
-    .any()
-    .refine(
-      (file) =>
-        typeof File !== "undefined" && file instanceof File && file.size > 0,
-      { message: "Image is required" }
-    ),
-
-  documents: z
-    .array(documentsSchema)
-    .min(1, "At least one document is required"),
 });
-interface EditScholarshipProps {
-  data: ScholarshipTypes | undefined;
-}
 
 type FormData = z.infer<typeof createScholarshipSchema>;
-
-export default function EditScholarship({ data }: EditScholarshipProps) {
+export type EditScholarshipTypes = {
+  scholarshipId: string;
+  scholarshipTitle: string;
+  scholarshipProvider: string;
+  scholarshipDealine: string;
+  scholarshipDescription: string;
+  scholarshipAmount: string;
+  scholarshipLimit: string;
+};
+export default function EditScholarship({
+  data,
+}: {
+  data: EditScholarshipTypes;
+}) {
+  const [open, setOpen] = useState(false);
+  const [date, setDate] = useState<Date | undefined>(undefined);
   const form = useForm<FormData>({
     resolver: zodResolver(createScholarshipSchema),
     defaultValues: {
-      scholarshipTitle: "",
-      providerName: "",
-      scholarshipDescription: "",
-      applicationDeadline: "",
-      scholarshipAmount: "",
-      scholarshipLimit: "",
-      documents: [{ label: "", formats: [] }],
+      scholarshipTitle: data.scholarshipTitle,
+      providerName: data.scholarshipProvider,
+      scholarshipDescription: data.scholarshipDescription,
+      applicationDeadline: data.scholarshipDealine,
+      scholarshipAmount: data.scholarshipAmount.toString(),
+      scholarshipLimit: data.scholarshipLimit.toString(),
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
-    control: form.control,
-    name: "documents",
-  });
-
-  // Populate form with data when it becomes available
-  useEffect(() => {
-    if (data) {
-      console.log("Original deadline:", data.scholarshipDealine);
-      const convertedDeadline = convertToDateInputFormat(
-        data.scholarshipDealine || ""
-      );
-      console.log("Converted deadline:", convertedDeadline);
-      const transformedDocuments = data.scholarshipDocuments?.map((doc) => ({
-        label: doc.label,
-        formats: doc.formats.map((format) => String(format)),
-      })) || [{ label: "", formats: [] }];
-
-      form.reset({
-        scholarshipTitle: data.scholarshipTitle || "",
-        providerName: data.scholarshipProvider || "",
-        scholarshipDescription: data.scholarshipDescription || "",
-        applicationDeadline: convertedDeadline,
-        scholarshipAmount: data.scholarshipAmount?.toString() || "",
-        scholarshipLimit: "0", // You might need to add this field to ScholarshipTypes
-        documents: transformedDocuments,
-      });
-    }
-  }, [data, form]);
-
-  // const onSubmit = async (data: FormData) => {};
+  const handleSubmit = (formData: FormData) => {
+    console.log(formData);
+  };
 
   return (
-    <div className="p-4">
+    <div className="p-8 space-y-5 pt-10">
       <Form {...form}>
-        <div className="space-y-5">
-          <div className="grid grid-cols-3 lg:gap-y-10 gap-y-6 gap-x-5">
-            <div className="col-span-3">
-              <FormField
-                control={form.control}
-                name="scholarshipTitle"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex justify-between items-center">
-                      Scholarship Title <FormMessage />
-                    </FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="lg:col-span-1 col-span-3">
-              <FormField
-                control={form.control}
-                name="providerName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex justify-between items-center">
-                      Provider Name <FormMessage />
-                    </FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div>
+        <div className="space-y-8">
+          <FormField
+            control={form.control}
+            name="scholarshipTitle"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="flex justify-between items-center">
+                  Title <FormMessage />
+                </FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="providerName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="flex justify-between items-center">
+                  Provider Name <FormMessage />
+                </FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="scholarshipDescription"
+            render={({ field }) => (
+              <FormItem className="">
+                <FormLabel className="flex justify-between items-center">
+                  Description <FormMessage />
+                </FormLabel>
+                <FormControl>
+                  <Textarea {...field} />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
+          <div className="flex justify-center items-center gap-3">
             <FormField
               control={form.control}
-              name="detailsImage"
-              render={({ field: { onChange, onBlur, name, ref } }) => (
-                <FormItem>
-                  <FormLabel className="flex justify-between items-center">
-                    Backdrop Image <FormMessage />
+              name="applicationDeadline"
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <FormLabel className="px-1 flex justify-between items-center">
+                    Deadline <FormMessage />
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      type="file"
-                      accept="image/*"
-                      name={name}
-                      onBlur={onBlur}
-                      ref={ref}
-                      onChange={(e) => onChange(e.target.files?.[0])}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="sponsorImage"
-              render={({ field: { onChange, onBlur, name, ref } }) => (
-                <FormItem>
-                  <FormLabel className="flex justify-between items-center">
-                    Sponsor Image <FormMessage />
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      type="file"
-                      accept="image/*"
-                      name={name}
-                      onBlur={onBlur}
-                      ref={ref}
-                      onChange={(e) => onChange(e.target.files?.[0])}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
-            <div className="col-span-3">
-              <FormField
-                control={form.control}
-                name="scholarshipDescription"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex justify-between items-center">
-                      Scholarship Description <FormMessage />
-                    </FormLabel>
-                    <FormControl>
-                      <Textarea {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className="lg:col-span-1 col-span-3">
-              <FormField
-                control={form.control}
-                name="applicationDeadline"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex justify-between items-center">
-                      Application Deadline <FormMessage />
-                    </FormLabel>
-                    <FormControl>
-                      <Input type="date" {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="lg:col-span-1 col-span-3">
-              <FormField
-                control={form.control}
-                name="scholarshipAmount"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex justify-between items-center">
-                      Scholarship Amount <FormMessage />
-                    </FormLabel>
-                    <FormControl>
-                      <Input type="number" {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="lg:col-span-1 col-span-3">
-              <FormField
-                control={form.control}
-                name="scholarshipLimit"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex justify-between items-center">
-                      Scholarship Limit (0 = unlimited) <FormMessage />
-                    </FormLabel>
-                    <FormControl>
-                      <Input type="number" {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div>
-          </div>
-
-          {/* Dynamic Required Documents */}
-          <div className="w-full flex items-center justify-between mt-10">
-            <h2 className="font-semibold text-lg">Required Documents</h2>
-            <Button
-              type="button"
-              size="sm"
-              onClick={() => append({ label: "", formats: [] })}
-              variant="outline"
-            >
-              <Plus className="w-4 h-4 mr-1" />
-              More requirements
-            </Button>
-          </div>
-
-          <div className="space-y-4 mt-5">
-            {fields.map((field, index) => (
-              <div
-                key={field.id}
-                className="grid grid-cols-3 gap-3 items-center"
-              >
-                {/* Label */}
-                <div className="lg:col-span-1 col-span-3">
-                  <FormField
-                    control={form.control}
-                    name={`documents.${index}.label`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="flex justify-between items-center">
-                          Document Label {index + 1} <FormMessage />
-                        </FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                {/* Formats */}
-                <div className="lg:col-span-1 col-span-3">
-                  <FormField
-                    control={form.control}
-                    name={`documents.${index}.formats`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="flex justify-between items-center">
-                          Document Formats
-                          <FormMessage />
-                        </FormLabel>
-                        <FormControl>
-                          <MultipleSelector
-                            commandProps={{
-                              label: "Select document formats",
-                            }}
-                            value={options.filter((option) =>
-                              field.value?.includes(option.value)
-                            )}
-                            defaultOptions={options}
-                            placeholder="Choose formats"
-                            hideClearAllButton
-                            hidePlaceholderWhenSelected
-                            emptyIndicator={
-                              <p className="text-center text-sm">
-                                No results found
-                              </p>
+                    <Popover open={open} onOpenChange={setOpen}>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          id="date"
+                          className="w-full justify-between font-normal"
+                        >
+                          {date ? date.toLocaleDateString() : "Select date"}
+                          <ChevronDownIcon />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent
+                        className="w-auto overflow-hidden p-0"
+                        align="start"
+                      >
+                        <Calendar
+                          mode="single"
+                          selected={date}
+                          captionLayout="dropdown"
+                          onSelect={(date) => {
+                            setDate(date);
+                            if (date) {
+                              field.onChange(date.toISOString());
                             }
-                            onChange={(selected) => {
-                              field.onChange(
-                                selected.map((option) => option.value)
-                              );
-                            }}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                </div>
+                            setOpen(false);
+                          }}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
 
-                {/* File + Remove */}
-                <div className="lg:col-span-1 col-span-3 flex items-end gap-2 lg:mt-6 mt-3">
-                  <Input type="file" disabled />
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    disabled={fields.length === 1 }
-                    onClick={() => remove(index)}
-                  >
-                    <X />
-                  </Button>
-                </div>
-              </div>
-            ))}
+            <FormField
+              control={form.control}
+              name="scholarshipLimit"
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <FormLabel className="flex justify-between items-center">
+                    Application Limit <FormMessage />
+                  </FormLabel>
+                  <FormControl>
+                    <Input {...field} type="number" />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
           </div>
+
+          <FormField
+            control={form.control}
+            name="scholarshipAmount"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="flex justify-between items-center">
+                  Amount <FormMessage />
+                </FormLabel>
+                <FormControl>
+                  <Input {...field} type="number" />
+                </FormControl>
+              </FormItem>
+            )}
+          />
         </div>
+        <Button onClick={form.handleSubmit(handleSubmit)}>Edit</Button>
       </Form>
     </div>
   );
