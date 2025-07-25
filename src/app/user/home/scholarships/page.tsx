@@ -58,7 +58,7 @@ export default function ClientScholarship() {
                   </div>
                   <p>2 days left</p>
                 </div>
-                
+
                 <div className="grid grid-cols-2">
                   <div>
                     <h1 className="text-sm">Documents</h1>
@@ -73,10 +73,10 @@ export default function ClientScholarship() {
                     </p>
                   </div>
                 </div>
-                
+
                 <div className="flex gap-3">
                   <Link
-                    href={`/home/scholarships/${scholarship.scholarshipId}`}
+                    href={`/user/home/scholarships/${scholarship.scholarshipId}?apply=true`}
                     className="flex-1"
                   >
                     <Button className="gap-2 w-full">

@@ -23,9 +23,12 @@ import useScholarshipUserById from "@/lib/get-scholar-by-id";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import UploadDocs from "./docs-upload";
+import { useSearchParams } from "next/navigation";
 
 export default function InterceptManageScholarshipClient() {
-  const [isApply, setIsApply] = useState(false);
+  const searchParams = useSearchParams();
+  const apply = searchParams.get("apply");
+  const [isApply, setIsApply] = useState(apply || false);
   const router = useRouter();
   const params = useParams();
   const [open, setOpen] = useState(true);

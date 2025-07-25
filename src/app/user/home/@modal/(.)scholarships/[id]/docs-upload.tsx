@@ -53,7 +53,7 @@ export default function UploadDocs({
     try {
       const res = await axios.post(
         `https://edugrant-express-server-production.up.railway.app/user/applyScholarship`,
-        {},
+        { documents: values.documents },
         { withCredentials: true }
       );
       if (res.status === 200) {
