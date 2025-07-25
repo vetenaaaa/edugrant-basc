@@ -60,6 +60,16 @@
   );
 }
 
+.mask-gradient-bottom {
+  mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%);
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    black 0%,
+    black 80%,
+    transparent 100%
+  );
+}
+
 @custom-variant dark (&:is(.dark *));
 * {
   /* border: 1px solid red; */

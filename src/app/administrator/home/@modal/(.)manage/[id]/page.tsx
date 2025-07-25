@@ -124,7 +124,7 @@ export default function InterceptManageScholarship() {
         </DrawerHeader>
         {editMode ? (
           <div className=" overflow-auto h-full no-scrollbar">
-            {data && <EditScholarship data={data} />}
+            {data && <EditScholarship data={data} setEditMode={setEditMode} />}
           </div>
         ) : (
           <div className=" overflow-auto h-full no-scrollbar">
@@ -244,45 +244,26 @@ export default function InterceptManageScholarship() {
             </div>
           </div>
         )}
-        {scholarshipId && (
-          <DrawerFooter>
+        {scholarshipId && !editMode && (
+          <div className="p-4">
             <div className="flex gap-3">
-              {editMode ? (
-                <Button className="flex-1 bg-green-800 text-white hover:bg-green-700">
-                  <Save /> Save
-                </Button>
-              ) : (
-                <Button
-                  onClick={() => setEditMode(true)}
-                  className="flex-1 bg-blue-800 text-white hover:bg-blue-700"
-                >
-                  <Edit /> Edit
-                </Button>
-              )}
+              <Button
+                onClick={() => setEditMode(true)}
+                className="flex-1 bg-blue-800 text-white hover:bg-blue-700"
+              >
+                <Edit /> Edit
+              </Button>
 
-              {!editMode ? (
-                <>
-                  <Button
-                    className="flex-1"
-                    variant="destructive"
-                    onClick={() => setOpenAlert(true)}
-                  >
-                    <Trash2 /> Delete
-                  </Button>
-                  <Button className="flex-1" variant="outline">
-                    <Activity /> Generate Report
-                  </Button>
-                </>
-              ) : (
-                <Button
-                  onClick={() => setEditMode(false)}
-                  className="flex-1"
-                  variant="outline"
-                >
-                  <X />
-                  Cancel
-                </Button>
-              )}
+              <Button
+                className="flex-1"
+                variant="destructive"
+                onClick={() => setOpenAlert(true)}
+              >
+                <Trash2 /> Delete
+              </Button>
+              <Button className="flex-1" variant="outline">
+                <Activity /> Generate Report
+              </Button>
             </div>
 
             <AlertDialog open={openAlert} onOpenChange={setOpenAlert}>
@@ -311,7 +292,7 @@ export default function InterceptManageScholarship() {
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
-          </DrawerFooter>
+          </div>
         )}
       </DrawerContent>
     </Drawer>

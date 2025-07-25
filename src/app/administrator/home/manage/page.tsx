@@ -162,7 +162,7 @@ export default function Manage() {
                           prefetch={true}
                         > */}
                         <img
-                          className="size-13 object-cover rounded-full"
+                          className="size-10 object-cover rounded-full"
                           src={row.scholarshipLogo}
                           alt=""
                         />{" "}

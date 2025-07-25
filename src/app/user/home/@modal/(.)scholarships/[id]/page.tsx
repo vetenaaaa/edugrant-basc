@@ -31,8 +31,6 @@ export default function InterceptManageScholarshipClient() {
   const [open, setOpen] = useState(true);
   const id = params.id as string;
   const { data, loading } = useScholarshipUserById(id);
-  // console.log(data?.scholarshipTitle);
-  // console.log(data);
   const title = data?.scholarshipTitle;
   const deadline = data?.scholarshipDealine;
   const formatted = deadline
@@ -51,7 +49,9 @@ export default function InterceptManageScholarshipClient() {
   const HandleCloseDrawer = (value: boolean) => {
     setOpen(value);
     if (!value) {
-      router.back();
+      setTimeout(() => {
+        router.back();
+      }, 300);
     }
   };
 
@@ -70,7 +70,7 @@ export default function InterceptManageScholarshipClient() {
 
         <div className=" overflow-auto h-full no-scrollbar">
           {isApply ? (
-            data && <UploadDocs data={data} />
+            data && <UploadDocs data={data} setIsApply={setIsApply} />
           ) : (
             <>
               <div className="relative h-48 md:h-64 flex justify-center items-center pointer-events-none">
@@ -193,39 +193,22 @@ export default function InterceptManageScholarshipClient() {
           )}
         </div>
 
-        {scholarshipId && (
+        {scholarshipId && !isApply && (
           <DrawerFooter>
             <div className="flex gap-3">
-              {isApply ? (
-                <Button
-                  className="flex-1 bg-green-900 text-foreground hover:bg-green-900"
-                  onClick={() => setIsApply(true)}
-                >
-                  <FileInput />
-                  Apply Now
-                </Button>
-              ) : (
-                <Button className="flex-1" onClick={() => setIsApply(true)}>
-                  <FileInput />
-                  Apply Scholarship
-                </Button>
-              )}
+              <Button className="flex-1" onClick={() => setIsApply(true)}>
+                <FileInput />
+                Apply Scholarship
+              </Button>
 
-              {isApply ? (
-                <Button
-                  className="flex-1"
-                  variant="destructive"
-                  onClick={() => setIsApply(false)}
-                >
-                  <X />
-                  Cancel Apply
-                </Button>
-              ) : (
-                <Button className="flex-1" variant="outline">
-                  <X />
-                  Back
-                </Button>
-              )}
+              <Button
+                className="flex-1"
+                variant="outline"
+                onClick={() => HandleCloseDrawer(false)}
+              >
+                <X />
+                Back
+              </Button>
             </div>
           </DrawerFooter>
         )}

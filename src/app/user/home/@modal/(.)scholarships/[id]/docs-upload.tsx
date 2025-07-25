@@ -16,8 +16,15 @@ import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { ScholarshipTypes } from "@/lib/get-scholar-by-id";
 import axios from "axios";
+import { FileInput, X } from "lucide-react";
 
-export default function UploadDocs({ data }: { data: ScholarshipTypes }) {
+export default function UploadDocs({
+  data,
+  setIsApply,
+}: {
+  data: ScholarshipTypes;
+  setIsApply: (value: boolean) => void;
+}) {
   const formSchema = z.object({
     documents: z
       .array(
@@ -42,20 +49,19 @@ export default function UploadDocs({ data }: { data: ScholarshipTypes }) {
 
   const onSubmit = async (values: FormSchemaType) => {
     console.log("Uploaded docs:", values.documents);
+
     try {
-      const res = await axios.post(`
-        https://edugrant-express-server-production.up.railway.app/user/applyScholarship`,
+      const res = await axios.post(
+        `https://edugrant-express-server-production.up.railway.app/user/applyScholarship`,
         {},
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      )
-      console.log(res)
+        { withCredentials: true }
+      );
+      if (res.status === 200) {
+        console.log(res);
+      }
     } catch (error) {
-      console.log(error)
+      console.error(error);
+    } finally {
     }
   };
 
@@ -64,7 +70,7 @@ export default function UploadDocs({ data }: { data: ScholarshipTypes }) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="p-4 space-y-5">
+      <div className="p-4 space-y-5">
         <div className="space-y-2">
           <div className="flex items-center gap-2">
             <h1 className="text-2xl font-bold">Apply for Scholarship</h1>
@@ -121,13 +127,24 @@ export default function UploadDocs({ data }: { data: ScholarshipTypes }) {
             />
           ))}
         </div>
+      </div>
+      <div className="flex gap-3 p-4 absolute bottom-0 w-full left-0">
         <Button
-          type="submit"
-          disabled={uploadedCount !== data.scholarshipDocuments.length}
+          className="flex-1 bg-green-900 text-foreground hover:bg-green-900 cursor-pointer"
+          onClick={form.handleSubmit(onSubmit)}
         >
-          Submit Application
+          <FileInput />
+          Apply Now
         </Button>
-      </form>
+        <Button
+          className="flex-1 cursor-pointer"
+          variant="destructive"
+          onClick={() => setIsApply(false)}
+        >
+          <X />
+          Cancel Apply
+        </Button>
+      </div>
     </Form>
   );
 }

@@ -1,8 +1,5 @@
 "use client";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { useForm } from "react-hook-form";
-import { ChevronDownIcon } from "lucide-react";
+import { ChevronDownIcon, Save, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -10,7 +7,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-
 import {
   Form,
   FormControl,
@@ -22,47 +18,20 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
-const createScholarshipSchema = z.object({
-  scholarshipTitle: z.string().min(3, "Required"),
-  providerName: z.string().min(3, "Required"),
-  scholarshipDescription: z.string().min(3, "Required"),
-  applicationDeadline: z.string().min(1, "Required"),
-  scholarshipAmount: z.string().min(1, "Required"),
-  scholarshipLimit: z.string().min(1, "Required"),
-});
-
-type FormData = z.infer<typeof createScholarshipSchema>;
-export type EditScholarshipTypes = {
-  scholarshipId: string;
-  scholarshipTitle: string;
-  scholarshipProvider: string;
-  scholarshipDealine: string;
-  scholarshipDescription: string;
-  scholarshipAmount: string;
-  scholarshipLimit: string;
-};
+import { EditScholarshipTypes } from "@/lib/types";
+import { useEditScholarshipForm } from "@/lib/use-edit-scholarship-form";
+import { useScholarshipSubmission } from "@/lib/edit-scholarship-submission";
 export default function EditScholarship({
   data,
+  setEditMode,
 }: {
   data: EditScholarshipTypes;
+  setEditMode: (value: boolean) => void;
 }) {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date | undefined>(undefined);
-  const form = useForm<FormData>({
-    resolver: zodResolver(createScholarshipSchema),
-    defaultValues: {
-      scholarshipTitle: data.scholarshipTitle,
-      providerName: data.scholarshipProvider,
-      scholarshipDescription: data.scholarshipDescription,
-      applicationDeadline: data.scholarshipDealine,
-      scholarshipAmount: data.scholarshipAmount.toString(),
-      scholarshipLimit: data.scholarshipLimit.toString(),
-    },
-  });
-
-  const handleSubmit = (formData: FormData) => {
-    console.log(formData);
-  };
+  const { form, schema } = useEditScholarshipForm(data);
+  const { handleSubmit } = useScholarshipSubmission();
 
   return (
     <div className="p-4 ">
@@ -188,8 +157,24 @@ export default function EditScholarship({
             )}
           />
         </div>
-        <Button onClick={form.handleSubmit(handleSubmit)}>Edit</Button>
       </Form>
+      <div className="flex gap-3 w-full absolute bottom-0 left-0 p-4">
+        <Button
+          onClick={form.handleSubmit(handleSubmit)}
+          className="flex-1 bg-green-800 text-white hover:bg-green-700"
+        >
+          <Save /> Save
+        </Button>
+
+        <Button
+          onClick={() => setEditMode(false)}
+          className="flex-1"
+          variant="outline"
+        >
+          <X />
+          Cancel
+        </Button>
+      </div>
     </div>
   );
 }
