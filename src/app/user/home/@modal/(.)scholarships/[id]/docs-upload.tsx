@@ -44,8 +44,9 @@ export default function UploadDocs({ data }: { data: ScholarshipTypes }) {
     console.log("Uploaded docs:", values.documents);
     try {
       const res = await axios.post(`https://vssw66kc-4000.asse.devtunnels.ms/user/applyScholarship`,values.documents,{withCredentials: true})
+      console.log(res)
     } catch (error) {
-      
+      console.log(error)
     }
   };
 
