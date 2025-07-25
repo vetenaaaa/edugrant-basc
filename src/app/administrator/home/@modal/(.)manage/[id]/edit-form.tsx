@@ -21,7 +21,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
 const createScholarshipSchema = z.object({
   scholarshipTitle: z.string().min(3, "Required"),
@@ -66,9 +65,9 @@ export default function EditScholarship({
   };
 
   return (
-    <div className="p-8 space-y-5 pt-10">
+    <div className="p-4 ">
       <Form {...form}>
-        <div className="space-y-8">
+        <div className="space-y-6">
           <FormField
             control={form.control}
             name="scholarshipTitle"

@@ -61,7 +61,6 @@ export default function InterceptManageScholarship() {
         day: "numeric",
       })
     : "No deadline set";
-
   const provider = data?.scholarshipProvider;
   const description = data?.scholarshipDescription;
   const scholarshipId = data?.scholarshipId;
@@ -119,8 +118,8 @@ export default function InterceptManageScholarship() {
       }}
     >
       <DrawerContent className="w-[900px] mx-auto h-[95vh] outline-0 border-0">
-        <DrawerHeader className="sr-only ">
-          <DrawerTitle>Are you absolutely sure?</DrawerTitle>
+        <DrawerHeader className={editMode ? "" : "sr-only"}>
+          <DrawerTitle className="text-2xl">Edit Mode</DrawerTitle>
           <DrawerDescription>This action cannot be undone.</DrawerDescription>
         </DrawerHeader>
         {editMode ? (
