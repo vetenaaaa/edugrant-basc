@@ -19,26 +19,20 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import useScholarshipUserData from "@/lib/client-scholarship";
+import useScholarshipUserById from "@/lib/get-scholar-by-id";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import UploadDocs from "./docs-upload";
 
 export default function InterceptManageScholarshipClient() {
   const [isApply, setIsApply] = useState(false);
-  const { data, loading } = useScholarshipUserData({
-    currentPage: 1,
-    rowsPerPage: 100,
-    sort: "",
-  });
-
   const router = useRouter();
   const params = useParams();
   const [open, setOpen] = useState(true);
   const id = params.id as string;
-  const selected = data.find((meow) => meow.scholarshipId == id);
-  const title = selected?.scholarshipTitle;
-  const deadline = selected?.scholarshipDealine;
+  const { data, loading } = useScholarshipUserById({ id });
+  const title = data?.scholarshipTitle;
+  const deadline = data?.scholarshipDealine;
   const formatted = deadline
     ? new Date(deadline).toLocaleDateString("en-US", {
         year: "numeric",
@@ -46,11 +40,11 @@ export default function InterceptManageScholarshipClient() {
         day: "numeric",
       })
     : "No deadline available";
-  const provider = selected?.scholarshipProvider;
-  const amount = selected?.scholarshipAmount;
-  const scholarshipId = selected?.scholarshipId;
-  const scholarshipCover = selected?.scholarshipCover;
-  const scholarshipLogo = selected?.scholarshipLogo;
+  const provider = data?.scholarshipProvider;
+  const amount = data?.scholarshipAmount;
+  const scholarshipId = data?.scholarshipId;
+  const scholarshipCover = data?.scholarshipCover;
+  const scholarshipLogo = data?.scholarshipLogo;
   const HandleCloseDrawer = (value: boolean) => {
     setOpen(value);
     if (!value) {
@@ -73,7 +67,7 @@ export default function InterceptManageScholarshipClient() {
 
         <div className=" overflow-auto h-full no-scrollbar">
           {isApply ? (
-            <UploadDocs selected={selected}/>
+            <UploadDocs />
           ) : (
             <>
               <div className="relative h-48 md:h-64 flex justify-center items-center pointer-events-none">
