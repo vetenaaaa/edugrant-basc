@@ -8,7 +8,9 @@ import DynamicHeader from "./dynamic-header";
 import { useEffect, useState } from "react";
 import SummaryClient from "./summary";
 import TabsClient from "./tabs";
+import { useUserStore } from "@/store/useUserStore";
 export default function ClientDashboard() {
+  const { user } = useUserStore();
   const [date, setDate] = useState("");
 
   useEffect(() => {
@@ -59,7 +61,7 @@ export default function ClientDashboard() {
               />
               <div>
                 <h1 className="text-2xl font-semibold bg-gradient-to-r from-blue-500 via-green-400 to-teal-500 bg-clip-text text-transparent">
-                  Hello, Jerome Tecson...
+                  Hello, {user?.firstName}...
                 </h1>
                 <p className="text-muted-foreground text-sm">{date}</p>
               </div>

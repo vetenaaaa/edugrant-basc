@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
+import { useUserStore } from "@/store/useUserStore";
 import {
   ArrowLeft,
   CircleAlert,
@@ -101,7 +102,10 @@ export default function Login({ setTransition, className }: LoginProps) {
       );
 
       if (response.status === 200) {
+        const { userData } = response.data;
+        useUserStore.getState().setUser(userData);
         setSuccess("Registration successful! Redirecting...");
+        console.log(response.data);
         setTimeout(() => {
           router.push("/user/home");
         }, 2000);
