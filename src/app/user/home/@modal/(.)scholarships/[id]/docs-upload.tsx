@@ -15,6 +15,7 @@ import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { ScholarshipTypes } from "@/lib/get-scholar-by-id";
+import axios from "axios";
 
 export default function UploadDocs({ data }: { data: ScholarshipTypes }) {
   const formSchema = z.object({
@@ -39,8 +40,13 @@ export default function UploadDocs({ data }: { data: ScholarshipTypes }) {
     },
   });
 
-  const onSubmit = (values: FormSchemaType) => {
+  const onSubmit = async (values: FormSchemaType) => {
     console.log("Uploaded docs:", values.documents);
+    try {
+      const res = await axios.post(`https://vssw66kc-4000.asse.devtunnels.ms/user/applyScholarship`,values.documents,{withCredentials: true})
+    } catch (error) {
+      
+    }
   };
 
   // Helper function to get uploaded files count
