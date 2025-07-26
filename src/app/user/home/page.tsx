@@ -54,7 +54,9 @@ export default function ClientDashboard() {
           <div className="flex justify-between bg-background/40 p-4 rounded-md border">
             <div>
               <h1 className="text-2xl font-semibold bg-gradient-to-r from-blue-500 via-green-400 to-teal-500 bg-clip-text text-transparent  ">
-                Hello, Jerome.
+                Hello, {user?.firstName}
+                {""}
+                {user?.lastName}.
               </h1>
               <p className="text-muted-foreground text-sm">{date}</p>
             </div>
