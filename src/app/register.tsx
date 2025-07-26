@@ -254,7 +254,11 @@ export default function Register({ setTransition, className }: LoginProps) {
   };
 
   return (
-    <div className="relative flex justify-center items-center gap-5  w-full py-10">
+    <div
+      className={`relative flex justify-center items-center gap-5  w-full ${
+        className ? "min-h-[calc(100vh-116px)]" : "min-h-screen"
+      }`}
+    >
       <Link
         href={"/"}
         prefetch={true}
@@ -266,7 +270,7 @@ export default function Register({ setTransition, className }: LoginProps) {
         </Button>
       </Link>
       <div className="flex-1 flex justify-center items-center ">
-        <div className="lg:w-2xl w-[90%] space-y-5">
+        <div className="min-w-2xl space-y-5">
           <Stepper
             defaultValue={1}
             value={stepper}
@@ -297,7 +301,7 @@ export default function Register({ setTransition, className }: LoginProps) {
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-4 lg:gap-y-10 gap-y-5">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-10">
                   <FormField
                     control={personalForm.control}
                     name="firstName"
@@ -448,7 +452,7 @@ export default function Register({ setTransition, className }: LoginProps) {
                     control={personalForm.control}
                     name="address"
                     render={({ field }) => (
-                      <FormItem className="lg:col-span-2">
+                      <FormItem className="col-span-2">
                         <FormLabel className="flex items-center justify-between">
                           Address (Street, Barangay, City/Municipality,
                           Province) <FormMessage />
