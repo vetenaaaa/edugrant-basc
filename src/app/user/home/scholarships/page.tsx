@@ -97,6 +97,7 @@ export default function ClientScholarship() {
                       <Link
                         href={`/user/home/scholarships/${scholarship.scholarshipId}?apply=true`}
                         className="flex-1"
+                        prefetch
                       >
                         <Button size="sm" className="gap-2 w-full">
                           <LogIn className="h-4 w-4" />
@@ -106,6 +107,7 @@ export default function ClientScholarship() {
                       <Link
                         href={`/user/home/scholarships/${scholarship.scholarshipId}`}
                         className="flex-1"
+                        prefetch
                       >
                         <Button
                           size="sm"

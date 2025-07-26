@@ -96,6 +96,7 @@ export default function InterceptManageScholarshipClient() {
                       href={`${scholarshipCover}`}
                       target="_blank"
                       rel="noopener noreferrer"
+                  
                     >
                       <Button className="absolute z-10 cursor-pointer bottom-5 right-5">
                         View
