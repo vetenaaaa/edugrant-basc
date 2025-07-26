@@ -48,22 +48,30 @@ export default function UploadDocs({
   });
 
   const onSubmit = async (values: FormSchemaType) => {
-    console.log("Uploaded docs:", values.documents);
+  const formData = new FormData();
 
-    try {
-      const res = await axios.post(
-        `https://edugrant-express-server-production.up.railway.app/user/applyScholarship`,
-        { documents: values.documents },
-        { withCredentials: true }
-      );
-      if (res.status === 200) {
-        console.log(res);
+  values.documents.forEach((file) => {
+    formData.append("documents", file); // use the field name expected by your backend
+  });
+
+  try {
+    const res = await axios.post(
+      "https://edugrant-express-server-production.up.railway.app/user/applyScholarship",
+      formData,
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "multipart/form-data", // axios sets this automatically, but you can include it
+        },
       }
-    } catch (error) {
-      console.error(error);
-    } finally {
+    );
+    if (res.status === 200) {
+      console.log(res);
     }
-  };
+  } catch (error) {
+    console.error(error);
+  }
+};
 
   // Helper function to get uploaded files count
   const uploadedCount = form.watch("documents").filter(Boolean).length;
