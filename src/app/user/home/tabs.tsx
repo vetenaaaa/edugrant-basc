@@ -1,59 +1,50 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-const announcements = [
-  {
-    id: 1,
-    title: "Scholarship Application Deadline Extended",
-    description:
-      "The deadline for scholarship applications has been extended to June 30, 2025.",
-    date: "Dec 12, 2024",
-    priority: "high",
-  },
-  {
-    id: 2,
-    title: "New Document Upload Feature",
-    description:
-      "You can now upload additional supporting documents through your dashboard.",
-    date: "Dec 10, 2024",
-    priority: "medium",
-  },
-];
-const items = [
-  {
-    id: 1,
-    date: "Mar 15, 2024",
-    title: "Submitted",
-    description: "Initial team meeting.",
-  },
-  {
-    id: 2,
-    date: "Mar 22, 2024",
-    title: "Under Review",
-    description: "Completed wireframes.",
-  },
-  {
-    id: 3,
-    date: "Apr 5, 2024",
-    title: "Approve/Declined",
-    description: "Approved",
-  },
-  {
-    id: 4,
-    date: "Apr 19, 2024",
-    title: "Missing Requirements",
-    description: "Your COR is expired",
-  },
-];
-import {
-  Timeline,
-  TimelineContent,
-  TimelineDate,
-  TimelineHeader,
-  TimelineIndicator,
-  TimelineItem,
-  TimelineSeparator,
-  TimelineTitle,
-} from "@/components/ui/timeline";
-import { ArrowRight, Home, Megaphone } from "lucide-react";
+// const announcements = [
+//   {
+//     id: 1,
+//     title: "Scholarship Application Deadline Extended",
+//     description:
+//       "The deadline for scholarship applications has been extended to June 30, 2025.",
+//     date: "Dec 12, 2024",
+//     priority: "high",
+//   },
+//   {
+//     id: 2,
+//     title: "New Document Upload Feature",
+//     description:
+//       "You can now upload additional supporting documents through your dashboard.",
+//     date: "Dec 10, 2024",
+//     priority: "medium",
+//   },
+// ];
+// const items = [
+//   {
+//     id: 1,
+//     date: "Mar 15, 2024",
+//     title: "Submitted",
+//     description: "Initial team meeting.",
+//   },
+//   {
+//     id: 2,
+//     date: "Mar 22, 2024",
+//     title: "Under Review",
+//     description: "Completed wireframes.",
+//   },
+//   {
+//     id: 3,
+//     date: "Apr 5, 2024",
+//     title: "Approve/Declined",
+//     description: "Approved",
+//   },
+//   {
+//     id: 4,
+//     date: "Apr 19, 2024",
+//     title: "Missing Requirements",
+//     description: "Your COR is expired",
+//   },
+// ];
+
+import { Home, Megaphone } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -62,8 +53,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 
 export default function TabsClient() {
   return (
@@ -107,7 +96,6 @@ export default function TabsClient() {
         <Card className="bg-background/40 flex-1">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-            
               Announcements
             </CardTitle>
             <CardDescription>Keep on latest update</CardDescription>

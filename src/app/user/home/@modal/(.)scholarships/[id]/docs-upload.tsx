@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { ScholarshipTypes } from "@/lib/get-scholar-by-id";
 import axios from "axios";
 import { FileInput, X } from "lucide-react";
+import { useUserStore } from "@/store/useUserStore";
 
 export default function UploadDocs({
   data,
@@ -25,6 +26,9 @@ export default function UploadDocs({
   data: ScholarshipTypes;
   setIsApply: (value: boolean) => void;
 }) {
+  const { user } = useUserStore();
+  const userId = user?.studentId;
+  const scholarId = data.scholarshipId;
   const formSchema = z.object({
     documents: z
       .array(
@@ -48,32 +52,42 @@ export default function UploadDocs({
   });
 
   const onSubmit = async (values: FormSchemaType) => {
-  const formData = new FormData();
+    try {
+      const formData = new FormData();
+      formData.append("userId", String(userId));
+      formData.append("scholarshipId", String(scholarId));
 
-  values.documents.forEach((file) => {
-    formData.append("documents", file); // use the field name expected by your backend
-  });
+      values.documents.forEach((file, index) => {
+        const label = data.scholarshipDocuments[index]?.label;
+        if (label && file) {
+          formData.append(label, file);
+        }
+      });
 
-  try {
-    const res = await axios.post(
-      "https://edugrant-express-server-production.up.railway.app/user/applyScholarship",
-      formData,
-      {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "multipart/form-data", // axios sets this automatically, but you can include it
-        },
+      console.log("sending to backend:");
+      for (const [key, value] of formData.entries()) {
+        console.log(`${key}:`, value);
       }
-    );
-    if (res.status === 200) {
-      console.log(res);
-    }
-  } catch (error) {
-    console.error(error);
-  }
-};
 
-  // Helper function to get uploaded files count
+      const res = await axios.post(
+        "https://edugrant-express-server-production.up.railway.app/user/applyScholarship",
+        formData,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (res.status === 200) {
+        console.log("Upload success:", res.data);
+      }
+    } catch (error) {
+      console.error("Upload error:", error);
+    }
+  };
+
   const uploadedCount = form.watch("documents").filter(Boolean).length;
 
   return (
@@ -120,7 +134,7 @@ export default function UploadDocs({
                       onChange={(e) => {
                         const file = e.target.files?.[0];
                         if (file) {
-                          // Update the documents array at the specific index
+                       
                           const currentDocs = form.getValues("documents") || [];
                           currentDocs[index] = file;
                           form.setValue("documents", currentDocs);
