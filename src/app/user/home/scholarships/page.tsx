@@ -11,6 +11,7 @@ import Link from "next/link";
 
 import useScholarshipUserData from "@/lib/client-scholarship";
 import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
 export default function ClientScholarship() {
   const [currentPage] = useState(1);
   const [rowsPerPage] = useState(10);
@@ -39,15 +40,15 @@ export default function ClientScholarship() {
           {data.map((scholarship) => (
             <div
               key={scholarship.scholarshipId}
-              className="rounded-lg border bg-background/30 shadow-sm  overflow-hidden h-full"
+              className="rounded-lg border bg-background/40 shadow-sm  overflow-hidden h-full  relative p-2"
             >
               <img
                 src={scholarship.scholarshipLogo}
                 alt=""
-                className="h-50 w-full object-cover rounded-md mask-gradient-bottom bg-background"
+                className=" w-full object-cover rounded-md mask-gradient-bottom bg-background mb-20 aspect-video"
               />
-              <div className="p-3 space-y-3">
-                <div className="flex justify-between items-start">
+              <div className=" absolute bottom-0 w-full left-0 p-2 space-y-5">
+                <div className="flex justify-between items-start px-2">
                   <div>
                     <h1 className="font-bold text-lg">
                       {scholarship.scholarshipTitle}
@@ -56,22 +57,7 @@ export default function ClientScholarship() {
                       by {scholarship.scholarshipProvider}
                     </p>
                   </div>
-                  <p>2 days left</p>
-                </div>
-
-                <div className="grid grid-cols-2">
-                  <div>
-                    <h1 className="text-sm">Documents</h1>
-                    <p className="text-lg font-bold">
-                      {scholarship.scholarshipDocuments.length}
-                    </p>
-                  </div>
-                  <div>
-                    <h1 className="text-sm">Amount</h1>
-                    <p className="text-lg font-bold">
-                      {scholarship.scholarshipAmount}
-                    </p>
-                  </div>
+                  <Badge>2 days left</Badge>
                 </div>
 
                 <div className="flex gap-3">
@@ -79,7 +65,7 @@ export default function ClientScholarship() {
                     href={`/user/home/scholarships/${scholarship.scholarshipId}?apply=true`}
                     className="flex-1"
                   >
-                    <Button className="gap-2 w-full">
+                    <Button size="sm" className="gap-2 w-full">
                       <LogIn className="h-4 w-4" />
                       Apply Now
                     </Button>
@@ -88,7 +74,11 @@ export default function ClientScholarship() {
                     href={`/user/home/scholarships/${scholarship.scholarshipId}`}
                     className="flex-1"
                   >
-                    <Button variant="outline" className="gap-2 w-full">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="gap-2 w-full"
+                    >
                       <Info className="h-4 w-4" />
                       Details
                     </Button>
