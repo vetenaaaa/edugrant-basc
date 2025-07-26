@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/useUserStore";
-import { ModeToggle } from "@/components/ui/dark-mode";
+// import { ModeToggle } from "@/components/ui/dark-mode";
 import {
   ArrowLeft,
   CircleAlert,
@@ -184,9 +184,9 @@ export default function Login({ setTransition, className }: LoginProps) {
           <ArrowLeft />
         </Button>
       </Link>
-      <div className="absolute top-3 right-3">
+      {/* <div className="absolute top-3 right-3">
         <ModeToggle />
-      </div>
+      </div> */}
 
       <div className="flex-1 flex justify-center items-center">
         <div className="min-w-md">

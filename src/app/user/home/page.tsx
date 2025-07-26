@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import type React from "react";
 import { usePathname } from "next/navigation";
 import { UserCog2 } from "lucide-react";
-import morty from "@/assets/image.png";
 import DynamicHeader from "./dynamic-header";
 import { useEffect, useState } from "react";
 import SummaryClient from "./summary";
@@ -48,23 +47,16 @@ export default function ClientDashboard() {
   const path = usePathname();
   const segmentedPath = path.split("/");
   return (
-    <div className="pl-1 pr-2  min-h-screen your-class">
+    <div className="px-4   min-h-screen your-class">
       <DynamicHeader first={segmentedPath[2]} />
-      <div className=" grid grid-cols-3  gap-5 px-5 mt-5">
+      <div className=" grid grid-cols-3  gap-4  mt-6 ">
         <div className="col-span-2 space-y-3">
-          <div className="flex justify-between py-8">
-            <div className="flex gap-5">
-              <img
-                className="h-15 w-15 aspect-square object-cover rounded-full"
-                src={morty.src || "/placeholder.svg"}
-                alt=""
-              />
-              <div>
-                <h1 className="text-2xl font-semibold bg-gradient-to-r from-blue-500 via-green-400 to-teal-500 bg-clip-text text-transparent">
-                  Hello, {user?.firstName}...
-                </h1>
-                <p className="text-muted-foreground text-sm">{date}</p>
-              </div>
+          <div className="flex justify-between bg-background/40 p-4 rounded-md border">
+            <div>
+              <h1 className="text-2xl font-semibold bg-gradient-to-r from-blue-500 via-green-400 to-teal-500 bg-clip-text text-transparent  ">
+                Hello, Jerome.
+              </h1>
+              <p className="text-muted-foreground text-sm">{date}</p>
             </div>
 
             <span className="flex gap-3">
@@ -76,11 +68,11 @@ export default function ClientDashboard() {
           </div>
           <SummaryClient />
         </div>
-        <div className="bg-background/40"></div>
-        <div className=" col-span-2 pt-5">
+        <div className="bg-background/40 rounded-md border"></div>
+        <div className=" col-span-2">
           <TabsClient />
         </div>
-        <div className="bg-background/40"></div>
+        <div className="bg-background/40 rounded-md border"></div>
       </div>
     </div>
   );

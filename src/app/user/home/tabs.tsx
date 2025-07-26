@@ -68,10 +68,10 @@ import { Badge } from "@/components/ui/badge";
 export default function TabsClient() {
   return (
     <Tabs defaultValue="tab-1">
-      <TabsList className="bg-card mb-1 h-auto -space-x-px p-0 shadow-xs rtl:space-x-reverse w-full">
+      <TabsList className="bg-background/20 mb-1 h-auto -space-x-px p-0 shadow-xs rtl:space-x-reverse w-full">
         <TabsTrigger
           value="tab-1"
-          className="data-[state=active]:bg-muted dark:data-[state=active]:bg-muted  relative overflow-hidden border py-2 rounded flex-1"
+          className="data-[state=active]:bg-muted dark:data-[state=active]:bg-card  relative overflow-hidden border py-2 rounded-sm flex-1"
         >
           <Megaphone
             className="-ms-0.5 me-1.5 opacity-60"
@@ -82,7 +82,7 @@ export default function TabsClient() {
         </TabsTrigger>
         <TabsTrigger
           value="tab-2"
-          className="data-[state=active]:bg-muted dark:data-[state=active]:bg-muted  relative overflow-hidden border py-2 rounded flex-1"
+          className="data-[state=active]:bg-muted dark:data-[state=active]:bg-muted  relative overflow-hidden border py-2 rounded-sm flex-1"
         >
           <Megaphone
             className="-ms-0.5 me-1.5 opacity-60"
@@ -93,7 +93,7 @@ export default function TabsClient() {
         </TabsTrigger>
         <TabsTrigger
           value="tab-3"
-          className="data-[state=active]:bg-muted dark:data-[state=active]:bg-muted  relative overflow-hidden border py-2 rounded flex-1"
+          className="data-[state=active]:bg-muted dark:data-[state=active]:bg-muted  relative overflow-hidden border py-2 rounded-sm flex-1"
         >
           <Home
             className="-ms-0.5 me-1.5 opacity-60"
@@ -104,145 +104,42 @@ export default function TabsClient() {
         </TabsTrigger>
       </TabsList>
       <TabsContent value="tab-1">
-        <Card className="bg-card flex-1">
+        <Card className="bg-background/40 flex-1">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Megaphone className="h-5 w-5" />
+            
               Announcements
             </CardTitle>
             <CardDescription>Keep on latest update</CardDescription>
           </CardHeader>
-          <CardContent className="grid grid-cols-1 gap-3 ">
-            <Timeline className="divide-y rounded-lg border">
-              {announcements.map((item) => (
-                <TimelineItem
-                  key={item.id}
-                  step={item.id}
-                  className="m-0! px-4! py-3!"
-                >
-                  <TimelineContent className="text-foreground">
-                    {item.description}
-                    <TimelineDate className="mt-1">{item.date}</TimelineDate>
-                  </TimelineContent>
-                </TimelineItem>
-              ))}
-            </Timeline>
-          </CardContent>
-          <CardFooter>
-            <Button className="w-full " size="sm" variant="outline">
-              View All <ArrowRight className="h-4 w-4" />
-            </Button>
-          </CardFooter>
+          <CardContent className="grid grid-cols-1 gap-3 "></CardContent>
+          <CardFooter></CardFooter>
         </Card>
       </TabsContent>
 
       <TabsContent value="tab-2">
-        <Card className="bg-card">
+        <Card className="bg-background/40">
           <CardHeader>
             <CardTitle>Recent Applications</CardTitle>
             <CardDescription>
               Your latest scholarship applications
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="flex-1">
-                  <h3 className="font-semibold">
-                    Academic Excellence Scholarship
-                  </h3>
-                  <p className="text-sm text-muted-foreground">
-                    Merit-based scholarship for outstanding academic performance
-                  </p>
-                  <div className="flex items-center gap-4 mt-2">
-                    <Badge variant="secondary">$7,500</Badge>
-                    <span className="text-sm text-muted-foreground">
-                      Due: March 15, 2025
-                    </span>
-                  </div>
-                </div>
-                <Button size="sm">Apply Now</Button>
-              </div>
-
-              <div className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="flex-1">
-                  <h3 className="font-semibold">STEM Innovation Grant</h3>
-                  <p className="text-sm text-muted-foreground">
-                    For students pursuing Science, Technology, Engineering, or
-                    Mathematics
-                  </p>
-                  <div className="flex items-center gap-4 mt-2">
-                    <Badge variant="secondary">$5,000</Badge>
-                    <span className="text-sm text-muted-foreground">
-                      Due: April 1, 2025
-                    </span>
-                  </div>
-                </div>
-                <Button size="sm">Apply Now</Button>
-              </div>
-            </div>
-          </CardContent>
-          <CardFooter>
-            <Button variant="outline" className="w-full">
-              View More
-            </Button>
-          </CardFooter>
+          <CardContent></CardContent>
+          <CardFooter></CardFooter>
         </Card>
       </TabsContent>
 
       <TabsContent value="tab-3">
-        <Card className="bg-card">
+        <Card className="bg-background/40">
           <CardHeader>
             <CardTitle>Track Applications</CardTitle>
             <CardDescription>
               Monitor the progress of your scholarship applications
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              <div className="border rounded-lg p-4">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-semibold">
-                    Academic Excellence Scholarship
-                  </h3>
-                  <Badge variant="outline">Under Review</Badge>
-                </div>
-                <Timeline defaultValue={3} orientation="horizontal">
-                  {items.map((item) => (
-                    <TimelineItem key={item.id} step={item.id}>
-                      <TimelineHeader>
-                        <TimelineSeparator />
-                        <TimelineDate>{item.date}</TimelineDate>
-                        <TimelineTitle>{item.title}</TimelineTitle>
-                        <TimelineIndicator />
-                      </TimelineHeader>
-                      <TimelineContent>{item.description}</TimelineContent>
-                    </TimelineItem>
-                  ))}
-                </Timeline>
-              </div>
-
-              <div className="border rounded-lg p-4">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-semibold">STEM Innovation Grant</h3>
-                  <Badge variant="outline">Submitted</Badge>
-                </div>
-                <Timeline defaultValue={3} orientation="horizontal">
-                  {items.map((item) => (
-                    <TimelineItem key={item.id} step={item.id}>
-                      <TimelineHeader>
-                        <TimelineSeparator />
-                        <TimelineDate>{item.date}</TimelineDate>
-                        <TimelineTitle>{item.title}</TimelineTitle>
-                        <TimelineIndicator />
-                      </TimelineHeader>
-                      <TimelineContent>{item.description}</TimelineContent>
-                    </TimelineItem>
-                  ))}
-                </Timeline>
-              </div>
-            </div>
-          </CardContent>
+          <CardContent></CardContent>
+          <CardFooter></CardFooter>
         </Card>
       </TabsContent>
     </Tabs>
