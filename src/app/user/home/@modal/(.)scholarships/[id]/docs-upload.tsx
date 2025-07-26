@@ -93,7 +93,7 @@ export default function UploadDocs({
   return (
     <Form {...form}>
       <div className="p-4 space-y-5">
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <div className="flex items-center gap-2">
             <h1 className="text-2xl font-bold">Apply for Scholarship</h1>
           </div>
@@ -102,7 +102,7 @@ export default function UploadDocs({
           </p>
         </div>
 
-        <Separator />
+        <Separator /> */}
 
         <div className="space-y-4">
           <div className="flex justify-between items-center">

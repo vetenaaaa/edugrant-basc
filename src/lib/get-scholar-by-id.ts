@@ -26,6 +26,7 @@ export type ScholarshipTypes = {
 export default function useScholarshipUserById(id: string) {
   const [data, setData] = useState<ScholarshipTypes | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(
     function () {
@@ -43,7 +44,11 @@ export default function useScholarshipUserById(id: string) {
             setData(res.data.scholarship);
           }
         } catch (error) {
-          console.error(error);
+          if (axios.isAxiosError(error)) {
+            if (error.message === "Network Error") {
+              setError("No internet connection. Please check your network.");
+            }
+          }
         } finally {
           setLoading(false);
         }
@@ -54,5 +59,5 @@ export default function useScholarshipUserById(id: string) {
     [id]
   );
 
-  return { data, loading };
+  return { data, loading, error };
 }

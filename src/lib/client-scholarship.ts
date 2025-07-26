@@ -36,6 +36,7 @@ export default function useScholarshipUserData({
 }) {
   const [data, setData] = useState<ScholarshipTypes[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   useEffect(
     function () {
       async function fetchScholarships() {
@@ -51,6 +52,11 @@ export default function useScholarshipUserData({
           }
         } catch (error) {
           console.error(error);
+          if (axios.isAxiosError(error)) {
+            if (error.message === "Network Error") {
+              setError("No internet connection. Please check your network.");
+            }
+          }
         } finally {
           setLoading(false);
         }
@@ -61,5 +67,5 @@ export default function useScholarshipUserData({
     [sort, currentPage, rowsPerPage]
   );
 
-  return { data, loading };
+  return { data, loading, error };
 }

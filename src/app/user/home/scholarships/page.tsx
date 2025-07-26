@@ -56,90 +56,70 @@ export default function ClientScholarship() {
           </Select>
         </div>
 
-        <div className="space-y-3 py-10 grid lg:grid-cols-4 grid-cols-2 gap-3">
-          {loading ? (
-            <>
-              <div className="p-2 bg-background/40 relative">
-                <Skeleton className=" mb-20 aspect-video" />
-                <div className="w-full absolute bottom-0 left-0 flex gap-3 p-2">
-                  <Skeleton className="h-9 flex-1" />
-                  <Skeleton className="h-9 flex-1" />
+        <div className=" py-10 grid lg:grid-cols-4 grid-cols-2 gap-3">
+          {loading
+            ? [...Array(4)].map((_, index) => (
+                <div
+                  key={index}
+                  className="p-2 bg-background/40 relative rounded-md border"
+                >
+                  <Skeleton className="mb-22 aspect-video" />
+                  <div className="w-full absolute bottom-0 left-0 flex gap-3 px-2 py-4">
+                    <Skeleton className="h-8.5 flex-1" />
+                    <Skeleton className="h-8.5 flex-1" />
+                  </div>
                 </div>
-              </div>
-              <div className="p-2 bg-background/40 relative">
-                <Skeleton className=" mb-20 aspect-video" />
-                <div className="w-full absolute bottom-0 left-0 flex gap-3 p-2">
-                  <Skeleton className="h-9 flex-1" />
-                  <Skeleton className="h-9 flex-1" />
-                </div>
-              </div>
-              <div className="p-2 bg-background/40 relative">
-                <Skeleton className=" mb-20 aspect-video" />
-                <div className="w-full absolute bottom-0 left-0 flex gap-3 p-2">
-                  <Skeleton className="h-9 flex-1" />
-                  <Skeleton className="h-9 flex-1" />
-                </div>
-              </div>
-              <div className="p-2 bg-background/40 relative">
-                <Skeleton className=" mb-20 aspect-video" />
-                <div className="w-full absolute bottom-0 left-0 flex gap-3 p-2">
-                  <Skeleton className="h-9 flex-1" />
-                  <Skeleton className="h-9 flex-1" />
-                </div>
-              </div>
-            </>
-          ) : (
-            data.map((scholarship) => (
-              <div
-                key={scholarship.scholarshipId}
-                className="rounded-lg border bg-background/40 shadow-sm  overflow-hidden h-full  relative p-2"
-              >
-                <img
-                  src={scholarship.scholarshipLogo}
-                  alt=""
-                  className=" w-full object-cover rounded-md mask-gradient-bottom bg-background mb-20 aspect-video"
-                />
-                <div className=" absolute bottom-0 w-full left-0 p-2 space-y-3">
-                  <div className="flex justify-between items-start px-2">
-                    <div>
-                      <h1 className="font-bold text-lg">
-                        {scholarship.scholarshipTitle}
-                      </h1>
-                      <p className="text-sm text-muted-foreground">
-                        by {scholarship.scholarshipProvider}
-                      </p>
+              ))
+            : data.map((scholarship) => (
+                <div
+                  key={scholarship.scholarshipId}
+                  className="rounded-lg border bg-background/40 shadow-sm  overflow-hidden h-full  relative p-2"
+                >
+                  <img
+                    src={scholarship.scholarshipLogo}
+                    alt=""
+                    className=" w-full object-cover rounded-md mask-gradient-bottom bg-background mb-22 aspect-video"
+                  />
+                  <div className=" absolute bottom-0 w-full left-0 p-2 space-y-3">
+                    <div className="flex justify-between items-start px-2">
+                      <div>
+                        <h1 className="font-bold text-lg">
+                          {scholarship.scholarshipTitle}
+                        </h1>
+                        <p className="text-sm text-muted-foreground">
+                          by {scholarship.scholarshipProvider}
+                        </p>
+                      </div>
+                      <Badge>2 days left</Badge>
                     </div>
-                    <Badge>2 days left</Badge>
-                  </div>
 
-                  <div className="flex gap-3 py-2">
-                    <Link
-                      href={`/user/home/scholarships/${scholarship.scholarshipId}?apply=true`}
-                      className="flex-1"
-                    >
-                      <Button size="sm" className="gap-2 w-full">
-                        <LogIn className="h-4 w-4" />
-                        Apply Now
-                      </Button>
-                    </Link>
-                    <Link
-                      href={`/user/home/scholarships/${scholarship.scholarshipId}`}
-                      className="flex-1"
-                    >
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="gap-2 w-full"
+                    <div className="flex gap-3 py-2">
+                      <Link
+                        href={`/user/home/scholarships/${scholarship.scholarshipId}?apply=true`}
+                        className="flex-1"
                       >
-                        <Info className="h-4 w-4" />
-                        Details
-                      </Button>
-                    </Link>
+                        <Button size="sm" className="gap-2 w-full">
+                          <LogIn className="h-4 w-4" />
+                          Apply Now
+                        </Button>
+                      </Link>
+                      <Link
+                        href={`/user/home/scholarships/${scholarship.scholarshipId}`}
+                        className="flex-1"
+                      >
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="gap-2 w-full"
+                        >
+                          <Info className="h-4 w-4" />
+                          Details
+                        </Button>
+                      </Link>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))
-          )}
+              ))}
         </div>
       </div>
     </div>

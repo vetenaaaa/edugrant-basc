@@ -1,153 +1,310 @@
 "use client";
 import React, { useState } from "react";
 import { usePathname } from "next/navigation";
-import {
-  Edit3,
-  Eye,
-  EyeOff,
-} from "lucide-react";
+import { Edit3, Eye, EyeOff, UserPen, UserRound } from "lucide-react";
 import DynamicHeader from "../dynamic-header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { useProfileZod } from "@/lib/zod-user-profile";
+import { useUserStore } from "@/store/useUserStore";
+const mockUserData = {
+  firstName: "Jerome",
+  middleName: "Laguyo",
+  lastName: "Tecson",
+  gender: "Male",
+  dateOfBirth: "1999-02-18",
 
+  // Contact
+  email: "jerome.tecson@example.com",
+  contactNumber: "09154888862",
+  address: "Buliran, San Miguel, Bulacan",
+
+  // Academic
+  studentId: "2023-00123",
+  course: "BSIT",
+  yearLevel: "3rd Year",
+  section: "A",
+  password: "P@ssw0rd123",
+};
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Separator } from "@/components/ui/separator";
 export default function Profile() {
-  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isEdit, setIsEdit] = useState(true);
+  const { form, schema } = useProfileZod(mockUserData);
   const path = usePathname();
   const segmentedPath = path.split("/");
   return (
-    <div className="bg-background min-h-screen">
+    <div className="bg-background min-h-screen your-class px-4">
       <DynamicHeader first={segmentedPath[2]} second={segmentedPath[3]} />
-      <div className="mx-auto lg:w-3/4 w-[95%] py-10">
-        {/* Profile Header Card */}
-        <div className="bg-card rounded-lg  p-4 mb-8 border ">
-          <div className="flex flex-col md:flex-row items-center md:items-start gap-4">
-            <div className="flex-1 text-center md:text-left">
-              <h2 className="text-3xl font-bold text-gray-300 mb-2">
-                John Michael Smith
-              </h2>
-              <div className="text-lg text-gray-600 mb-3">
-                <span className="font-semibold">2021-0001234</span>
-              </div>
-              <div className="flex flex-wrap justify-center md:justify-start gap-3">
-                <Badge> Computer Science</Badge>
-                <Badge> 3rd Year</Badge>
-                <Badge> Section CS-3A</Badge>
+
+      <Form {...form}>
+        <div className="w-[60%] mx-auto py-10">
+          <div className="flex justify-between items-end">
+            <div>
+              <h1 className="text-2xl font-semibold flex gap-2 items-center">
+                <UserRound /> Jerome Laguyo Tecson
+              </h1>
+              <p className="text-sm text-gray-500 mt-1">ID: 2022000493</p>
+              <div className="flex gap-2 mt-2">
+                <Badge>Information Technology</Badge>
+                <Badge>4th Year</Badge>
+                <Badge>Section C</Badge>
               </div>
             </div>
-
-            <Button>
-              {" "}
-              <Edit3 />
-              Edit Profile
+            <Button onClick={() => setIsEdit(!isEdit)}>
+              <UserPen />
+              {isEdit ? "Edit Profile" : "Exit Edit Mode"}
             </Button>
           </div>
-        </div>
-
-        {/* Information Cards Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Personal Information */}
-          <div className="bg-card rounded-lg  p-4 border  ">
-            <h3 className="text-xl font-semibold text-gray-300 mb-4">
+          <div className=" w-full mt-10 space-y-5">
+            <h1 className="text-2xl font-semibold flex gap-2 items-center  pl-3 border-l-3 leading-5.5   border-amber-500">
               Personal Information
-            </h3>
-
-            <div className="mb-4 space-y-2">
-              <Label>First Name</Label>
-              <Input />
-            </div>
-            <div className="mb-4 space-y-2">
-              <Label>Middle Name</Label>
-              <Input />
-            </div>
-            <div className="mb-4 space-y-2">
-              <Label>Last Name</Label>
-              <Input />
-            </div>
-            <div className="mb-4 space-y-2">
-              <Label>Gender</Label>
-              <Input />
-            </div>
-            <div className="mb-4 space-y-2">
-              <Label>Date of Birth</Label>
-              <Input />
-            </div>
-          </div>
-
-          {/* Contact Information */}
-          <div className="bg-card rounded-lg  p-4 border  ">
-            <h3 className="text-xl font-semibold text-gray-300 mb-4">
-              Contact Information
-            </h3>
-
-            <div className="mb-4 space-y-2">
-              <Label>Email Address</Label>
-              <Input />
-            </div>
-            <div className="mb-4 space-y-2">
-              <Label>Contact Number</Label>
-              <Input />
-            </div>
-            <div className="mb-4 space-y-2">
-              <Label>Address</Label>
-              <Input />
-            </div>
-          </div>
-
-          {/* Academic Information */}
-          <div className="bg-card rounded-lg  p-4 border  ">
-            <h3 className="text-xl font-semibold text-gray-300 mb-4">
-              Academic Information
-            </h3>
-
-            <div className="mb-4 space-y-2">
-              <Label>Student ID</Label>
-              <Input />
-            </div>
-            <div className="mb-4 space-y-2">
-              <Label>Course</Label>
-              <Input />
-            </div>
-            <div className="mb-4 space-y-2">
-              <Label>Year Level</Label>
-              <Input />
-            </div>
-            <div className="mb-4 space-y-2">
-              <Label>Section</Label>
-              <Input />
-            </div>
-          </div>
-
-          {/* Account Security */}
-          <div className="bg-card rounded-lg  p-4 border  ">
-            <h3 className="text-xl font-semibold text-gray-300 mb-4">
-              Account Security
-            </h3>
-
-            <div className="mb-4 space-y-2">
-              <Label>Email</Label>
-              <Input />
-            </div>
-            <div className="mb-4 space-y-2">
-              <Label>Password</Label>
-              <Input />
-              <button
-                onClick={() => setShowPassword(!showPassword)}
-                className="text-gray-500 hover:text-gray-700"
-                type="button"
-                aria-label={showPassword ? "Hide password" : "Show password"}
-              >
-                {showPassword ? (
-                  <EyeOff className="h-4 w-4" />
-                ) : (
-                  <Eye className="h-4 w-4" />
+            </h1>
+            <div className="grid grid-cols-2  gap-x-3 gap-y-6">
+              <FormField
+                control={form.control}
+                name="firstName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>First Name</FormLabel>
+                    <FormControl>
+                      <Input {...field} disabled={isEdit} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )}
-              </button>
+              />
+              <FormField
+                control={form.control}
+                name="middleName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Middle Name</FormLabel>
+                    <FormControl>
+                      <Input {...field} disabled={isEdit} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="lastName"
+                render={({ field }) => (
+                  <FormItem className="col-span-2">
+                    <FormLabel>Last Name</FormLabel>
+                    <FormControl>
+                      <Input {...field} disabled={isEdit} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="gender"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Gender</FormLabel>
+                    <FormControl>
+                      <Input {...field} disabled={isEdit} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="dateOfBirth"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Date of Birth</FormLabel>
+                    <FormControl>
+                      <Input {...field} disabled={isEdit} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
           </div>
+          <div className=" w-full mt-10 space-y-5">
+            <h1 className="text-2xl font-semibold flex gap-2 items-center  pl-3 border-l-3 leading-5.5 border-amber-500">
+              Contact Information
+            </h1>
+            <div className="grid grid-cols-2  gap-x-3 gap-y-6">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem className="col-span-2">
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input {...field} disabled={isEdit} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />{" "}
+              <FormField
+                control={form.control}
+                name="address"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Address</FormLabel>
+                    <FormControl>
+                      <Input {...field} disabled={isEdit} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />{" "}
+              <FormField
+                control={form.control}
+                name="dateOfBirth"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Date of Birth</FormLabel>
+                    <FormControl>
+                      <Input {...field} disabled={isEdit} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
+          <div className=" w-full mt-10 space-y-5">
+            <h1 className="text-2xl font-semibold flex gap-2 items-center  pl-3 border-l-3 leading-5.5 border-amber-500">
+              Academic Information
+            </h1>
+            <div className="grid grid-cols-2  gap-x-3 gap-y-6">
+              <FormField
+                control={form.control}
+                name="studentId"
+                render={({ field }) => (
+                  <FormItem className="col-span-2">
+                    <FormLabel>Student ID</FormLabel>
+                    <FormControl>
+                      <Input {...field} disabled={isEdit} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />{" "}
+              <div className="grid grid-cols-3 gap-3 col-span-2">
+                <FormField
+                  control={form.control}
+                  name="course"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Course</FormLabel>
+                      <FormControl>
+                        <Input {...field} disabled={isEdit} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />{" "}
+                <FormField
+                  control={form.control}
+                  name="yearLevel"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Year Level</FormLabel>
+                      <FormControl>
+                        <Input {...field} disabled={isEdit} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />{" "}
+                <FormField
+                  control={form.control}
+                  name="section"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Section</FormLabel>
+                      <FormControl>
+                        <Input {...field} disabled={isEdit} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />{" "}
+              </div>
+            </div>
+          </div>
+          <div className=" w-full mt-10 space-y-5">
+            <h1 className="text-2xl font-semibold flex gap-2 items-center  pl-3 border-l-3 leading-5.5 border-amber-500">
+              Account Security
+            </h1>
+            <div className="grid grid-cols-2  gap-x-3 gap-y-6">
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem className="col-span-2">
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input {...field} disabled={isEdit} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
+          {!isEdit && (
+            <>
+              {" "}
+              <Separator className="mt-10" />
+              <div className=" w-full mt-10 space-y-5">
+                <div>
+                  <h1 className="text-2xl font-semibold flex gap-2 items-center">
+                    Save Changes?
+                  </h1>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Enter your current password to save changes.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-2  gap-x-3 gap-y-6">
+                  <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem className="col-span-2">
+                        <FormLabel>Password</FormLabel>
+                        <FormControl>
+                          <Input {...field} disabled={isEdit} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="w-full flex gap-3">
+                  <Button className="flex-1">Save</Button>
+                  <Button className="flex-1" onClick={() => setIsEdit(true)}>
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            </>
+          )}
         </div>
-      </div>
+      </Form>
     </div>
   );
 }
