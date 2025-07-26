@@ -1,15 +1,16 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/store/useUserStore";
-// import { ModeToggle } from "@/components/ui/dark-mode";
+
 import {
   ArrowLeft,
   CircleAlert,
   CircleCheckIcon,
   IdCard,
+  Key,
+  KeyRound,
   LoaderCircleIcon,
   LogIn,
 } from "lucide-react";
@@ -171,7 +172,7 @@ export default function Login({ setTransition, className }: LoginProps) {
   return (
     <div
       className={`relative flex justify-center items-center gap-5 w-full ${
-        className ? "h-[calc(100vh-116px)]" : "h-screen"
+        className ? "h-[calc(100dvh-116px)]" : "h-[100dvh]"
       }`}
     >
       <Link
@@ -184,14 +185,11 @@ export default function Login({ setTransition, className }: LoginProps) {
           <ArrowLeft />
         </Button>
       </Link>
-      {/* <div className="absolute top-3 right-3">
-        <ModeToggle />
-      </div> */}
 
       <div className="flex-1 flex justify-center items-center">
-        <div className="min-w-md">
+        <div className="lg:w-md w-[90%]">
           {step === "login" && (
-            <div className="space-y-8">
+            <div className="space-y-6">
               <div className="space-y-1.5">
                 <h1 className="text-2xl font-semibold">Welcome back!</h1>
                 <p className="text-sm text-muted-foreground">
@@ -223,14 +221,15 @@ export default function Login({ setTransition, className }: LoginProps) {
                 </div>
               )}
               <Form {...LoginForm}>
-                <div className="space-y-10">
+                <div className="space-y-5">
                   <FormField
                     control={LoginForm.control}
                     name="studentId"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>
-                          <IdCard /> Student ID
+                        <FormLabel className="flex justify-between items-center">
+                          Student ID
+                          <IdCard />
                         </FormLabel>
                         <FormControl>
                           <Input
@@ -249,7 +248,10 @@ export default function Login({ setTransition, className }: LoginProps) {
                     name="password"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Password</FormLabel>
+                        <FormLabel className="flex justify-between items-center">
+                          Password
+                          <KeyRound />
+                        </FormLabel>
                         <FormControl>
                           <Input
                             type="password"
@@ -263,41 +265,46 @@ export default function Login({ setTransition, className }: LoginProps) {
                     )}
                   />
                 </div>
-                <Button
-                  className="w-full"
-                  onClick={LoginForm.handleSubmit(handleSendCode)}
-                  disabled={loading}
-                >
-                  {loading && (
-                    <LoaderCircleIcon
-                      className="-ms-1 animate-spin"
-                      size={16}
-                      aria-hidden="true"
-                    />
-                  )}
-                  Login <LogIn />
-                </Button>
-                <div className="relative flex justify-center items-center gap-3">
-                  <div className=" border flex-1"></div>
-                  <Label>Don&apos;t have an account?</Label>
-                  <div className=" border flex-1"></div>
-                </div>
-                <Link
-                  href={`/user/register`}
-                  prefetch
-                  onClick={handleRegisterClick}
-                >
-                  <Button variant="secondary" className="w-full">
-                    Register
+                <div className="space-y-3 mt-10">
+                  <Button
+                    className="w-full"
+                    onClick={LoginForm.handleSubmit(handleSendCode)}
+                    disabled={loading}
+                  >
+                    {loading && (
+                      <LoaderCircleIcon
+                        className="-ms-1 animate-spin"
+                        size={16}
+                        aria-hidden="true"
+                      />
+                    )}
+                    Login <LogIn />
                   </Button>
-                </Link>
-              </Form>
 
-              <p className="text-xs text-center mt-1">
-                By clicking continue, you agree to our <br />
-                <span className="underline"> Terms of Service </span> and{" "}
-                <span className="underline"> Privacy Policy</span>.
-              </p>
+                  <div className="relative flex justify-center items-center text-xs gap-3">
+                    <div className=" border flex-1"></div>
+                    <p>Don&apos;t have an account?</p>
+                    <div className=" border flex-1"></div>
+                  </div>
+                  <Link
+                    href={`/user/register`}
+                    prefetch
+                    onClick={handleRegisterClick}
+                  >
+                    <Button variant="secondary" className="w-full">
+                      Register
+                    </Button>
+                  </Link>
+                  <div className="text-xs text-center mt-2">
+                    By clicking continue, you agree to our <br />
+                    <span className="underline">
+                      {" "}
+                      Terms of Service{" "}
+                    </span> and{" "}
+                    <span className="underline"> Privacy Policy</span>.
+                  </div>
+                </div>
+              </Form>
             </div>
           )}
           {step === "otp" && (

@@ -36,27 +36,30 @@ export default function useScholarshipUserData({
 }) {
   const [data, setData] = useState<ScholarshipTypes[]>([]);
   const [loading, setLoading] = useState(true);
-  useEffect(function () {
-    async function fetchScholarships() {
-      setLoading(true);
-      try {
-        const res = await axios.post(
-          `https://edugrant-express-server-production.up.railway.app/user/getAllScholarships`,
-          { page: currentPage, dataPerPage: rowsPerPage, sortBy: sort },
-          { withCredentials: true }
-        );
-        if (res.status === 200) {
-          setData(res.data.getScholarshipsData);
+  useEffect(
+    function () {
+      async function fetchScholarships() {
+        setLoading(true);
+        try {
+          const res = await axios.post(
+            `https://edugrant-express-server-production.up.railway.app/user/getAllScholarships`,
+            { page: currentPage, dataPerPage: rowsPerPage, sortBy: sort },
+            { withCredentials: true }
+          );
+          if (res.status === 200) {
+            setData(res.data.getScholarshipsData);
+          }
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setLoading(false);
         }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
       }
-    }
 
-    fetchScholarships();
-  }, []);
+      fetchScholarships();
+    },
+    [sort, currentPage, rowsPerPage]
+  );
 
   return { data, loading };
 }

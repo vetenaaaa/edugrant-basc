@@ -26,8 +26,8 @@ export default function UploadDocs({
   data: ScholarshipTypes;
   setIsApply: (value: boolean) => void;
 }) {
-  const { user } = useUserStore();
-  const userId = user?.userId
+  const user = useUserStore((state) => state.user);
+  const userId = user?.userId;
   const scholarId = data.scholarshipId;
   const formSchema = z.object({
     documents: z
@@ -134,7 +134,6 @@ export default function UploadDocs({
                       onChange={(e) => {
                         const file = e.target.files?.[0];
                         if (file) {
-                       
                           const currentDocs = form.getValues("documents") || [];
                           currentDocs[index] = file;
                           form.setValue("documents", currentDocs);
