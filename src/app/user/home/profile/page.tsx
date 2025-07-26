@@ -1,14 +1,12 @@
 "use client";
 import React, { useState } from "react";
 import { usePathname } from "next/navigation";
-import { Edit3, Eye, EyeOff, UserPen, UserRound } from "lucide-react";
+import {  UserPen, UserRound } from "lucide-react";
 import DynamicHeader from "../dynamic-header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { useProfileZod } from "@/lib/zod-user-profile";
-import { useUserStore } from "@/store/useUserStore";
 const mockUserData = {
   firstName: "Jerome",
   middleName: "Laguyo",
@@ -39,7 +37,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 export default function Profile() {
   const [isEdit, setIsEdit] = useState(true);
-  const { form, schema } = useProfileZod(mockUserData);
+  const { form } = useProfileZod(mockUserData);
   const path = usePathname();
   const segmentedPath = path.split("/");
   return (
