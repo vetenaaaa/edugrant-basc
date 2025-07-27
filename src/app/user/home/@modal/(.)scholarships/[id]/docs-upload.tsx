@@ -26,7 +26,7 @@ export default function UploadDocs({
   setIsApply: (value: boolean) => void;
 }) {
   const user = useUserStore((state) => state.user);
-  const userId = user?.userId;
+  const userId = user?.studentId;
   const scholarId = data.scholarshipId;
   const formSchema = z.object({
     documents: z
