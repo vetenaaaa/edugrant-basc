@@ -36,10 +36,10 @@ import { useScholarshipStore } from "@/store/scholarshipStore";
 import { Skeleton } from "@/components/ui/skeleton";
 import axios from "axios";
 import { toast } from "sonner";
-import useScholarshipUserById from "@/lib/get-scholar-by-id";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
+import useScholarshipUserByIdAdmin from "@/lib/get-id-scholar-admin";
 
 export default function InterceptManageScholarship() {
   const [editMode, setEditMode] = useState(false);
@@ -51,7 +51,7 @@ export default function InterceptManageScholarship() {
   const params = useParams();
   const [open, setOpen] = useState(true);
   const id = params.id as string;
-  const { data, loading } = useScholarshipUserById(id, "administrator");
+  const { data, loading } = useScholarshipUserByIdAdmin(id);
   const title = data?.scholarshipTitle || "N/A";
   const deadline = data?.scholarshipDealine;
   const readable = deadline

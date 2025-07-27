@@ -39,7 +39,7 @@ export default function InterceptManageScholarshipClient() {
   const params = useParams();
   const [open, setOpen] = useState(true);
   const id = params.id as string;
-  const { data, loading } = useScholarshipUserById(id, "user");
+  const { data, loading } = useScholarshipUserById(id);
   const title = data?.scholarshipTitle || "N/A";
   const deadline = data?.scholarshipDealine;
   const formatted = deadline
