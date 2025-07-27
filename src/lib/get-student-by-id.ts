@@ -11,7 +11,7 @@ export default function useAuthenticatedUser() {
       try {
         setLoading(true);
         const res = await axios.get(
-          `https://edugrant-express-server-production.up.railway.app/user/tokenAuthentication`,
+          `https://edugrant-express-server-production.up.railway.app/user/tokenValidation`,
           {
             withCredentials: true,
           }
