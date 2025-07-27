@@ -52,6 +52,7 @@ export default function InterceptManageScholarship() {
   const [open, setOpen] = useState(true);
   const id = params.id as string;
   const { data, loading } = useScholarshipUserByIdAdmin(id);
+
   const title = data?.scholarshipTitle || "N/A";
   const deadline = data?.scholarshipDealine;
   const readable = deadline
