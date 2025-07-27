@@ -1,4 +1,4 @@
-import { Activity, CheckCheck, CloudUpload, TrendingUp } from "lucide-react";
+import { Activity, CheckCheck, CloudUpload, PhilippinePeso, TrendingUp } from "lucide-react";
 
 export default function SummaryClient() {
   return (
@@ -9,11 +9,11 @@ export default function SummaryClient() {
             <TrendingUp />
           </span>
           <p className="flex text-xs border p-1 rounded-sm bg-green-800/10 text-blue-600">
-            3 pending review
+           + 3 pending review
           </p>
         </div>
         <div className="flex justify-between items-end">
-          <p className="text-sm text-muted-foreground">All Application</p>
+          <p className="font-semibold text-sm">All Application</p>
           <p className="text-3xl font-semibold text-blue-600">2</p>
         </div>
       </div>
@@ -27,7 +27,7 @@ export default function SummaryClient() {
           </p>
         </div>
         <div className="flex justify-between items-end">
-          <p className="text-sm text-muted-foreground">Approved</p>
+          <p className="font-semibold text-sm">Approved</p>
           <p className="text-3xl font-semibold text-green-600">0</p>
         </div>
       </div>
@@ -41,22 +41,22 @@ export default function SummaryClient() {
           </p>
         </div>
         <div className="flex justify-between items-end">
-          <p className="text-sm text-muted-foreground">Pending</p>
+          <p className="font-semibold text-sm">Pending</p>
           <p className="text-3xl font-semibold text-yellow-500">0</p>
         </div>
       </div>
       <div className="space-y-2 bg-background flex flex-col justify-center p-4 rounded-lg border shadow-sm">
         <div className="flex justify-between items-start ">
           <span className="border p-2 rounded-md">
-            <Activity />
+            <PhilippinePeso />
           </span>
-          <p className="flex text-xs border p-1 rounded-sm bg-gray-800/10 text-gray-600">
+          {/* <p className="flex text-xs border p-1 rounded-sm bg-gray-800/10 text-gray-600">
             Above average
-          </p>
+          </p> */}
         </div>
         <div className="flex justify-between items-end">
-          <p className="text-sm text-muted-foreground">Cancelled</p>
-          <p className="text-3xl font-semibold text-gray-600">2</p>
+          <p className="font-semibold text-sm">Total Recieve</p>
+          <p className="text-3xl font-semibold text-gray-600">3K</p>
         </div>
       </div>
     </div>
