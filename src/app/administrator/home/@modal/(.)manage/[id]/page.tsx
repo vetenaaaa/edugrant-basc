@@ -30,7 +30,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import EditScholarship from "./edit-form";
 import { useScholarshipStore } from "@/store/scholarshipStore";

@@ -1,4 +1,4 @@
-import { Activity, CheckCheck, CloudUpload, PhilippinePeso, TrendingUp } from "lucide-react";
+import {  CheckCheck, CloudUpload, PhilippinePeso, TrendingUp } from "lucide-react";
 
 export default function SummaryClient() {
   return (

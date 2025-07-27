@@ -2,16 +2,16 @@
 import { Button } from "@/components/ui/button";
 import type React from "react";
 import { usePathname } from "next/navigation";
-import { ArrowRight, UserCog2 } from "lucide-react";
+
 import DynamicHeader from "./dynamic-header";
-import { useEffect, useState } from "react";
+
 import { Calendar } from "@/components/ui/calendar";
 import SummaryClient from "./summary";
-import TabsClient from "./tabs";
-import { useUserStore } from "@/store/useUserStore";
-import { Separator } from "@/components/ui/separator";
+import { useState } from "react";
+
+
 export default function ClientDashboard() {
-  const { user } = useUserStore();
+  
   const [date, setDate] = useState<Date | undefined>(new Date());
 
   const path = usePathname();
