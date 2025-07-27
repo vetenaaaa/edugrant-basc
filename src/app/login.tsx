@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
-import { useUserStore } from "@/store/useUserStore";
+
 // import { ModeToggle } from "@/components/ui/dark-mode";
 import {
   ArrowLeft,
@@ -14,6 +14,7 @@ import {
   LogIn,
 } from "lucide-react";
 import Link from "next/link";
+import { useUserStore } from "@/store/useUserStore";
 import z from "zod";
 import {
   Form,
@@ -56,6 +57,7 @@ type loginFormData = z.infer<typeof loginSchema>;
 type loginOtpFormData = z.infer<typeof loginOtpSchema>;
 
 export default function Login({ setTransition, className }: LoginProps) {
+  const { setUser } = useUserStore();
   const router = useRouter();
   const [step, setStep] = useState<"login" | "otp">("login");
   const [loading, setLoading] = useState(false);
@@ -103,8 +105,7 @@ export default function Login({ setTransition, className }: LoginProps) {
       );
 
       if (response.status === 200) {
-        const { userData } = response.data;
-        useUserStore.getState().setUser(userData);
+        setUser(response.data);
         setSuccess("Registration successful! Redirecting...");
         console.log(response.data);
         setTimeout(() => {
