@@ -107,7 +107,7 @@ export default function Login({ setTransition, className }: LoginProps) {
       if (response.status === 200) {
         setUser(response.data);
         setSuccess("Registration successful! Redirecting...");
-        console.log(response.data);
+        console.log("login:", response.data);
         setTimeout(() => {
           router.push("/user/home");
         }, 2000);

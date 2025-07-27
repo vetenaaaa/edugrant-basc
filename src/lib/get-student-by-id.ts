@@ -17,8 +17,9 @@ export default function useAuthenticatedUser() {
           }
         );
 
-        if (res.status === 200 && res.data?.user) {
-          setUser(res.data.user);
+        if (res.status === 200) {
+          // setUser(res.data.user);
+          console.log("authapi:", res.data);
         }
       } catch (error) {
         if (axios.isAxiosError(error) && error.message === "Network Error") {
