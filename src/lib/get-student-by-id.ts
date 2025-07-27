@@ -18,7 +18,6 @@ export default function useAuthenticatedUser() {
         );
 
         if (res.status === 200 && res.data?.user) {
-          console.log(res);
           setUser(res.data.user);
         }
       } catch (error) {

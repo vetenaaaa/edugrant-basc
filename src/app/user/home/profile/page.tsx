@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { usePathname } from "next/navigation";
-import {  UserPen, UserRound } from "lucide-react";
+import { UserPen, UserRound } from "lucide-react";
 import DynamicHeader from "../dynamic-header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,12 +34,16 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { useUserStore } from "@/store/useUserStore";
 import { Separator } from "@/components/ui/separator";
 export default function Profile() {
   const [isEdit, setIsEdit] = useState(true);
   const { form } = useProfileZod(mockUserData);
   const path = usePathname();
   const segmentedPath = path.split("/");
+  const { user, loading, error } = useUserStore();
+  console.log("meow", user?.studentId, loading, error);
+
   return (
     <div className="bg-background min-h-screen your-class px-4">
       <DynamicHeader first={segmentedPath[2]} second={segmentedPath[3]} />
