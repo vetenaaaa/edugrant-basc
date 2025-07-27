@@ -1,3 +1,4 @@
+"use client";
 import { AppSidebar } from "@/components/ui/client-sidebar";
 import { ReactNode } from "react";
 import useAuthenticatedUser from "@/lib/get-student-by-id";
