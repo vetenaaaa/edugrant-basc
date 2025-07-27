@@ -39,7 +39,7 @@ export default function InterceptManageScholarshipClient() {
   const params = useParams();
   const [open, setOpen] = useState(true);
   const id = params.id as string;
-  const { data, loading } = useScholarshipUserById(id);
+  const { data, loading } = useScholarshipUserById(id, "user");
   const title = data?.scholarshipTitle || "N/A";
   const deadline = data?.scholarshipDealine;
   const formatted = deadline
@@ -96,7 +96,6 @@ export default function InterceptManageScholarshipClient() {
                       href={`${scholarshipCover}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                  
                     >
                       <Button className="absolute z-10 cursor-pointer bottom-5 right-5">
                         View

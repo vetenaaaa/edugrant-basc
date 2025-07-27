@@ -23,7 +23,7 @@ export type ScholarshipTypes = {
   scholarshipDocuments: scholarshipDocumentTypes[];
 };
 
-export default function useScholarshipUserById(id: string) {
+export default function useScholarshipUserById(id: string, wtf: string) {
   const [data, setData] = useState<ScholarshipTypes | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -36,7 +36,7 @@ export default function useScholarshipUserById(id: string) {
           const res = await axios.get<{
             scholarship: ScholarshipTypes;
           }>(
-            `https://edugrant-express-server-production.up.railway.app/user/getScholarshipsbyId?scholarshipId=${id}`,
+            `https://edugrant-express-server-production.up.railway.app/${wtf}/getScholarshipsbyId?scholarshipId=${id}`,
 
             { withCredentials: true }
           );
