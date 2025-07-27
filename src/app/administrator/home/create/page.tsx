@@ -1,6 +1,7 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { format } from "date-fns";
 import { useForm, useFieldArray } from "react-hook-form";
 import MultipleSelector, { Option } from "@/components/ui/multi-select";
 import { toast } from "sonner";
@@ -26,8 +27,10 @@ import { Button } from "@/components/ui/button";
 import {
   AlertCircleIcon,
   ArrowLeft,
+  CalendarIcon,
   ImageUpIcon,
   LoaderCircleIcon,
+  PenLine,
   Plus,
   X,
   XIcon,
@@ -36,6 +39,13 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import DynamicHeaderAdmin from "../dynamic-header";
 import { useFileUpload } from "@/lib/use-file-upload";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { cn } from "@/lib/utils";
 
 const options: Option[] = [
   { label: "PDF", value: ".pdf" },
@@ -53,9 +63,11 @@ const createScholarshipSchema = z.object({
   scholarshipTitle: z.string().min(3, "Required"),
   providerName: z.string().min(3, "Required"),
   scholarshipDescription: z.string().min(3, "Required"),
-  applicationDeadline: z.string().min(1, "Required"),
+  applicationDeadline: z.date({
+    message: "Required",
+  }),
   scholarshipAmount: z.string().min(1, "Required"),
-  scholarshipLimit: z.string().min(1, "Required"),
+  scholarshipLimit: z.string(),
   detailsImage: z
     .any()
     .refine(
@@ -135,7 +147,7 @@ export default function Create() {
       scholarshipTitle: "",
       providerName: "",
       scholarshipDescription: "",
-      applicationDeadline: "",
+      applicationDeadline: undefined,
       scholarshipAmount: "",
       scholarshipLimit: "",
       documents: [{ label: "", formats: [] }],
@@ -180,7 +192,10 @@ export default function Create() {
 
       formDataToSend.append("applicationStartDate", today);
       console.log("startDate:", today);
-      formDataToSend.append("newScholarDeadline", data.applicationDeadline);
+      formDataToSend.append(
+        "newScholarDeadline",
+        format(formData.applicationDeadline, "PPP")
+      );
       console.log("applicationDeadline:", data.applicationDeadline);
 
       formDataToSend.append("scholarshipAmount", data.scholarshipAmount);
@@ -226,7 +241,7 @@ export default function Create() {
           scholarshipTitle: "",
           providerName: "",
           scholarshipDescription: "",
-          applicationDeadline: "",
+          applicationDeadline: undefined,
           scholarshipAmount: "",
           scholarshipLimit: "",
           detailsImage: undefined,
@@ -265,11 +280,12 @@ export default function Create() {
   };
 
   return (
-    <div className="pl-1 pr-2 your-class">
+    <div className="px-4 your-class">
       <DynamicHeaderAdmin first="Scholarship" second="Create" />
 
-      <div className="mx-auto lg:w-3/4 w-[95%] py-10">
-        <h1 className="text-3xl font-semibold">
+      <div className="mx-auto lg:w-[60%] w-[95%] py-10">
+        <h1 className="text-2xl font-semibold flex items-center gap-2">
+          <PenLine />
           Create a New Scholarship Opportunity
         </h1>
         <p className="text-sm text-gray-500 mt-1">
@@ -278,115 +294,145 @@ export default function Create() {
         <Form {...form}>
           <div className="space-y-5 mt-10">
             {/* Scholarship Fields */}
-            <div className="space-y-5  border p-4 rounded-md bg-background/30">
-              <div className="w-full ">
-                <h2 className="font-semibold text-lg">Scholarship Details</h2>
+            <h1 className="text-2xl font-semibold flex gap-2 items-center  pl-3 border-l-3 leading-5.5   border-amber-500">
+              Scholarship Details
+            </h1>
+            <div className="grid grid-cols-3 gap-x-3 gap-y-6">
+              <div className="col-span-2">
+                <FormField
+                  control={form.control}
+                  name="scholarshipTitle"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex justify-between items-center">
+                        Scholarship Title <FormMessage />
+                      </FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
               </div>
-              <div className="grid grid-cols-3 gap-5">
-                <div className="col-span-2">
-                  <FormField
-                    control={form.control}
-                    name="scholarshipTitle"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="flex justify-between items-center">
-                          Scholarship Title <FormMessage />
-                        </FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="">
-                  <FormField
-                    control={form.control}
-                    name="providerName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="flex justify-between items-center">
-                          Provider Name <FormMessage />
-                        </FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                </div>
+              <div className="">
+                <FormField
+                  control={form.control}
+                  name="providerName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex justify-between items-center">
+                        Provider Name <FormMessage />
+                      </FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
 
-                <div className="">
-                  <FormField
-                    control={form.control}
-                    name="scholarshipAmount"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="flex justify-between items-center">
-                          Scholarship Amount <FormMessage />
-                        </FormLabel>
-                        <FormControl>
-                          <Input type="number" {...field} />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                </div>
+              <div className="">
+                <FormField
+                  control={form.control}
+                  name="scholarshipAmount"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex justify-between items-center">
+                        Scholarship Amount <FormMessage />
+                      </FormLabel>
+                      <FormControl>
+                        <Input type="number" {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
 
-                <div className="">
-                  <FormField
-                    control={form.control}
-                    name="applicationDeadline"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="flex justify-between items-center">
-                          Application Deadline <FormMessage />
-                        </FormLabel>
-                        <FormControl>
-                          <Input type="date" {...field} />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                </div>
+              <div className="">
+                <FormField
+                  control={form.control}
+                  name="applicationDeadline"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel className="flex items-center justify-between">
+                        Deadline <FormMessage />
+                      </FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "w-full  text-left font-normal",
+                                !field.value && "text-muted-foreground"
+                              )}
+                            >
+                              {field.value ? (
+                                format(field.value, "PPP")
+                              ) : (
+                                <span>Pick a date</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={field.onChange}
+                          
+                            captionLayout="dropdown"
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    </FormItem>
+                  )}
+                />
+              </div>
 
-                <div className="">
-                  <FormField
-                    control={form.control}
-                    name="scholarshipLimit"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="flex justify-between items-center">
-                          Scholarship Limit (0 = unlimited) <FormMessage />
-                        </FormLabel>
-                        <FormControl>
-                          <Input type="number" {...field} />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                </div>
+              <div className="">
+                <FormField
+                  control={form.control}
+                  name="scholarshipLimit"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex justify-between items-center">
+                        Scholarship Limit (optional)
+                        <FormMessage />
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Leave blank if no limit"
+                          type="number"
+                          {...field}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
 
-                <div className="col-span-3">
-                  <FormField
-                    control={form.control}
-                    name="scholarshipDescription"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="flex justify-between items-center">
-                          Scholarship Description <FormMessage />
-                        </FormLabel>
-                        <FormControl>
-                          <Textarea {...field} />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                </div>
+              <div className="col-span-3">
+                <FormField
+                  control={form.control}
+                  name="scholarshipDescription"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex justify-between items-center">
+                        Scholarship Description <FormMessage />
+                      </FormLabel>
+                      <FormControl>
+                        <Textarea {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
               </div>
             </div>
-
-            <div className="w-full flex gap-5  border p-4 rounded-md bg-background/30">
+          </div>
+          <div className="space-y-5 mt-10">
+            <div className="w-full flex gap-5">
               {/* Backdrop Image */}
               <div className="flex flex-col flex-1 gap-2">
                 <FormField
@@ -417,7 +463,7 @@ export default function Create() {
                               }, 0);
                             }}
                             data-dragging={detailsIsDragging || undefined}
-                            className="border-input hover:bg-accent/50 data-[dragging=true]:bg-accent/50 has-[input:focus]:border-ring has-[input:focus]:ring-ring/50 relative flex min-h-35 flex-col items-center justify-center overflow-hidden rounded-xl border border-dashed p-4 transition-colors has-disabled:pointer-events-none has-disabled:opacity-50 has-[img]:border-none has-[input:focus]:ring-[3px]"
+                            className="border-input hover:bg-accent/50 data-[dragging=true]:bg-accent/50 has-[input:focus]:border-ring has-[input:focus]:ring-ring/50 relative flex min-h-35 flex-col items-center justify-center overflow-hidden rounded-xl border border-dashed p-4 transition-colors has-disabled:pointer-events-none has-disabled:opacity-50 has-[img]:border-none has-[input:focus]:ring-[3px] bg-white/5"
                           >
                             <input
                               {...detailsGetInputProps()}
@@ -517,7 +563,7 @@ export default function Create() {
                               }, 0);
                             }}
                             data-dragging={sponsorIsDragging || undefined}
-                            className="border-input hover:bg-accent/50 data-[dragging=true]:bg-accent/50 has-[input:focus]:border-ring has-[input:focus]:ring-ring/50 relative flex min-h-35 flex-col items-center justify-center overflow-hidden rounded-xl border border-dashed p-4 transition-colors has-disabled:pointer-events-none has-disabled:opacity-50 has-[img]:border-none has-[input:focus]:ring-[3px]"
+                            className="border-input hover:bg-accent/50 data-[dragging=true]:bg-accent/50 has-[input:focus]:border-ring has-[input:focus]:ring-ring/50 relative flex min-h-35 flex-col items-center justify-center overflow-hidden rounded-xl border border-dashed p-4 transition-colors has-disabled:pointer-events-none has-disabled:opacity-50 has-[img]:border-none has-[input:focus]:ring-[3px] bg-white/5"
                           >
                             <input
                               {...sponsorGetInputProps()}
@@ -585,110 +631,113 @@ export default function Create() {
                 />
               </div>
             </div>
+          </div>
 
-            {/* Dynamic Required Documents */}
-            <div className="space-y-5 border p-4 rounded-md bg-background/30">
-              <div className="w-full flex items-center justify-between ">
-                <h2 className="font-semibold text-lg">Required Documents</h2>
-                <Button
-                  type="button"
-                  size="sm"
-                  onClick={() => append({ label: "", formats: [] })}
-                  variant="outline"
-                >
-                  <Plus className="w-4 h-4 mr-1" />
-                  More requirements
-                </Button>
-              </div>
-
-              <div className="space-y-5">
-                {fields.map((field, index) => (
-                  <div
-                    key={field.id}
-                    className="grid grid-cols-3 gap-3 items-center"
-                  >
-                    {/* Label */}
-                    <div className="lg:col-span-1 col-span-3">
-                      <FormField
-                        control={form.control}
-                        name={`documents.${index}.label`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="flex justify-between items-center">
-                              Document Label {index + 1} <FormMessage />
-                            </FormLabel>
-                            <FormControl>
-                              <Input placeholder="e.g. COR" {...field} />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-
-                    {/* Formats */}
-                    <div className="lg:col-span-1 col-span-3">
-                      <FormField
-                        control={form.control}
-                        name={`documents.${index}.formats`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="flex justify-between items-center">
-                              Document Formats
-                              <FormMessage />
-                            </FormLabel>
-                            <FormControl>
-                              <MultipleSelector
-                                commandProps={{
-                                  label: "Select document formats",
-                                }}
-                                value={options.filter((option) =>
-                                  field.value?.includes(option.value)
-                                )}
-                                defaultOptions={options}
-                                placeholder="Choose formats"
-                                hideClearAllButton
-                                hidePlaceholderWhenSelected
-                                emptyIndicator={
-                                  <p className="text-center text-sm">
-                                    No results found
-                                  </p>
-                                }
-                                onChange={(selected) => {
-                                  field.onChange(
-                                    selected.map((option) => option.value)
-                                  );
-                                }}
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-
-                    {/* File + Remove */}
-                    <div className="lg:col-span-1 col-span-3 flex items-end gap-2 lg:mt-6 mt-3">
-                      <Input type="file" disabled />
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        disabled={fields.length === 1}
-                        onClick={() => remove(index)}
-                      >
-                        <X />
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
+          {/* Dynamic Required Documents */}
+          <div className="space-y-5 mt-10">
+            <div className="w-full flex items-center justify-between ">
+              <h1 className="text-2xl font-semibold flex gap-2 items-center  pl-3 border-l-3 leading-5.5   border-amber-500">
+                Documents
+              </h1>
+              <Button
+                type="button"
+                size="sm"
+                onClick={() => append({ label: "", formats: [] })}
+                variant="outline"
+              >
+                <Plus className="w-4 h-4 mr-1" />
+                More requirements
+              </Button>
             </div>
 
-            <Button
-              onClick={form.handleSubmit(validateAndOpenDrawer)}
-              className="w-full"
-            >
-              Submit
-            </Button>
+            <div className="space-y-5">
+              {fields.map((field, index) => (
+                <div
+                  key={field.id}
+                  className="grid grid-cols-3 gap-3 items-center"
+                >
+                  {/* Label */}
+                  <div className="lg:col-span-1 col-span-3">
+                    <FormField
+                      control={form.control}
+                      name={`documents.${index}.label`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex justify-between items-center">
+                            Document Label {index + 1} <FormMessage />
+                          </FormLabel>
+                          <FormControl>
+                            <Input placeholder="e.g. COR" {...field} />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  {/* Formats */}
+                  <div className="lg:col-span-1 col-span-3">
+                    <FormField
+                      control={form.control}
+                      name={`documents.${index}.formats`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex justify-between items-center">
+                            Document Formats
+                            <FormMessage />
+                          </FormLabel>
+                          <FormControl>
+                            <MultipleSelector
+                            className="bg-white/5"
+                              commandProps={{
+                                label: "Select document formats",
+                              }}
+                              value={options.filter((option) =>
+                                field.value?.includes(option.value)
+                              )}
+                              defaultOptions={options}
+                              placeholder="Choose formats"
+                              hideClearAllButton
+                              hidePlaceholderWhenSelected
+                              emptyIndicator={
+                                <p className="text-center text-sm">
+                                  No results found
+                                </p>
+                              }
+                              onChange={(selected) => {
+                                field.onChange(
+                                  selected.map((option) => option.value)
+                                );
+                              }}
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  {/* File + Remove */}
+                  <div className="lg:col-span-1 col-span-3 flex items-end gap-2 lg:mt-6 mt-3">
+                    <Input type="file" disabled />
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      disabled={fields.length === 1}
+                      onClick={() => remove(index)}
+                    >
+                      <X />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
+
+          <Button
+            onClick={form.handleSubmit(validateAndOpenDrawer)}
+            className="w-full mt-10"
+          >
+            Submit
+          </Button>
         </Form>
         <Drawer open={open} onOpenChange={setOpen}>
           <DrawerContent className="w-3/4 mx-auto h-[85vh]">
@@ -750,7 +799,9 @@ export default function Create() {
                   Deadline
                 </h1>
                 <p className="text-lg font-bold border p-2 rounded flex-1">
-                  {formData.applicationDeadline || "Not specified"}
+                  {formData.applicationDeadline
+                    ? format(formData.applicationDeadline, "PPP")
+                    : "Not specified"}
                 </p>
               </div>
 

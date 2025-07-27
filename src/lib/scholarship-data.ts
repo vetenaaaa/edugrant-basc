@@ -44,9 +44,8 @@ export default function useScholarshipData({
       async function fetchScholarships() {
         setLoading(true);
         try {
-          const res = await axios.post(
-            `https://edugrant-express-server-production.up.railway.app/administrator/getScholarships`,
-            { page: currentPage, dataPerPage: rowsPerPage, sortBy: sort },
+          const res = await axios.get(
+            `https://edugrant-express-server-production.up.railway.app/administrator/getScholarships?page=${currentPage}&dataPerPage=${rowsPerPage}&sortBy=${sort}`,
             { withCredentials: true }
           );
           if (res.status === 200) {

@@ -33,11 +33,11 @@ export default function useScholarshipUserById(id: string) {
       async function fetchScholarships() {
         setLoading(true);
         try {
-          const res = await axios.post<{
+          const res = await axios.get<{
             scholarship: ScholarshipTypes;
           }>(
-            `https://edugrant-express-server-production.up.railway.app/user/getScholarshipsbyId`,
-            { scholarshipId: id },
+            `https://edugrant-express-server-production.up.railway.app/user/getScholarshipsbyId?scholarshipId=${id}`,
+
             { withCredentials: true }
           );
           if (res.status === 200) {

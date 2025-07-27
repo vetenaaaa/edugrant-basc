@@ -30,6 +30,7 @@ import {
   ChevronsUpDown,
   ChevronUp,
   Grid2x2,
+  SlidersVertical,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -45,6 +46,7 @@ const headers = [
   { label: "Status" },
   { label: "Deadline" },
   { label: "Approved" },
+  { label: "Applicants" },
 ];
 import { useScholarshipStore } from "@/store/scholarshipStore";
 export default function Manage() {
@@ -74,11 +76,14 @@ export default function Manage() {
   );
 
   return (
-    <div className="pl-1 pr-2 your-class  h-screen">
+    <div className=" your-class  h-screen px-4">
       <DynamicHeaderAdmin first="Scholarship" second="Manage" />
 
-      <div className="mx-auto lg:w-3/4 w-[95%] py-10">
-        <h1 className="text-3xl font-semibold">Manage Scholarships</h1>
+      <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
+        <h1 className="text-2xl font-semibold flex items-center gap-2">
+          <SlidersVertical size={20} />
+          Manage Scholarships ({data.length || "-"})
+        </h1>
         <p className="text-sm text-gray-500 mt-1">
           Browse the list of active scholarships. Use the available actions to
           modify or remove entries.
@@ -126,7 +131,12 @@ export default function Manage() {
                 </TableHead>
                 {headers.map((header) => (
                   <TableHead
-                    className={header.label === "Approved" ? "text-center" : ""}
+                    className={
+                      header.label === "Approved" ||
+                      header.label === "Applicants"
+                        ? "text-center"
+                        : ""
+                    }
                     key={header.label}
                   >
                     {header.label}
@@ -183,6 +193,9 @@ export default function Manage() {
                       <TableCell className="text-center">
                         {row.totalApproved}
                       </TableCell>
+                      <TableCell className="text-center">
+                        {row.totalApplicants}
+                      </TableCell>
                     </TableRow>
                   ))
                 ) : (
@@ -214,18 +227,20 @@ export default function Manage() {
                       )
                     }
                   >
-                    <TableCell className="">{row.scholarshipId}</TableCell>
-                    <TableCell className="font-medium">
+                    <TableCell className="flex gap-3 items-center font-medium">
                       {/* <Link
                         href={`/administrator/home/manage/${row.scholarshipId}`}
                         prefetch={true}
                       > */}
+                      <img
+                        className="size-10 object-cover rounded-full"
+                        src={row.scholarshipLogo}
+                        alt=""
+                      />{" "}
                       {row.scholarshipTitle}
                       {/* </Link> */}
                     </TableCell>
-                    <TableCell className="">
-                      {row.scholarshipProvider}
-                    </TableCell>
+                    <TableCell>{row.scholarshipProvider}</TableCell>
                     <TableCell className="">
                       <Badge className="bg-green-900 text-gray-300">
                         Active

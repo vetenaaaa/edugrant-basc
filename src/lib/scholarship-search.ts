@@ -7,6 +7,7 @@ type SearchTypes = {
   scholarshipTitle: string;
   scholarshipProvider: string;
   status: string;
+  scholarshipLogo: string;
   scholarshipDealine: string;
   totalApproved: string;
 };
@@ -25,9 +26,9 @@ export default function useScholarshipSearch({ query }: { query: string }) {
     setLoading(true);
     const delayDebounce = setTimeout(async () => {
       try {
-        const res = await axios.post(
-          `https://edugrant-express-server-production.up.railway.app/administrator/searchScholarship`,
-          { search: trimmedQuery },
+        const res = await axios.get(
+          `https://edugrant-express-server-production.up.railway.app/administrator/searchScholarship?search=${trimmedQuery}`,
+
           { withCredentials: true }
         );
 

@@ -4,11 +4,13 @@ import {
   CheckCheck,
   Edit,
   LoaderCircleIcon,
+  Maximize,
   PhilippinePeso,
   Trash2,
   Users2,
- 
 } from "lucide-react";
+import { Ring } from "ldrs/react";
+import "ldrs/react/Ring.css";
 import {
   Drawer,
   DrawerContent,
@@ -38,6 +40,7 @@ import { toast } from "sonner";
 import useScholarshipUserById from "@/lib/get-scholar-by-id";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import Link from "next/link";
 
 export default function InterceptManageScholarship() {
   const [editMode, setEditMode] = useState(false);
@@ -50,7 +53,7 @@ export default function InterceptManageScholarship() {
   const [open, setOpen] = useState(true);
   const id = params.id as string;
   const { data, loading } = useScholarshipUserById(id);
-  const title = data?.scholarshipTitle;
+  const title = data?.scholarshipTitle || "N/A";
   const deadline = data?.scholarshipDealine;
   const readable = deadline
     ? new Date(deadline).toLocaleDateString("en-US", {
@@ -59,7 +62,7 @@ export default function InterceptManageScholarship() {
         day: "numeric",
       })
     : "No deadline set";
-  const provider = data?.scholarshipProvider;
+  const provider = data?.scholarshipProvider || "unknown";
   const description = data?.scholarshipDescription;
   const scholarshipId = data?.scholarshipId;
   const scholarshipCover = data?.scholarshipCover;
@@ -126,128 +129,188 @@ export default function InterceptManageScholarship() {
           </div>
         ) : (
           <div className=" overflow-auto h-full no-scrollbar">
-            <div className="relative h-48 md:h-64 flex justify-center items-center pointer-events-none">
-              {loading ? (
-                <Skeleton className="h-full w-full" />
-              ) : (
-                <img
-                  src={scholarshipCover}
-                  alt="Scholarship Cover"
-                  className="w-full h-full object-cover mask-gradient brightness-75"
-                />
-              )}
-
-              <div className="absolute flex items-end gap-3 -bottom-10 left-4">
-                <div className="size-35 rounded-full overflow-hidden border-3 border-background bg-background">
-                  {loading ? (
-                    <Skeleton className="h-full w-full" />
-                  ) : (
+            <>
+              <div className="relative h-48 md:h-64 flex justify-center items-center">
+                {loading ? (
+                  <Skeleton className="h-full w-full" />
+                ) : (
+                  <div className="relative h-full w-full flex justify-center items-center overflow-hidden ">
+                    <Link
+                      href={`${scholarshipCover}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Button className="absolute z-10 cursor-pointer bottom-5 right-5">
+                        View
+                        <Maximize />
+                      </Button>
+                    </Link>
                     <img
-                      src={scholarshipLogo}
-                      alt=""
-                      className="w-full h-full object-cover"
+                      src={scholarshipCover}
+                      alt="Scholarship Cover"
+                      className="w-full h-full object-cover mask-gradient brightness-75 "
                     />
+                  </div>
+                )}
+
+                <div className="absolute flex items-end gap-3 -bottom-10 left-4">
+                  <div className="lg:size-35 size-25 rounded-full overflow-hidden border-3 border-background bg-background">
+                    {loading ? (
+                      <Skeleton className="h-full w-full" />
+                    ) : (
+                      <img
+                        src={scholarshipLogo}
+                        alt=""
+                        className="w-full h-full object-cover"
+                      />
+                    )}
+                  </div>
+                  <div>
+                    <h1 className="text-2xl md:text-3xl  text-white mb-1 font-bold">
+                      {title}
+                    </h1>
+                    <p className="text-white/90 flex items-center gap-1">
+                      by {provider}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="lg:px-6 px-2 pt-16 pb-6 space-y-6">
+                {/* Stats Cards */}
+                <div className="grid grid-cols-3 gap-3">
+                  <div className="border p-3 rounded-md flex items-end bg-card">
+                    <div className="flex-1 space-y-2">
+                      <Users2 className="border p-2 rounded-sm h-8 w-8 bg-background text-gray-300" />
+                      <h1 className="text-sm text-gray-300">
+                        Total Applicants
+                      </h1>
+                    </div>
+                    <span className="text-4xl font-semibold text-blue-700">
+                      {loading ? (
+                        <Ring size={30} speed={2} bgOpacity={0} color="green" />
+                      ) : (
+                        data?.totalApplicants
+                      )}
+                    </span>
+                  </div>
+                  <div className="border p-3 rounded-md flex items-end bg-card">
+                    <div className="flex-1 space-y-2">
+                      <CheckCheck className="border p-2 rounded-sm h-8 w-8 bg-background text-gray-300" />
+                      <h1 className="text-sm text-gray-300">Total Approved</h1>
+                    </div>
+                    <span className="text-4xl font-semibold text-green-700">
+                      {loading ? (
+                        <Ring size={30} speed={2} bgOpacity={0} color="green" />
+                      ) : (
+                        data?.totalApproved
+                      )}
+                    </span>
+                  </div>{" "}
+                  <div className="border p-3 rounded-md flex items-end bg-card">
+                    <div className="flex-1 space-y-2">
+                      <PhilippinePeso className="border p-2 rounded-sm h-8 w-8 bg-background text-gray-300" />
+                      <h1 className="text-sm text-gray-300">Pending</h1>
+                    </div>
+                    <span className="text-4xl font-semibold text-amber-500">
+                      {loading ? (
+                        <Ring size={30} speed={2} bgOpacity={0} color="green" />
+                      ) : (
+                        data?.totalApplicants
+                      )}
+                    </span>
+                  </div>
+                </div>
+                {/* <div className="flex bg-card gap-3 items-center rounded-md border">
+                  <div className="flex-1 flex justify-between items-end p-4">
+                    <div>
+                      <PhilippinePeso className="border p-2 rounded-sm h-8 w-8 bg-background text-gray-300" />
+                      <h1>Amount</h1>
+                    </div>
+                    <p className="text-3xl font-semibold text-green-700">
+                      {amount}
+                    </p>
+                  </div>
+                  <div className="border h-17"></div>
+                  <div className="flex-1 flex justify-between items-end p-4">
+                    <div>
+                      <CalendarClock className="border p-2 rounded-sm h-8 w-8 bg-background text-gray-300 " />
+                      <h1>Deadlne</h1>
+                    </div>
+                    <p className="text-xl font-semibold text-green-700">
+                      {formatted}
+                    </p>
+                  </div>
+                  <div className="border h-17"></div>
+                  <div className="flex-1 flex justify-between items-end p-4">
+                    <div>
+                      <CalendarClock className="border p-2 rounded-sm h-8 w-8 bg-background text-gray-300" />
+                      <h1>Required Docs</h1>
+                    </div>
+                    <p className="text-3xl font-semibold text-green-700">
+                      {data?.scholarshipDocuments.length}
+                    </p>
+                  </div>
+                </div> */}
+                <Separator />
+                {/* Description */}
+                <div className="space-y-3">
+                  <h2 className="text-xl font-semibold">
+                    About this Scholarship
+                  </h2>
+                  {loading ? (
+                    <div className="space-y-2">
+                      <Skeleton className="h-7 w-full" />
+                      <Skeleton className="h-7 w-full" />
+                    </div>
+                  ) : (
+                    <p className="text-muted-foreground leading-relaxed">
+                      {description}
+                    </p>
                   )}
                 </div>
-                <div>
-                  <h1 className="text-2xl md:text-3xl  text-white mb-1 font-bold">
-                    {title}
-                  </h1>
-                  <p className="text-white/90 flex items-center gap-1">
-                    by {provider}
-                  </p>
-                </div>
-              </div>
+                {/* Required Documents */}
+                {data?.scholarshipDocuments &&
+                  data.scholarshipDocuments.length > 0 && (
+                    <div className="space-y-3">
+                      <h2 className="text-xl font-semibold">
+                        Required Documents
+                      </h2>
+                      <div className="grid gap-2">
+                        {data?.scholarshipDocuments.map((docs) => (
+                          <div
+                            key={docs.label}
+                            className="flex border justify-between border-l-4 border-l-green-800 items-center p-4 gap-5 rounded-sm bg-card"
+                          >
+                            <h1>Document: {docs.label}</h1>
 
-              <div className="absolute flex items-end gap-3 -bottom-10 right-4">
-                Until {readable}
-              </div>
-            </div>
-            <div className="px-6 pt-16 pb-6 space-y-6">
-              {/* Stats Cards */}
-              <div className="grid grid-cols-3 gap-3">
-                <div className="border p-3 rounded-md flex items-end bg-card">
-                  <div className="flex-1 space-y-2">
-                    <Users2 className="border p-2 rounded-sm h-10 w-10 bg-background text-gray-300" />
-                    <h1 className="text-sm text-gray-300">Total Application</h1>
-                  </div>
-                  <p className="text-4xl font-semibold text-blue-700">0</p>
-                </div>
-                <div className="border p-3 rounded-md flex items-end bg-card">
-                  <div className="flex-1 space-y-2">
-                    <CheckCheck className="border p-2 rounded-sm h-10 w-10 bg-background text-gray-300" />
-                    <h1 className="text-sm text-gray-300">Total Approved</h1>
-                  </div>
-                  <p className="text-4xl font-semibold text-green-700">0</p>
-                </div>{" "}
-                <div className="border p-3 rounded-md flex items-end bg-card">
-                  <div className="flex-1 space-y-2">
-                    <PhilippinePeso className="border p-2 rounded-sm h-10 w-10 bg-background text-gray-300" />
-                    <h1 className="text-sm text-gray-300">Amount</h1>
-                  </div>
-                  <p className="text-4xl font-semibold text-amber-500">3000</p>
-                </div>
-              </div>
-
-              <Separator />
-
-              {/* Description */}
-              <div className="space-y-3">
-                <h2 className="text-xl font-semibold">
-                  About this Scholarship
-                </h2>
-                {loading ? (
-                  <div className="space-y-2">
-                    <Skeleton className="h-4 w-full" />
-                    <Skeleton className="h-4 w-full" />
-                    <Skeleton className="h-4 w-3/4" />
-                  </div>
-                ) : (
-                  <p className="text-muted-foreground leading-relaxed">
-                    {description}
-                  </p>
-                )}
-              </div>
-
-              {/* Required Documents */}
-              {data?.scholarshipDocuments &&
-                data.scholarshipDocuments.length > 0 && (
-                  <div className="space-y-3">
-                    <h2 className="text-xl font-semibold">
-                      Required Documents
-                    </h2>
-                    <div className="grid gap-2">
-                      {data?.scholarshipDocuments.map((docs) => (
-                        <div
-                          key={docs.label}
-                          className="flex border justify-between border-l-4 border-l-green-800 items-center p-4 gap-5 rounded-sm bg-card"
-                        >
-                          <h1>Document: {docs.label}</h1>
-
-                          <p>
-                            Format:{" "}
-                            {docs.formats.map((format) => format).join(", ")}
-                          </p>
-                        </div>
-                      ))}
+                            <p>
+                              Format:{" "}
+                              {docs.formats.map((format) => format).join(", ")}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
-
-              {/* Status */}
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">Status:</span>
-                <Badge>Active</Badge>
+                  )}
+                {/* Status */}
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-muted-foreground">Status:</span>
+                  <Badge className="bg-green-800 text-gray-300">Active</Badge>
+                </div>
+                <div className="flex items-center gap-2">
+                  <p>Until {readable}</p>
+                </div>
               </div>
-            </div>
+            </>
           </div>
         )}
-        {scholarshipId && !editMode && (
+        {!editMode && (
           <div className="p-4">
             <div className="flex gap-3">
               <Button
                 onClick={() => setEditMode(true)}
                 className="flex-1 bg-blue-800 text-white hover:bg-blue-700"
+                disabled={loading}
               >
                 <Edit /> Edit
               </Button>
@@ -256,16 +319,16 @@ export default function InterceptManageScholarship() {
                 className="flex-1"
                 variant="destructive"
                 onClick={() => setOpenAlert(true)}
+                disabled={loading}
               >
                 <Trash2 /> Delete
               </Button>
-              <Button className="flex-1" variant="outline">
+              <Button className="flex-1" variant="outline" disabled={loading}>
                 <Activity /> Generate Report
               </Button>
             </div>
 
             <AlertDialog open={openAlert} onOpenChange={setOpenAlert}>
-              <AlertDialogTrigger asChild></AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
