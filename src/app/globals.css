@@ -60,6 +60,22 @@
   );
 }
 
+.mask-gradient-left {
+   mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 100%,
+    black 100%
+  );
+  /* -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 20%,
+    black 100%
+  ); */
+}
+
+
 .mask-gradient-bottom {
   mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%);
   -webkit-mask-image: linear-gradient(
