@@ -15,9 +15,7 @@ const userProfileSchema = z.object({
   address: z.string().min(1, "Required"),
   //Academic
   studentId: z.string().min(1, "Required"),
-  course: z.string().min(1, "Required"),
-  yearLevel: z.string().min(1, "Required"),
-  section: z.string().min(1, "Required"),
+  course: z.array(z.string()).min(1, "Required"),
   password: z.string().min(1, "Required"),
 });
 export type FormData = z.infer<typeof userProfileSchema>;
@@ -26,20 +24,18 @@ export function useProfileZod(data: UserProfileTypes) {
   const form = useForm<FormData>({
     resolver: zodResolver(userProfileSchema),
     defaultValues: {
-      firstName: data.firstName,
-      middleName: data.middleName,
-      lastName: data.lastName,
-      gender: data.gender,
-      dateOfBirth: data.dateOfBirth,
+      firstName: data.firstName || "",
+      middleName: data.middleName || "",
+      lastName: data.lastName || "",
+      gender: data.gender || "",
+      dateOfBirth: data.dateOfBirth || "",
       //Contact
-      email: data.email,
-      contactNumber: data.contactNumber,
-      address: data.address,
+      email: data.studentEmail || "",
+      contactNumber: data.contactNumber || "",
+      address: data.address || "",
       //Academic
-      studentId: data.studentId,
-      course: data.course,
-      yearLevel: data.yearLevel,
-      section: data.section,
+      studentId: data.studentId || "",
+      course: data.studentCourseYearSection || "",
       password: "************",
     },
   });

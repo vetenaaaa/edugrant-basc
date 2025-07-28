@@ -3,13 +3,13 @@ import * as React from "react";
 import { usePathname } from "next/navigation";
 import {
   Home,
-  UserRoundCheck,
   UserRoundX,
   UserRoundMinus,
   Megaphone,
   PenLine,
   GraduationCap,
   Archive,
+  CheckCheck,
 } from "lucide-react";
 import logo from "@/assets/basclogo.png";
 import {
@@ -69,7 +69,7 @@ const sidebarData = {
         {
           title: "Approved Applicants",
           url: "/administrator/home/application/",
-          icon: UserRoundCheck,
+          icon: CheckCheck,
         },
         {
           title: "Rejected Applicants",

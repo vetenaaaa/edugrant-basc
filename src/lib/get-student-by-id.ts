@@ -18,7 +18,7 @@ export default function useAuthenticatedUser() {
         );
 
         if (res.status === 200) {
-          // setUser(res.data.user);
+          setUser(res.data.userData);
           console.log("authapi:", res.data);
         }
       } catch (error) {

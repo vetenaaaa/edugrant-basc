@@ -8,6 +8,8 @@ export type EditScholarshipTypes = {
   scholarshipLimit: string;
 };
 export type UserProfileTypes = {
+  userId: string;
+  userPassword: string;
   //Personal
   firstName: string;
   middleName: string;
@@ -15,13 +17,11 @@ export type UserProfileTypes = {
   gender: string;
   dateOfBirth: string;
   //Contact
-  email: string;
+  studentEmail: string;
   contactNumber: string;
   address: string;
   //Academic
   studentId: string;
-  course: string;
-  yearLevel: string;
-  section: string;
   password: string;
+  studentCourseYearSection: string[];
 };

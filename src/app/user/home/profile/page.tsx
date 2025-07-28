@@ -7,25 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useProfileZod } from "@/lib/zod-user-profile";
-const mockUserData = {
-  firstName: "Jerome",
-  middleName: "Laguyo",
-  lastName: "Tecson",
-  gender: "Male",
-  dateOfBirth: "1999-02-18",
 
-  // Contact
-  email: "jerome.tecson@example.com",
-  contactNumber: "09154888862",
-  address: "Buliran, San Miguel, Bulacan",
-
-  // Academic
-  studentId: "2023-00123",
-  course: "BSIT",
-  yearLevel: "3rd Year",
-  section: "A",
-  password: "P@ssw0rd123",
-};
 import {
   Form,
   FormControl,
@@ -38,11 +20,15 @@ import { useUserStore } from "@/store/useUserStore";
 import { Separator } from "@/components/ui/separator";
 export default function Profile() {
   const [isEdit, setIsEdit] = useState(true);
-  const { form } = useProfileZod(mockUserData);
+
   const path = usePathname();
   const segmentedPath = path.split("/");
   const { user, loading, error } = useUserStore();
-  console.log("meow", user?.studentId, loading, error);
+  if (!user) {
+    return <div>Loading user...</div>; // or return null
+  }
+  const { form } = useProfileZod(user);
+  console.log("meow", user?.userId);
 
   return (
     <div className="bg-background min-h-screen your-class px-4">
@@ -218,7 +204,7 @@ export default function Profile() {
                     </FormItem>
                   )}
                 />{" "}
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name="yearLevel"
                   render={({ field }) => (
@@ -230,8 +216,8 @@ export default function Profile() {
                       <FormMessage />
                     </FormItem>
                   )}
-                />{" "}
-                <FormField
+                />{" "} */}
+                {/* <FormField
                   control={form.control}
                   name="section"
                   render={({ field }) => (
@@ -243,7 +229,7 @@ export default function Profile() {
                       <FormMessage />
                     </FormItem>
                   )}
-                />{" "}
+                />{" "} */}
               </div>
             </div>
           </div>
