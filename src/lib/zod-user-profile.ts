@@ -1,7 +1,9 @@
 import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { UserProfileTypes } from "./types";
+
 const userProfileSchema = z.object({
   //Personal
   firstName: z.string().min(1, "Required"),
@@ -18,26 +20,49 @@ const userProfileSchema = z.object({
   course: z.array(z.string()).min(1, "Required"),
   password: z.string().min(1, "Required"),
 });
+
 export type FormData = z.infer<typeof userProfileSchema>;
 
 export function useProfileZod(data: UserProfileTypes | null) {
   const form = useForm<FormData>({
     resolver: zodResolver(userProfileSchema),
     defaultValues: {
-      firstName: data?.firstName || "",
-      middleName: data?.middleName || "",
-      lastName: data?.lastName || "",
-      gender: data?.gender || "",
-      dateOfBirth: data?.dateOfBirth || "",
+      firstName: "",
+      middleName: "",
+      lastName: "",
+      gender: "",
+      dateOfBirth: "",
       //Contact
-      email: data?.studentEmail || "",
-      contactNumber: data?.contactNumber || "",
-      address: data?.address || "",
+      email: "",
+      contactNumber: "",
+      address: "",
       //Academic
-      studentId: data?.studentId || "",
-      course: data?.studentCourseYearSection || [],
+      studentId: "",
+      course: [],
       password: "************",
     },
   });
+
+  // Use useEffect to reset form values when data changes
+  useEffect(() => {
+    if (data) {
+      form.reset({
+        firstName: data.firstName || "",
+        middleName: data.middleName || "",
+        lastName: data.lastName || "",
+        gender: data.gender || "",
+        dateOfBirth: data.dateOfBirth || "",
+        //Contact
+        email: data.studentEmail || "",
+        contactNumber: data.contactNumber || "",
+        address: data.address || "",
+        //Academic
+        studentId: data.studentId || "",
+        course: data.studentCourseYearSection || [],
+        password: "************",
+      });
+    }
+  }, [data, form]);
+
   return { form, schema: userProfileSchema };
 }
