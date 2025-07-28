@@ -53,7 +53,7 @@ const sidebarData = {
         },
         {
           title: "Archived Scholarships",
-          url: "/administrator/home/manage",
+          url: "/administrator/home/archived",
           icon: Archive,
         },
       ],
@@ -63,17 +63,17 @@ const sidebarData = {
       items: [
         {
           title: "Pending Review",
-          url: "/administrator/home/application/",
+          url: "/administrator/home/review/",
           icon: UserRoundMinus,
         },
         {
           title: "Approved Applicants",
-          url: "/administrator/home/application/",
+          url: "/administrator/home/approved/",
           icon: CheckCheck,
         },
         {
           title: "Rejected Applicants",
-          url: "/administrator/home/application/",
+          url: "/administrator/home/rejected/",
           icon: UserRoundX,
         },
       ],
