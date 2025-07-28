@@ -1,6 +1,7 @@
 "use client";
 import { Ring } from "ldrs/react";
 import "ldrs/react/Ring.css";
+import { format } from "date-fns";
 import {
   Table,
   TableBody,
@@ -130,7 +131,7 @@ export default function Manage() {
               <Input
                 onChange={(e) => setQuery(e.target.value)}
                 className="peer ps-9 pe-9"
-                placeholder="Search..."
+                placeholder="Search Student Name or ID..."
                 type="search"
               />
               <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
@@ -261,7 +262,9 @@ export default function Manage() {
                       </TableCell>
                       <TableCell>{row.scholarship.scholarshipTitle}</TableCell>
                       <TableCell className="text-center">
-                        date ng application
+                        {row.applicationDate
+                          ? format(row.applicationDate, "PPP")
+                          : "Not specified"}
                       </TableCell>
                     </TableRow>
                   ))
@@ -304,7 +307,9 @@ export default function Manage() {
                     </TableCell>
                     <TableCell>{row.scholarship.scholarshipTitle}</TableCell>
                     <TableCell className="text-center">
-                      date ng application
+                      {row.applicationDate
+                        ? format(row.applicationDate, "PPP")
+                        : "Not specified"}
                     </TableCell>
                   </TableRow>
                 ))

@@ -63,4 +63,5 @@ export type ApplicationTypes = {
   student: UserProfileTypes;
   userDocuments: Record<string, string>;
   userId: string;
+  applicationDate: string;
 };
