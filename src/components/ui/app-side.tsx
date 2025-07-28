@@ -1,7 +1,16 @@
 "use client";
 import * as React from "react";
 import { usePathname } from "next/navigation";
-import { Home, FilePlus, Layers, Eye, Users, CheckCheck, UserRoundCheck, UserRoundX, UserRoundMinus, Megaphone, PenLine, GraduationCap, Archive } from "lucide-react";
+import {
+  Home,
+  UserRoundCheck,
+  UserRoundX,
+  UserRoundMinus,
+  Megaphone,
+  PenLine,
+  GraduationCap,
+  Archive,
+} from "lucide-react";
 import logo from "@/assets/basclogo.png";
 import {
   Sidebar,
