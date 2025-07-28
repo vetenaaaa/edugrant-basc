@@ -1,4 +1,4 @@
-import InterceptReviewApplicants from "../../@modal/(.)application/[id]/page";
+import InterceptReviewApplicants from "../../@modal/(.)review/[id]/page";
 export default function ReviewApplication() {
   return <InterceptReviewApplicants />;
 }

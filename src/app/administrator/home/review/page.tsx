@@ -238,7 +238,7 @@ export default function Manage() {
                       key={row.applicationId}
                       onClick={() =>
                         router.push(
-                          `/administrator/home/application/${row.applicationId}`
+                          `/administrator/home/review/${row.applicationId}`
                         )
                       }
                       className="cursor-pointer"
