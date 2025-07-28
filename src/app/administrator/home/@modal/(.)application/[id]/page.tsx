@@ -22,7 +22,9 @@ export default function InterceptReviewApplicants() {
   const HandleCloseDrawer = (value: boolean) => {
     setOpen(value);
     if (!value) {
-      router.back();
+      setTimeout(() => {
+        router.back();
+      }, 200);
     }
   };
 
