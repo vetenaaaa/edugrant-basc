@@ -89,13 +89,9 @@ export default function LoginAdmin() {
   useEffect(() => {
     const checkToken = async () => {
       try {
-        const response = await axios.post(
+        const response = await axios.get(
           `https://edugrant-express-server-production.up.railway.app/administrator/adminTokenAuthentication`,
-          {},
           {
-            headers: {
-              "Content-Type": "application/json",
-            },
             withCredentials: true,
           }
         );
