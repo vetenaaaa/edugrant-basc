@@ -1,13 +1,7 @@
 "use client";
 import * as React from "react";
 import { usePathname } from "next/navigation";
-import {
-  Home,
-  FilePlus,
-  Layers,
-  Eye,
-  Users,
-} from "lucide-react";
+import { Home, FilePlus, Layers, Eye, Users, CheckCheck, UserRoundCheck, UserRoundX, UserRoundMinus, Megaphone, PenLine, GraduationCap, Archive } from "lucide-react";
 import logo from "@/assets/basclogo.png";
 import {
   Sidebar,
@@ -26,7 +20,7 @@ import Link from "next/link";
 const sidebarData = {
   navMain: [
     {
-      title: "Main",
+      title: "Home",
       items: [
         {
           title: "Dashboard",
@@ -39,36 +33,40 @@ const sidebarData = {
       title: "Scholarship Management",
       items: [
         {
-          title: "Create Scholarship",
+          title: "Post Scholarship",
           url: "/administrator/home/create",
-          icon: FilePlus,
+          icon: PenLine,
         },
         {
           title: "Manage Scholarships",
           url: "/administrator/home/manage",
-          icon: Layers,
+          icon: GraduationCap,
         },
-       
+        {
+          title: "Archived Scholarships",
+          url: "/administrator/home/manage",
+          icon: Archive,
+        },
       ],
     },
     {
-      title: "Application Processing",
+      title: "Review Applications",
       items: [
-        // {
-        //   title: "All Applications",
-        //   url: "/administrator/home/applications/all",
-        //   icon: ClipboardList,
-        // },
         {
-          title: "Review Applications",
+          title: "Pending Review",
           url: "/administrator/home/application/",
-          icon: Eye,
+          icon: UserRoundMinus,
         },
-        // {
-        //   title: "Track Status",
-        //   url: "/administrator/home/applications/track",
-        //   icon: CheckCircle2,
-        // },
+        {
+          title: "Approved Applicants",
+          url: "/administrator/home/application/",
+          icon: UserRoundCheck,
+        },
+        {
+          title: "Rejected Applicants",
+          url: "/administrator/home/application/",
+          icon: UserRoundX,
+        },
       ],
     },
     {
@@ -77,7 +75,7 @@ const sidebarData = {
         {
           title: "Annoucements",
           url: "/administrator/home/announcements",
-          icon: Users,
+          icon: Megaphone,
         },
       ],
     },

@@ -283,7 +283,7 @@ export default function Create() {
     <div className="px-4 your-class">
       <DynamicHeaderAdmin first="Scholarship" second="Create" />
 
-      <div className="mx-auto lg:w-[60%] w-[95%] py-10">
+      <div className="mx-auto lg:w-[95%] w-[95%] py-10">
         <h1 className="text-2xl font-semibold flex items-center gap-2">
           <PenLine />
           Create a New Scholarship Opportunity

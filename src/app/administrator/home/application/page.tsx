@@ -9,6 +9,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 import {
   Pagination,
   PaginationContent,
@@ -17,11 +28,12 @@ import {
 import { Badge } from "@/components/ui/badge";
 import useScholarshipSearch from "@/lib/scholarship-search";
 import { Input } from "@/components/ui/input";
-import useScholarshipData from "@/lib/scholarship-data";
+
 import DynamicHeaderAdmin from "../dynamic-header";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
+  ArrowRightIcon,
   ChevronDown,
   ChevronFirstIcon,
   ChevronLastIcon,
@@ -29,7 +41,12 @@ import {
   ChevronRightIcon,
   ChevronsUpDown,
   ChevronUp,
-  Grid2x2,
+  FileDown,
+  RotateCcw,
+  SearchIcon,
+  Settings2,
+  Undo2,
+  UsersRound,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -40,64 +57,177 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import useAdminReview from "@/lib/get-applications";
+
 const headers = [
-  { label: "Provider" },
-  { label: "Status" },
-  { label: "Deadline" },
-  { label: "Approved" },
+  { label: "Student ID" },
+  { label: "Course, Year & Section" },
+  { label: "Application" },
+
+  { label: "Application Date" },
 ];
-import { useScholarshipStore } from "@/store/scholarshipStore";
+const frameworks = [
+  { value: "bsit", label: "BSIT" },
+  { value: "bsab", label: "BSABEN" },
+  { value: "bsft", label: "BSFT" },
+  { value: "bsge", label: "BSGE" },
+  { value: "bsba", label: "BSBA" },
+  { value: "bshm", label: "BSHM" },
+  { value: "bsa", label: "BSA" },
+  { value: "bsagribus", label: "BSAgriBus" },
+  { value: "bsdc", label: "BSDC" },
+  { value: "bse", label: "BSEd" },
+  { value: "bee", label: "BEEd" },
+  { value: "bsaf", label: "BSAF" },
+  { value: "dvm", label: "DVM" },
+];
+
 export default function Manage() {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const { refreshTrigger, deletedScholarshipIds } = useScholarshipStore();
   const [sort, setSort] = useState<"asc" | "desc" | "">("");
-  const { data, loading, totalPages } = useScholarshipData({
+
+  const { data, loading, totalPages } = useAdminReview({
     currentPage,
     rowsPerPage,
     sort,
-    refreshKey: refreshTrigger,
   });
 
   const [query, setQuery] = useState<string>("");
   console.log(query);
   const { searchData, searchLoading } = useScholarshipSearch({ query });
 
-  const filteredData = data.filter(
-    (scholarship) => !deletedScholarshipIds.has(scholarship.scholarshipId)
-  );
-
-  const filteredSearchData = searchData.filter(
-    (scholarship) => !deletedScholarshipIds.has(scholarship.scholarshipId)
-  );
-
   return (
-    <div className="pl-1 pr-2 your-class  h-screen">
+    <div className=" your-class  h-screen px-4">
       <DynamicHeaderAdmin first="Scholarship" second="Manage" />
 
-      <div className="mx-auto lg:w-3/4 w-[95%] py-10">
-        <h1 className="text-3xl font-semibold">Review Applicants</h1>
+      <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
+        <h1 className="text-2xl font-semibold flex items-center gap-2">
+          <UsersRound />
+          Pending Review
+        </h1>
         <p className="text-sm text-gray-500 mt-1">
-          Browse the list of active scholarships. Use the available actions to
-          modify or remove entries.
+          Review submitted documents and take action on scholarship
+          applications. You can approve, decline, or manage applicants.
         </p>
         <div className="container mx-auto py-10 space-y-3">
-          <div className="flex gap-3">
-            <Input
-              placeholder="Search Scholarship Title..."
-              onChange={(e) => setQuery(e.target.value)}
-            />
-            <Button variant="outline">
-              <Grid2x2 />
-            </Button>
-            <Button variant="outline">Export CSV</Button>
+          <div className="flex gap-3 justify-between">
+            <div className="relative w-[40%]">
+              <Input
+                onChange={(e) => setQuery(e.target.value)}
+                className="peer ps-9 pe-9"
+                placeholder="Search..."
+                type="search"
+              />
+              <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
+                <SearchIcon size={16} />
+              </div>
+              <button
+                className="text-muted-foreground/80 hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md transition-[color,box-shadow] outline-none focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+                aria-label="Submit search"
+                type="submit"
+              >
+                <ArrowRightIcon size={16} aria-hidden="true" />
+              </button>
+            </div>
+
+            <div className="flex gap-3 items-center">
+              <Drawer direction="right" modal={true}>
+                <DrawerTrigger asChild>
+                  <Button variant="outline">
+                    <Settings2 />
+                    Advance Filter
+                  </Button>
+                </DrawerTrigger>
+                <DrawerContent>
+                  <DrawerHeader>
+                    <DrawerTitle className="text-xl flex gap-2 items-center">
+                      {" "}
+                      <Settings2 />
+                      Advance Filter
+                    </DrawerTitle>
+                    <DrawerDescription>
+                      Filter applicants by course, scholarship, and more.
+                    </DrawerDescription>
+                  </DrawerHeader>
+                  <div className="p-4 space-y-5">
+                    <div className="space-y-1.5">
+                      <h1>Course, Year & Section</h1>
+                      <div className="flex flex-col gap-3">
+                        <Select>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Filter Course" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {frameworks.map((meow) => (
+                              <SelectItem key={meow.value} value={meow.value}>
+                                {meow.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <Select>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Filter Year Level" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="light">Light</SelectItem>
+                            <SelectItem value="dark">Dark</SelectItem>
+                            <SelectItem value="system">System</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <Select>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Filter Section" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="light">Light</SelectItem>
+                            <SelectItem value="dark">Dark</SelectItem>
+                            <SelectItem value="system">System</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <h1>Scholarships</h1>
+                      <Select>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Filter Scholarship" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="light">Light</SelectItem>
+                          <SelectItem value="dark">Dark</SelectItem>
+                          <SelectItem value="system">System</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  <DrawerFooter>
+                    <Button>
+                      <RotateCcw />
+                      Reset
+                    </Button>
+                    <DrawerClose asChild>
+                      <Button variant="outline">
+                        <Undo2 />
+                        Close
+                      </Button>
+                    </DrawerClose>
+                  </DrawerFooter>
+                </DrawerContent>
+              </Drawer>
+              <Button variant="outline">
+                <FileDown />
+                Export CSV
+              </Button>
+            </div>
           </div>
           <Table>
             {/* <TableCaption>A list of active scholarships.</TableCaption> */}
             <TableHeader>
               <TableRow>
-                <TableHead>ID</TableHead>
                 <TableHead>
                   <div
                     className="flex items-center  gap-2 cursor-pointer"
@@ -112,7 +242,7 @@ export default function Manage() {
                       setCurrentPage(1); // Reset to first page when sorting changes
                     }}
                   >
-                    Title{" "}
+                    Student Name{" "}
                     {sort === "" && (
                       <ChevronsUpDown size={18} className="text-white/50" />
                     )}
@@ -126,7 +256,12 @@ export default function Manage() {
                 </TableHead>
                 {headers.map((header) => (
                   <TableHead
-                    className={header.label === "Approved" ? "text-center" : ""}
+                    className={
+                      header.label === "Application" ||
+                      header.label === "Application Date"
+                        ? "text-center"
+                        : ""
+                    }
                     key={header.label}
                   >
                     {header.label}
@@ -145,39 +280,32 @@ export default function Manage() {
                   </TableCell>
                 </TableRow>
               ) : !query ? (
-                filteredData.length > 0 ? (
-                  filteredData.map((row) => (
+                data.length > 0 ? (
+                  data.map((row) => (
                     <TableRow
-                      key={row.scholarshipId}
+                      key={row.applicationId}
                       onClick={() =>
                         router.push(
-                          `/administrator/home/manage/${row.scholarshipId}`
+                          `/administrator/home/manage/${row.applicationId}`
                         )
                       }
                       className="cursor-pointer"
                     >
-                      <TableCell className="">{row.scholarshipId}</TableCell>
-                      <TableCell className="font-medium">
-                        {/* <Link
-                          href={`/administrator/home/manage/${row.scholarshipId}`}
-                          prefetch={true}
-                        > */}
-                        {row.scholarshipTitle}
+                      <TableCell className="font-medium flex items-center gap-3">
+                        {row.userId}
                         {/* </Link> */}
                       </TableCell>
-                      <TableCell className="">
-                        {row.scholarshipProvider}
-                      </TableCell>
+                      <TableCell className="">{row.userId}</TableCell>
                       <TableCell className="">
                         <Badge className="bg-green-900 text-gray-300">
                           Active
                         </Badge>
                       </TableCell>
-                      <TableCell className="">
-                        {new Date(row.scholarshipDealine).toLocaleDateString()}
+                      <TableCell className="text-center">
+                        {row.userId}
                       </TableCell>
                       <TableCell className="text-center">
-                        {row.totalApproved}
+                        {row.userId}
                       </TableCell>
                     </TableRow>
                   ))
@@ -200,8 +328,8 @@ export default function Manage() {
                     <Ring size={40} speed={2} bgOpacity={0} color="yellow" />
                   </TableCell>
                 </TableRow>
-              ) : filteredSearchData.length > 0 ? (
-                filteredSearchData.map((row) => (
+              ) : searchData.length > 0 ? (
+                searchData.map((row) => (
                   <TableRow
                     key={row.scholarshipId}
                     onClick={() =>
@@ -210,18 +338,20 @@ export default function Manage() {
                       )
                     }
                   >
-                    <TableCell className="">{row.scholarshipId}</TableCell>
-                    <TableCell className="font-medium">
+                    <TableCell className="flex gap-3 items-center font-medium">
                       {/* <Link
                         href={`/administrator/home/manage/${row.scholarshipId}`}
                         prefetch={true}
                       > */}
+                      <img
+                        className="size-10 object-cover rounded-full"
+                        src={row.scholarshipLogo}
+                        alt=""
+                      />{" "}
                       {row.scholarshipTitle}
                       {/* </Link> */}
                     </TableCell>
-                    <TableCell className="">
-                      {row.scholarshipProvider}
-                    </TableCell>
+                    <TableCell>{row.scholarshipProvider}</TableCell>
                     <TableCell className="">
                       <Badge className="bg-green-900 text-gray-300">
                         Active
@@ -248,7 +378,7 @@ export default function Manage() {
               )}
             </TableBody>
           </Table>
-          {!query && filteredData.length !== 0 && (
+          {!query && data.length !== 0 && (
             <div className="flex items-center justify-between gap-8">
               {/* Results per page */}
               <div className="flex items-center gap-3">
