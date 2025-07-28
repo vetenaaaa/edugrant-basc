@@ -23,11 +23,9 @@ export default function Profile() {
 
   const path = usePathname();
   const segmentedPath = path.split("/");
-  const { user, loading, error } = useUserStore();
-  if (!user) {
-    return <div>Loading user...</div>; // or return null
-  }
+  const { user } = useUserStore();
   const { form } = useProfileZod(user);
+
   console.log("meow", user?.userId);
 
   return (

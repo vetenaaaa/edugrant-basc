@@ -20,22 +20,22 @@ const userProfileSchema = z.object({
 });
 export type FormData = z.infer<typeof userProfileSchema>;
 
-export function useProfileZod(data: UserProfileTypes) {
+export function useProfileZod(data: UserProfileTypes | null) {
   const form = useForm<FormData>({
     resolver: zodResolver(userProfileSchema),
     defaultValues: {
-      firstName: data.firstName || "",
-      middleName: data.middleName || "",
-      lastName: data.lastName || "",
-      gender: data.gender || "",
-      dateOfBirth: data.dateOfBirth || "",
+      firstName: data?.firstName || "",
+      middleName: data?.middleName || "",
+      lastName: data?.lastName || "",
+      gender: data?.gender || "",
+      dateOfBirth: data?.dateOfBirth || "",
       //Contact
-      email: data.studentEmail || "",
-      contactNumber: data.contactNumber || "",
-      address: data.address || "",
+      email: data?.studentEmail || "",
+      contactNumber: data?.contactNumber || "",
+      address: data?.address || "",
       //Academic
-      studentId: data.studentId || "",
-      course: data.studentCourseYearSection || "",
+      studentId: data?.studentId || "",
+      course: data?.studentCourseYearSection || [],
       password: "************",
     },
   });
