@@ -26,7 +26,8 @@ export default function UploadDocs({
   setIsApply: (value: boolean) => void;
 }) {
   const user = useUserStore((state) => state.user);
-  const userId = user?.studentId;
+  const userId = user?.userId;
+  const scholarId = data.scholarshipId;
   const formSchema = z.object({
     documents: z
       .array(
@@ -53,6 +54,8 @@ export default function UploadDocs({
     try {
       const formData = new FormData();
       formData.append("userId", String(userId));
+      formData.append("scholarshipId", String(scholarId));
+
       values.documents.forEach((file, index) => {
         const label = data.scholarshipDocuments[index]?.label;
         if (label && file) {
