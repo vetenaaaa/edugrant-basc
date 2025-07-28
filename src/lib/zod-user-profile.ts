@@ -17,7 +17,11 @@ const userProfileSchema = z.object({
   address: z.string().min(1, "Required"),
   //Academic
   studentId: z.string().min(1, "Required"),
-  course: z.array(z.string()).min(1, "Required"),
+  course: z.object({
+    course: z.string().min(1, "Required"),
+    year: z.string().min(1, "Required"),
+    section: z.string().min(1, "Required"),
+  }),
   password: z.string().min(1, "Required"),
 });
 
@@ -38,12 +42,15 @@ export function useProfileZod(data: UserProfileTypes | null) {
       address: "",
       //Academic
       studentId: "",
-      course: [],
+      course: {
+        course: "",
+        year: "",
+        section: "",
+      },
       password: "************",
     },
   });
 
-  // Use useEffect to reset form values when data changes
   useEffect(() => {
     if (data) {
       form.reset({
@@ -58,7 +65,11 @@ export function useProfileZod(data: UserProfileTypes | null) {
         address: data.address || "",
         //Academic
         studentId: data.studentId || "",
-        course: data.studentCourseYearSection || [],
+        course: data.studentCourseYearSection || {
+          course: "",
+          year: "",
+          section: "",
+        },
         password: "************",
       });
     }

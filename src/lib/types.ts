@@ -1,3 +1,27 @@
+type FormatTypes = {
+  formats: string;
+};
+
+export type scholarshipDocumentTypes = {
+  label: string;
+  formats: FormatTypes[];
+};
+
+export type ScholarshipTypes = {
+  scholarshipId: string;
+  scholarshipTitle: string;
+  scholarshipProvider: string;
+  status: string;
+  scholarshipDealine: string;
+  totalApplicants: number;
+  totalApproved: number;
+  scholarshipLogo: string;
+  scholarshipCover: string;
+  scholarshipDescription: string;
+  scholarshipAmount: number;
+  scholarshipDocuments: scholarshipDocumentTypes[];
+};
+
 export type EditScholarshipTypes = {
   scholarshipId: string;
   scholarshipTitle: string;
@@ -23,5 +47,20 @@ export type UserProfileTypes = {
   //Academic
   studentId: string;
   password: string;
-  studentCourseYearSection: string[];
+  studentCourseYearSection: CourseTypes;
+};
+type CourseTypes = {
+  course: string;
+  year: string;
+  section: string;
+};
+
+export type ApplicationTypes = {
+  applicationId: string;
+  scholarship: ScholarshipTypes;
+  scholarshipId: string;
+  status: string;
+  student: UserProfileTypes;
+  userDocuments: Record<string, string>;
+  userId: string;
 };

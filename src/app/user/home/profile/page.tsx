@@ -28,8 +28,6 @@ export default function Profile() {
 
   console.log("meow", user?.userId);
 
-  
-
   return (
     <div className="bg-background min-h-screen your-class px-4">
       <DynamicHeader first={segmentedPath[2]} second={segmentedPath[3]} />
@@ -39,13 +37,16 @@ export default function Profile() {
           <div className="flex justify-between items-end">
             <div>
               <h1 className="text-2xl font-semibold flex gap-2 items-center">
-                <UserRound /> Jerome Laguyo Tecson
+                <UserRound /> {user?.firstName} {user?.middleName}{" "}
+                {user?.lastName}
               </h1>
-              <p className="text-sm text-gray-500 mt-1">ID: 2022000493</p>
+              <p className="text-sm text-gray-500 mt-1">
+                ID: {user?.studentId}
+              </p>
               <div className="flex gap-2 mt-2">
-                <Badge>Information Technology</Badge>
-                <Badge>4th Year</Badge>
-                <Badge>Section C</Badge>
+                <Badge>{user?.studentCourseYearSection.course}</Badge>
+                <Badge>{user?.studentCourseYearSection.year}</Badge>
+                <Badge>Section {user?.studentCourseYearSection.section}</Badge>
               </div>
             </div>
             <Button onClick={() => setIsEdit(!isEdit)}>
@@ -138,7 +139,10 @@ export default function Profile() {
                   <FormItem className="col-span-2">
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input {...field} disabled={isEdit} />
+                      <div className="flex gap-3">
+                        <Input {...field} disabled />
+                        <Button variant="outline">Change Email</Button>
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -159,10 +163,10 @@ export default function Profile() {
               />{" "}
               <FormField
                 control={form.control}
-                name="dateOfBirth"
+                name="contactNumber"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Date of Birth</FormLabel>
+                    <FormLabel>Contact Number</FormLabel>
                     <FormControl>
                       <Input {...field} disabled={isEdit} />
                     </FormControl>
@@ -184,7 +188,7 @@ export default function Profile() {
                   <FormItem className="col-span-2">
                     <FormLabel>Student ID</FormLabel>
                     <FormControl>
-                      <Input {...field} disabled={isEdit} />
+                      <Input {...field} disabled />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -193,7 +197,7 @@ export default function Profile() {
               <div className="grid grid-cols-3 gap-3 col-span-2">
                 <FormField
                   control={form.control}
-                  name="course"
+                  name="course.course"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Course</FormLabel>
@@ -204,9 +208,9 @@ export default function Profile() {
                     </FormItem>
                   )}
                 />{" "}
-                {/* <FormField
+                <FormField
                   control={form.control}
-                  name="yearLevel"
+                  name="course.year"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Year Level</FormLabel>
@@ -216,10 +220,10 @@ export default function Profile() {
                       <FormMessage />
                     </FormItem>
                   )}
-                />{" "} */}
-                {/* <FormField
+                />{" "}
+                <FormField
                   control={form.control}
-                  name="section"
+                  name="course.section"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Section</FormLabel>
@@ -229,7 +233,7 @@ export default function Profile() {
                       <FormMessage />
                     </FormItem>
                   )}
-                />{" "} */}
+                />{" "}
               </div>
             </div>
           </div>

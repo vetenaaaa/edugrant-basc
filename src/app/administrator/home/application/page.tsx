@@ -33,14 +33,14 @@ import DynamicHeaderAdmin from "../dynamic-header";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
+  AlignHorizontalDistributeCenter,
   ArrowRightIcon,
-  ChevronDown,
+  Check,
   ChevronFirstIcon,
   ChevronLastIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   ChevronsUpDown,
-  ChevronUp,
   FileDown,
   RotateCcw,
   SearchIcon,
@@ -61,8 +61,9 @@ import useAdminReview from "@/lib/get-applications";
 
 const headers = [
   { label: "Student ID" },
+  { label: "Student Name" },
   { label: "Course, Year & Section" },
-  { label: "Application" },
+  { label: "Scholarship" },
 
   { label: "Application Date" },
 ];
@@ -82,12 +83,52 @@ const frameworks = [
   { value: "dvm", label: "DVM" },
 ];
 
+import { cn } from "@/lib/utils";
+
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+const sortList = [
+  {
+    value: "",
+    label: "No Sort",
+  },
+  {
+    value: "asc",
+    label: "Ascending",
+  },
+  {
+    value: "desc",
+    label: "Descending",
+  },
+  {
+    value: "newest",
+    label: "Newest",
+  },
+  {
+    value: "oldest",
+    label: "Oldest",
+  },
+];
+
 export default function Manage() {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [sort, setSort] = useState<"asc" | "desc" | "">("");
-
+  const [sort, setSort] = useState<"" | "asc" | "desc" | "newest" | "oldest">(
+    ""
+  );
+  const [open, setOpen] = useState(false);
   const { data, loading, totalPages } = useAdminReview({
     currentPage,
     rowsPerPage,
@@ -133,6 +174,62 @@ export default function Manage() {
             </div>
 
             <div className="flex gap-3 items-center">
+              {" "}
+              <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={open}
+                    className="justify-between"
+                  >
+                    <AlignHorizontalDistributeCenter />
+                    {sort
+                      ? sortList.find((framework) => framework.value === sort)
+                          ?.label
+                      : "Sort by"}
+                    <ChevronsUpDown className="opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[150px] p-0">
+                  <Command>
+                    <CommandList>
+                      <CommandEmpty>No framework found.</CommandEmpty>
+                      <CommandGroup>
+                        {sortList.map((framework) => (
+                          <CommandItem
+                            key={framework.value}
+                            value={framework.value}
+                            onSelect={(currentValue) => {
+                              setSort(
+                                currentValue === sort
+                                  ? ""
+                                  : (currentValue as
+                                      | ""
+                                      | "asc"
+                                      | "desc"
+                                      | "newest"
+                                      | "oldest")
+                              );
+                              setOpen(false);
+                            }}
+                          >
+                            {framework.label}
+                            <Check
+                              className={cn(
+                                "ml-auto",
+                                sort === framework.value
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
               <Drawer direction="right" modal={true}>
                 <DrawerTrigger asChild>
                   <Button variant="outline">
@@ -228,39 +325,10 @@ export default function Manage() {
             {/* <TableCaption>A list of active scholarships.</TableCaption> */}
             <TableHeader>
               <TableRow>
-                <TableHead>
-                  <div
-                    className="flex items-center  gap-2 cursor-pointer"
-                    onClick={() => {
-                      if (sort === "") {
-                        setSort("asc");
-                      } else if (sort === "asc") {
-                        setSort("desc");
-                      } else {
-                        setSort(""); // Go back to default/no sort
-                      }
-                      setCurrentPage(1); // Reset to first page when sorting changes
-                    }}
-                  >
-                    Student Name{" "}
-                    {sort === "" && (
-                      <ChevronsUpDown size={18} className="text-white/50" />
-                    )}
-                    {sort === "asc" && (
-                      <ChevronDown size={18} className="text-white/50" />
-                    )}
-                    {sort === "desc" && (
-                      <ChevronUp size={18} className="text-white/50" />
-                    )}
-                  </div>
-                </TableHead>
                 {headers.map((header) => (
                   <TableHead
                     className={
-                      header.label === "Application" ||
-                      header.label === "Application Date"
-                        ? "text-center"
-                        : ""
+                      header.label === "Application Date" ? "text-center" : ""
                     }
                     key={header.label}
                   >
@@ -272,10 +340,7 @@ export default function Manage() {
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell
-                    colSpan={headers.length + 2}
-                    className="text-center"
-                  >
+                  <TableCell colSpan={headers.length} className="text-center">
                     <Ring size={40} speed={2} bgOpacity={0} color="yellow" />
                   </TableCell>
                 </TableRow>
@@ -291,40 +356,37 @@ export default function Manage() {
                       }
                       className="cursor-pointer"
                     >
-                      <TableCell className="font-medium flex items-center gap-3">
-                        {row.userId}
-                        {/* </Link> */}
-                      </TableCell>
-                      <TableCell className="">{row.userId}</TableCell>
                       <TableCell className="">
-                        <Badge className="bg-green-900 text-gray-300">
-                          Active
-                        </Badge>
+                        {row.student.studentId}
                       </TableCell>
-                      <TableCell className="text-center">
-                        {row.userId}
+                      <TableCell className="font-medium flex items-center gap-3">
+                        {`${row.student.lastName}, ${row.student.firstName} ${row.student.middleName}`}
                       </TableCell>
+
+                      <TableCell>
+                        {`${
+                          row.student.studentCourseYearSection.course
+                        }-${row.student.studentCourseYearSection.year.slice(
+                          0,
+                          1
+                        )}${row.student.studentCourseYearSection.section}`}
+                      </TableCell>
+                      <TableCell>{row.scholarship.scholarshipTitle}</TableCell>
                       <TableCell className="text-center">
-                        {row.userId}
+                        date ng application
                       </TableCell>
                     </TableRow>
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell
-                      colSpan={headers.length + 2}
-                      className="text-center"
-                    >
+                    <TableCell colSpan={headers.length} className="text-center">
                       No result found.
                     </TableCell>
                   </TableRow>
                 )
               ) : searchLoading ? (
                 <TableRow>
-                  <TableCell
-                    colSpan={headers.length + 2}
-                    className="text-center"
-                  >
+                  <TableCell colSpan={headers.length} className="text-center">
                     <Ring size={40} speed={2} bgOpacity={0} color="yellow" />
                   </TableCell>
                 </TableRow>
@@ -343,11 +405,7 @@ export default function Manage() {
                         href={`/administrator/home/manage/${row.scholarshipId}`}
                         prefetch={true}
                       > */}
-                      <img
-                        className="size-10 object-cover rounded-full"
-                        src={row.scholarshipLogo}
-                        alt=""
-                      />{" "}
+
                       {row.scholarshipTitle}
                       {/* </Link> */}
                     </TableCell>
@@ -368,10 +426,7 @@ export default function Manage() {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell
-                    colSpan={headers.length + 2}
-                    className="text-center"
-                  >
+                  <TableCell colSpan={headers.length} className="text-center">
                     No result found.
                   </TableCell>
                 </TableRow>

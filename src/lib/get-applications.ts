@@ -1,12 +1,8 @@
 "use client";
 import axios from "axios";
 import { useEffect, useState } from "react";
-export type ApplicationTypes = {
-  applicationId: string;
-  userId: string;
-  status: string;
-  userDocuments: string[];
-};
+import { ApplicationTypes } from "./types";
+
 export default function useAdminReview({
   currentPage,
   rowsPerPage,
