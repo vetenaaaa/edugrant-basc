@@ -24,7 +24,8 @@ export default function useApplicationpSearch({ query }: { query: string }) {
         );
 
         if (res.status === 200) {
-          setSearchData(res.data.dataSearch);
+          console.log(res);
+          setSearchData(res.data.data);
         }
       } catch (error) {
         console.error(error);

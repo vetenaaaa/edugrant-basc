@@ -69,6 +69,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import ApplicationFilter from "./filter";
+import useApplicationpSearch from "@/lib/application-search";
 const sortList = [
   {
     value: "",
@@ -108,7 +109,7 @@ export default function Manage() {
 
   const [query, setQuery] = useState<string>("");
   console.log(query);
-  const { searchData, searchLoading } = useScholarshipSearch({ query });
+  const { searchData, searchLoading } = useApplicationpSearch({ query });
 
   return (
     <div className=" your-class  h-screen px-4">
@@ -280,34 +281,30 @@ export default function Manage() {
               ) : searchData.length > 0 ? (
                 searchData.map((row) => (
                   <TableRow
-                    key={row.scholarshipId}
+                    key={row.applicationId}
                     onClick={() =>
                       router.push(
-                        `/administrator/home/manage/${row.scholarshipId}`
+                        `/administrator/home/review/${row.applicationId}`
                       )
                     }
+                    className="cursor-pointer"
                   >
-                    <TableCell className="flex gap-3 items-center font-medium">
-                      {/* <Link
-                        href={`/administrator/home/manage/${row.scholarshipId}`}
-                        prefetch={true}
-                      > */}
+                    <TableCell className="">{row.student.studentId}</TableCell>
+                    <TableCell className="font-medium flex items-center gap-3">
+                      {`${row.student.lastName}, ${row.student.firstName} ${row.student.middleName}`}
+                    </TableCell>
 
-                      {row.scholarshipTitle}
-                      {/* </Link> */}
+                    <TableCell>
+                      {`${
+                        row.student.studentCourseYearSection.course
+                      }-${row.student.studentCourseYearSection.year.slice(
+                        0,
+                        1
+                      )}${row.student.studentCourseYearSection.section}`}
                     </TableCell>
-                    <TableCell>{row.scholarshipProvider}</TableCell>
-                    <TableCell className="">
-                      <Badge className="bg-green-900 text-gray-300">
-                        Active
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="">
-                      {" "}
-                      {new Date(row.scholarshipDealine).toLocaleDateString()}
-                    </TableCell>
+                    <TableCell>{row.scholarship.scholarshipTitle}</TableCell>
                     <TableCell className="text-center">
-                      {row.totalApproved}
+                      date ng application
                     </TableCell>
                   </TableRow>
                 ))
