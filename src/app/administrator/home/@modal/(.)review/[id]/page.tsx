@@ -11,6 +11,7 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
+
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -21,6 +22,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   Check,
   CheckIcon,
+  Download,
   Expand,
   FileCheck2,
   Image,
@@ -29,37 +31,38 @@ import {
 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import {
-  Timeline,
-  TimelineContent,
-  TimelineDate,
-  TimelineHeader,
-  TimelineIndicator,
-  TimelineItem,
-  TimelineSeparator,
-  TimelineTitle,
-} from "@/components/ui/timeline";
+  Stepper,
+  StepperDescription,
+  StepperIndicator,
+  StepperItem,
+  StepperSeparator,
+  StepperTitle,
+  StepperTrigger,
+} from "@/components/ui/stepper";
+import Reviewer from "./reviewer";
 
-const items = [
+const steps = [
   {
-    id: 1,
-    date: "Mar 15, 2024",
+    step: 1,
     title: "Submitted",
-    description: "23232",
+    description: "Jan 8, 2025",
   },
   {
-    id: 2,
-    date: "Mar 22, 2024",
-    title: "In Review",
-    description: "2323",
+    step: 2,
+    title: "On Review",
+    description: "In progress",
   },
   {
-    id: 3,
-    date: "N/A",
+    step: 3,
     title: "Approved",
-    description: "23232",
+    description: "In progress",
+  },
+  {
+    step: 4,
+    title: "Incomplete",
+    description: "In progress",
   },
 ];
-
 export default function InterceptReviewApplicants() {
   const router = useRouter();
   const params = useParams();
@@ -83,147 +86,105 @@ export default function InterceptReviewApplicants() {
       }}
     >
       <DrawerContent className="max-w-[900px] w-full mx-auto h-[95vh] outline-0 border-0">
-        <DrawerHeader className="sr-only">
-          <DrawerTitle className="text-2xl ">
-            {/* {[
-              data?.student.firstName,
-              data?.student.middleName,
-              data?.student.lastName,
-            ].join(" ")} */}
+        <DrawerHeader className="  border-b-2">
+          <DrawerTitle className="grid grid-cols-3 gap-5">
+            <div>
+              <p className="text-xl font-semibold">
+                {[
+                  data?.student.firstName,
+                  data?.student.middleName,
+                  data?.student.lastName,
+                ].join(" ")}
+              </p>
+              <p className="text-sm text-muted-foreground mt-1">
+                {data?.student.studentId}
+              </p>
+              <span className="flex gap-2 items-center mt-2">
+                <Badge className="bg-blue-800 text-gray-200">BSIT</Badge>
+                <Badge className="bg-blue-800 text-gray-200">4th Year</Badge>
+                <Badge className="bg-blue-800 text-gray-200">Section C</Badge>
+              </span>
+            </div>
+            <div className="text-right col-span-2">
+              <h1 className="text-2xl font-semibold">
+                {data?.scholarship.scholarshipTitle}
+              </h1>
+              <p className="text-sm text-muted-foreground mt-1">
+                June 1st, 2025
+              </p>
+            </div>
           </DrawerTitle>
-          <DrawerDescription>
-            {/* {data?.student.studentId} */}
-          </DrawerDescription>
-          <div className="flex gap-2">
-            <Badge>BSIT</Badge>
-            <Badge>4th Year</Badge>
-            <Badge>Section C</Badge>
-          </div>
+          <DrawerDescription></DrawerDescription>
         </DrawerHeader>
         <div className="p-4 overflow-auto no-scrollbar">
-          {/* <div className="flex justify-between">
-            <div>
-              <div className="text-2xl font-semibold">Jerome Laguyo Tecson</div>
-              <p className="text-sm text-muted-foreground">2022000493</p>
+          <div className="flex-1 space-y-2">
+            <div className="flex justify-between items-center">
+              <h1 className="font-semibold">Submitted Documents</h1>
+              <span className="flex gap-2 items-center">
+                3/3{" "}
+                <Badge className="bg-green-800 text-gray-200">
+                  Complete
+                  <Check strokeWidth={4} />
+                </Badge>
+              </span>
             </div>
-           
-          </div> */}
-
-          <div className="grid grid-cols-3 gap-5 ">
-            <div className=" rounded-md space-y-12">
-              <div>
-                <p className="text-xl font-semibold">
-                  {" "}
-                  {[
-                    data?.student.firstName,
-                    data?.student.middleName,
-                    data?.student.lastName,
-                  ].join(" ")}{" "}
-                </p>
-                <p className="text-sm text-muted-foreground mt-1">
-                  {data?.student.studentId}
-                </p>
-                <span className="flex gap-2 items-center mt-2">
-                  <Badge>BSIT</Badge>
-                  <Badge>4th Year</Badge>
-                  <Badge>Section C</Badge>
-                </span>
-              </div>
-
-              <div>
-                <Timeline defaultValue={2}>
-                  {items.map((item) => (
-                    <TimelineItem
-                      key={item.id}
-                      step={item.id}
-                      className="group-data-[orientation=vertical]/timeline:ms-10"
-                    >
-                      <TimelineHeader>
-                        <TimelineSeparator className="group-data-[orientation=vertical]/timeline:-left-7 group-data-[orientation=vertical]/timeline:h-[calc(100%-1.5rem-0.25rem)] group-data-[orientation=vertical]/timeline:translate-y-6.5" />
-                        <TimelineDate>{item.date}</TimelineDate>
-                        <TimelineTitle>{item.title}</TimelineTitle>
-                        <TimelineIndicator className="group-data-completed/timeline-item:bg-primary group-data-completed/timeline-item:text-primary-foreground flex size-4.5 items-center justify-center group-data-completed/timeline-item:border-none group-data-[orientation=vertical]/timeline:-left-7">
-                          <CheckIcon
-                            className="group-not-data-completed/timeline-item:hidden"
-                            size={14}
-                          />
-                        </TimelineIndicator>
-                      </TimelineHeader>
-                      <TimelineContent>{item.description}</TimelineContent>
-                    </TimelineItem>
-                  ))}
-                </Timeline>
-              </div>
-            </div>
-
-            <div className="col-span-2 space-y-3  rounded-md ">
-              <div className="text-right  ">
-                <h1 className="text-2xl font-semibold">
-                  {data?.scholarship.scholarshipTitle}
-                </h1>
-                <p className="text-sm text-muted-foreground mt-1">
-                  June 1st, 2025
-                </p>
-              </div>
-              <div className="flex justify-between mt-15 items-center">
-                <h1>Submitted Documents</h1>
-                <span className="flex gap-2 items-center">
-                  3/3{" "}
-                  <Badge className="bg-green-800 text-gray-200">
-                    Complete
-                    <Check strokeWidth={4} />
-                  </Badge>
-                </span>
-              </div>
-              <div className="space-y-2 ">
-                <div className="border-input relative flex w-full items-center gap-2 rounded-md border p-4 shadow-xs outline-none border-l-2 border-l-green-800">
-                  <div className="flex grow items-center gap-3">
-                    <Image />
-                    <div className="grid gap-2">
-                      <Label>
-                        Certificate of Registration <Badge>File</Badge>
-                      </Label>
-                      <p className="text-muted-foreground text-xs">3MB</p>
+            <div className="space-y-2 ">
+              {data?.userDocuments &&
+                Object.entries(data.userDocuments).map(([key, doc]) => (
+                  <div
+                    key={key}
+                    className="border-input relative flex w-full items-center gap-3 rounded-md border p-4 shadow-xs outline-none border-l-2 border-l-green-800"
+                  >
+                    <div className="flex grow items-center gap-3">
+                      <Image />
+                      <div className="grid gap-2">
+                        <Label>
+                          {doc.document} <Badge>File</Badge>
+                        </Label>
+                        <p className="text-muted-foreground text-xs truncate">
+                          {doc.cloudinaryId}
+                        </p>
+                      </div>
                     </div>
+                    <Reviewer
+                      fileFormat={doc.fileFormat}
+                      resourceType={doc.resourceType}
+                      fileUrl={doc.fileUrl}
+                      document={doc.document}
+                      cloudinaryId={doc.cloudinaryId}
+                    />
+                    <Button>
+                      <Download />
+                    </Button>
                   </div>
-                  <Button>
-                    View <Expand />
-                  </Button>
-                </div>{" "}
-                <div className="border-input relative flex w-full items-center gap-2 rounded-md border p-4 shadow-xs outline-none border-l-2 border-l-amber-800">
-                  <div className="flex grow items-center gap-3">
-                    <Image />
-                    <div className="grid gap-2">
-                      <Label>
-                        Certificate of Registration <Badge>Image</Badge>
-                      </Label>
-                      <p className="text-muted-foreground text-xs">3MB</p>
-                    </div>
-                  </div>
-                  <Button>
-                    View <Expand />
-                  </Button>
-                </div>{" "}
-                <div className="border-input relative flex w-full items-center gap-2 rounded-md border p-4 shadow-xs outline-none border-l-2 border-l-amber-800">
-                  <div className="flex grow items-center gap-3">
-                    <Image />
-                    <div className="grid gap-2">
-                      <Label>
-                        Certificate of Registration <Badge>Image</Badge>
-                      </Label>
-                      <p className="text-muted-foreground text-xs">3MB</p>
-                    </div>
-                  </div>
-                  <Button>
-                    View <Expand />
-                  </Button>
-                </div>{" "}
-              </div>
+                ))}
             </div>
           </div>
         </div>
 
         <DrawerFooter className="space-y-2 border-t-2">
+          <Stepper defaultValue={2}>
+            {steps.map(({ step, title, description }) => (
+              <StepperItem
+                key={step}
+                step={step}
+                className="not-last:flex-1 max-md:items-start"
+              >
+                <StepperTrigger className="gap-4 rounded max-md:flex-col">
+                  <StepperIndicator />
+                  <div className="text-center md:-order-1 md:text-left">
+                    <StepperTitle>{title}</StepperTitle>
+                    <StepperDescription className="max-sm:hidden">
+                      {description}
+                    </StepperDescription>
+                  </div>
+                </StepperTrigger>
+                {step < steps.length && (
+                  <StepperSeparator className="max-md:mt-3.5 md:mx-4" />
+                )}
+              </StepperItem>
+            ))}
+          </Stepper>
           <Progress value={33} />
           {/* <Textarea placeholder="Admin Comment (Optional)" /> */}
           <div className="flex gap-3">

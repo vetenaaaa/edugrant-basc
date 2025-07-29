@@ -61,7 +61,14 @@ export type ApplicationTypes = {
   scholarshipId: string;
   status: string;
   student: UserProfileTypes;
-  userDocuments: Record<string, string>;
+  userDocuments: Record<string, UserDocument>;
   userId: string;
   applicationDate: string;
+};
+export type UserDocument = {
+  fileFormat: string;
+  resourceType: string;
+  fileUrl: string;
+  document: string;
+  cloudinaryId: string;
 };
