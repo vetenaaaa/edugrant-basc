@@ -1,8 +1,8 @@
 "use client";
 
-import { Ring } from "ldrs/react";
+// import { Ring } from "ldrs/react";
 import { Progress } from "@/components/ui/progress";
-import "ldrs/react/Ring.css";
+// import "ldrs/react/Ring.css";
 import {
   Drawer,
   DrawerContent,
@@ -18,42 +18,33 @@ import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import useApplicationById from "@/lib/get-application-by-id";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Check, Download, File, Image } from "lucide-react";
+import {  Download, File, Image } from "lucide-react";
 import { Label } from "@/components/ui/label";
-import {
-  Stepper,
-  StepperDescription,
-  StepperIndicator,
-  StepperItem,
-  StepperSeparator,
-  StepperTitle,
-  StepperTrigger,
-} from "@/components/ui/stepper";
+
 import Reviewer from "./reviewer";
 
-const steps = [
-  {
-    step: 1,
-    title: "Submitted",
-    description: "Jan 8, 2025",
-  },
-  {
-    step: 2,
-    title: "On Review",
-    description: "In progress",
-  },
-  {
-    step: 3,
-    title: "Approved",
-    description: "In progress",
-  },
-  {
-    step: 4,
-    title: "Incomplete",
-    description: "In progress",
-  },
-];
+// const steps = [
+//   {
+//     step: 1,
+//     title: "Submitted",
+//     description: "Jan 8, 2025",
+//   },
+//   {
+//     step: 2,
+//     title: "On Review",
+//     description: "In progress",
+//   },
+//   {
+//     step: 3,
+//     title: "Approved",
+//     description: "In progress",
+//   },
+//   {
+//     step: 4,
+//     title: "Incomplete",
+//     description: "In progress",
+//   },
+// ];
 export default function InterceptReviewApplicants() {
   const router = useRouter();
   const params = useParams();
