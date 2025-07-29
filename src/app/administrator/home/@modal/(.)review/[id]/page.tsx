@@ -21,13 +21,12 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Check,
-  CheckIcon,
+  
   Download,
-  Expand,
-  FileCheck2,
+
+
   Image,
-  ImageIcon,
-  Text,
+
 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import {
