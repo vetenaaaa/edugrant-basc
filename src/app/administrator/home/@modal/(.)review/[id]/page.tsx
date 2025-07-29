@@ -19,15 +19,7 @@ import { Badge } from "@/components/ui/badge";
 import useApplicationById from "@/lib/get-application-by-id";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Check,
-  
-  Download,
-
-
-  Image,
-
-} from "lucide-react";
+import { Check, Download, File, Image } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import {
   Stepper,
@@ -85,7 +77,7 @@ export default function InterceptReviewApplicants() {
       }}
     >
       <DrawerContent className="max-w-[900px] w-full mx-auto h-[95vh] outline-0 border-0">
-        <DrawerHeader className="  border-b-2">
+        <DrawerHeader className=" ">
           <DrawerTitle className="grid grid-cols-3 gap-5">
             <div>
               <p className="text-xl font-semibold">
@@ -99,9 +91,15 @@ export default function InterceptReviewApplicants() {
                 {data?.student.studentId}
               </p>
               <span className="flex gap-2 items-center mt-2">
-                <Badge className="bg-blue-800 text-gray-200">BSIT</Badge>
-                <Badge className="bg-blue-800 text-gray-200">4th Year</Badge>
-                <Badge className="bg-blue-800 text-gray-200">Section C</Badge>
+                <Badge className="bg-blue-800 text-gray-200">
+                  {data?.student.studentCourseYearSection.course}
+                </Badge>
+                <Badge className="bg-blue-800 text-gray-200">
+                  {data?.student.studentCourseYearSection.year}
+                </Badge>
+                <Badge className="bg-blue-800 text-gray-200">
+                  Section {data?.student.studentCourseYearSection.section}
+                </Badge>
               </span>
             </div>
             <div className="text-right col-span-2">
@@ -117,14 +115,15 @@ export default function InterceptReviewApplicants() {
         </DrawerHeader>
         <div className="p-4 overflow-auto no-scrollbar">
           <div className="flex-1 space-y-2">
-            <div className="flex justify-between items-center">
+            <div className="flex gap-2 items-center">
               <h1 className="font-semibold">Submitted Documents</h1>
-              <span className="flex gap-2 items-center">
-                3/3{" "}
-                <Badge className="bg-green-800 text-gray-200">
-                  Complete
-                  <Check strokeWidth={4} />
-                </Badge>
+              <span className="flex gap-1 items-center">
+                <p className=" font-semibold">3</p>/{" "}
+                <p className="">
+                  {" "}
+                  {data?.scholarship.scholarshipDocuments.length}
+                </p>
+                
               </span>
             </div>
             <div className="space-y-2 ">
@@ -132,13 +131,19 @@ export default function InterceptReviewApplicants() {
                 Object.entries(data.userDocuments).map(([key, doc]) => (
                   <div
                     key={key}
-                    className="border-input relative flex w-full items-center gap-3 rounded-md border p-4 shadow-xs outline-none border-l-2 border-l-green-800"
+                    className="border-input relative flex w-full items-center gap-3 rounded-md border p-4 shadow-xs outline-none border-l-2 border-l-green-800 bg-card"
                   >
                     <div className="flex grow items-center gap-3">
-                      <Image />
+                      {doc.fileFormat === "jpg" || doc.fileFormat === "png" ? (
+                        <Image />
+                      ) : (
+                        <File />
+                      )}
+
                       <div className="grid gap-2">
                         <Label>
-                          {doc.document} <Badge>File</Badge>
+                          {doc.document}{" "}
+                          <Badge className="uppercase">{doc.fileFormat || "DOCX"}</Badge>
                         </Label>
                         <p className="text-muted-foreground text-xs truncate">
                           {doc.cloudinaryId}
@@ -152,7 +157,7 @@ export default function InterceptReviewApplicants() {
                       document={doc.document}
                       cloudinaryId={doc.cloudinaryId}
                     />
-                    <Button>
+                    <Button variant="outline">
                       <Download />
                     </Button>
                   </div>
@@ -162,7 +167,7 @@ export default function InterceptReviewApplicants() {
         </div>
 
         <DrawerFooter className="space-y-2 border-t-2">
-          <Stepper defaultValue={2}>
+          {/* <Stepper defaultValue={2}>
             {steps.map(({ step, title, description }) => (
               <StepperItem
                 key={step}
@@ -183,12 +188,12 @@ export default function InterceptReviewApplicants() {
                 )}
               </StepperItem>
             ))}
-          </Stepper>
-          <Progress value={33} />
+          </Stepper> */}
+          <Progress value={100} />
           {/* <Textarea placeholder="Admin Comment (Optional)" /> */}
           <div className="flex gap-3">
             <Button
-              disabled
+              
               className="flex-1 bg-green-800 hover:bg-green-900 text-gray-200"
             >
               Approve

@@ -17,6 +17,10 @@ import {
   Download,
   ExternalLink,
   RefreshCw,
+  ArrowUp,
+  ArrowDown,
+  ArrowLeft,
+  ArrowRight,
 } from "lucide-react";
 
 export default function Reviewer({
@@ -28,7 +32,13 @@ export default function Reviewer({
 }: UserDocument) {
   const [zoom, setZoom] = useState(100);
   const [rotation, setRotation] = useState(0);
+  const [open, setOpen] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const moveUp = () => setPosition((pos) => ({ ...pos, y: pos.y - 20 }));
+  const moveDown = () => setPosition((pos) => ({ ...pos, y: pos.y + 20 }));
+  const moveLeft = () => setPosition((pos) => ({ ...pos, x: pos.x - 20 }));
+  const moveRight = () => setPosition((pos) => ({ ...pos, x: pos.x + 20 }));
 
   const handleZoomIn = () => setZoom((prev) => Math.min(prev + 25, 300));
   const handleZoomOut = () => setZoom((prev) => Math.max(prev - 25, 50));
@@ -36,10 +46,11 @@ export default function Reviewer({
   const handleReset = () => {
     setZoom(100);
     setRotation(0);
+    setPosition({ x: 0, y: 0 });
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
           <Expand />
@@ -52,7 +63,7 @@ export default function Reviewer({
         </DialogHeader>
         <div className="flex flex-col gap-3">
           {/* Document Viewer */}
-          <div className="flex-1  overflow-hidden rounded-md border">
+          <div className="flex-1  overflow-hidden rounded-md border bg-black">
             <iframe
               ref={iframeRef}
               className="h-full w-full bg-black"
@@ -64,7 +75,12 @@ export default function Reviewer({
                     )}&embedded=true`
               }
               style={{
-                transform: `scale(${zoom / 100}) rotate(${rotation}deg)`,
+                transform:
+                  resourceType === "image"
+                    ? `scale(${zoom / 100}) rotate(${rotation}deg) translate(${
+                        position.x
+                      }px, ${position.y}px)`
+                    : undefined,
                 transformOrigin: "center center",
               }}
               sandbox="allow-same-origin allow-scripts"
@@ -77,15 +93,33 @@ export default function Reviewer({
               <Button variant="outline" size="sm" onClick={handleZoomOut}>
                 <ZoomOut className="w-4 h-4" />
               </Button>
-              <span className="text-sm text-center font-medium min-w-16">{zoom}%</span>
+              <span className="text-sm text-center font-medium min-w-16">
+                {zoom}%
+              </span>
               <Button variant="outline" size="sm" onClick={handleZoomIn}>
                 <ZoomIn className="w-4 h-4" />
               </Button>
 
               {resourceType === "image" && (
-                <Button variant="outline" size="sm" onClick={handleRotate}>
-                  <RotateCw className="w-4 h-4" />
-                </Button>
+                <>
+                  <Button variant="outline" size="sm" onClick={handleRotate}>
+                    <RotateCw className="w-4 h-4" />
+                  </Button>
+                  <div className="flex items-center gap-1">
+                    <Button variant="outline" size="sm" onClick={moveUp}>
+                     <ArrowUp/>
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={moveDown}>
+                      <ArrowDown/>
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={moveLeft}>
+                      <ArrowLeft/>
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={moveRight}>
+                      <ArrowRight/>
+                    </Button>
+                  </div>
+                </>
               )}
 
               <Button variant="outline" size="sm" onClick={handleReset}>
@@ -102,7 +136,9 @@ export default function Reviewer({
             <div className="flex items-center gap-2">
               <Button className="flex-1">Approve</Button>
               <Button className="flex-1">Reject</Button>
-              <Button className="flex-1">Close</Button>
+              <Button className="flex-1" onClick={() => setOpen(false)}>
+                Close
+              </Button>
             </div>
           </div>
         </div>
