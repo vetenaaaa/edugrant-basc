@@ -56,36 +56,48 @@ export default function Reviewer({
           <Expand />
         </Button>
       </DialogTrigger>
-      <DialogContent className="h-screen !max-w-3/4">
+      <DialogContent className="h-screen !max-w-full">
         <DialogHeader className="sr-only">
           <DialogTitle>Are you absolutely sure?</DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 overflow-auto">
           {/* Document Viewer */}
-          <div className="flex-1  overflow-hidden rounded-md border bg-black">
-            <iframe
-              ref={iframeRef}
-              className="h-full w-full bg-black"
-              src={
-                resourceType === "image"
-                  ? fileUrl
-                  : `https://docs.google.com/viewer?url=${encodeURIComponent(
-                      fileUrl
-                    )}&embedded=true`
-              }
-              style={{
-                transform:
+          <div className="flex-1 flex justify-center items-center overflow-hidden rounded-md border bg-black">
+            {fileFormat === "jpg" || fileFormat === "png" ? (
+              <img
+                src={fileUrl}
+                alt="meow"
+                className="h-full w-full object-contain"
+                style={{
+                  transform:
+                    resourceType === "image"
+                      ? `scale(${
+                          zoom / 100
+                        }) rotate(${rotation}deg) translate(${position.x}px, ${
+                          position.y
+                        }px)`
+                      : undefined,
+                  transformOrigin: "center center",
+                }}
+              />
+            ) : (
+              <iframe
+                ref={iframeRef}
+                key={fileUrl}
+                className="h-full w-full bg-black"
+                src={
                   resourceType === "image"
-                    ? `scale(${zoom / 100}) rotate(${rotation}deg) translate(${
-                        position.x
-                      }px, ${position.y}px)`
-                    : undefined,
-                transformOrigin: "center center",
-              }}
-              sandbox="allow-same-origin allow-scripts"
-              title={`Document preview: ${document}`}
-            />
+                    ? fileUrl
+                    : `https://docs.google.com/viewer?url=${encodeURIComponent(
+                        fileUrl
+                      )}&embedded=true`
+                }
+                sandbox="allow-same-origin allow-scripts"
+                title={`Document preview: ${document}`}
+              />
+            )}
+            {/* */}
           </div>
 
           <div className="flex items-center justify-between p-2 border rounded">
