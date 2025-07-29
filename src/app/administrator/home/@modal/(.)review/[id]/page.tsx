@@ -179,7 +179,7 @@ export default function InterceptReviewApplicants() {
             </div>
           </div>
           <Separator />
-          <div className="grid md:grid-cols-1 gap-6 px-4">
+          <div className="grid md:grid-cols-1 gap-6 p-4">
             <div className="space-y-4">
               <div className="flex items-center space-x-3">
                 <User className="w-5 h-5 text-gray-700" />
