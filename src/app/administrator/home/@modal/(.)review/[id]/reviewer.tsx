@@ -48,7 +48,7 @@ export default function Reviewer({
     setRotation(0);
     setPosition({ x: 0, y: 0 });
   };
-
+  console.log(cloudinaryId, fileFormat);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -107,16 +107,16 @@ export default function Reviewer({
                   </Button>
                   <div className="flex items-center gap-1">
                     <Button variant="outline" size="sm" onClick={moveUp}>
-                     <ArrowUp/>
+                      <ArrowUp />
                     </Button>
                     <Button variant="outline" size="sm" onClick={moveDown}>
-                      <ArrowDown/>
+                      <ArrowDown />
                     </Button>
                     <Button variant="outline" size="sm" onClick={moveLeft}>
-                      <ArrowLeft/>
+                      <ArrowLeft />
                     </Button>
                     <Button variant="outline" size="sm" onClick={moveRight}>
-                      <ArrowRight/>
+                      <ArrowRight />
                     </Button>
                   </div>
                 </>
