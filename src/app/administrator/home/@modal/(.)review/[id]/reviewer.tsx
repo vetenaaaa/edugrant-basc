@@ -40,7 +40,6 @@ export default function Reviewer({
   document = "Sample Document",
   cloudinaryId = "sample-id",
 }: UserDocument) {
-  const [zoom, setZoom] = useState(100);
   const [rotation, setRotation] = useState(0);
   const [open, setOpen] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -50,9 +49,8 @@ export default function Reviewer({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
+        <Button variant="ghost">
           <Expand />
-          View Full Screen
         </Button>
       </DialogTrigger>
       <DialogContent className="h-screen !max-w-full  p-0 border-0">
@@ -112,6 +110,11 @@ export default function Reviewer({
                     >
                       <RefreshCw className="h-4 w-4" />
                     </Button>
+                  </div>
+
+                  <div className="absolute top-4 right-4 z-10 flex gap-2 bg-card p-2 rounded-lg">
+                    <Button variant="ghost">Approve</Button>
+                    <Button variant="ghost">Reject</Button>
                     <Button
                       size="sm"
                       variant="ghost"
@@ -119,14 +122,6 @@ export default function Reviewer({
                       onClick={() => setOpen(false)}
                     >
                       ✕
-                    </Button>
-                  </div>
-
-                  <div className="absolute top-4 right-4 z-10 flex gap-2 bg-card p-2 rounded-lg">
-                    <Button variant="ghost">Approve</Button>
-                    <Button variant="ghost">Reject</Button>
-                    <Button variant="ghost">
-                      <X />
                     </Button>
                   </div>
 
