@@ -36,17 +36,11 @@ export async function middleware(request: NextRequest) {
   const AdminToken = request.cookies.get("AdminToken")?.value;
   const { pathname } = request.nextUrl;
 
-  if (!token || !AdminToken) {
-    // Redirect to appropriate login page if no token
-    if (pathname.startsWith("/administrator/home")) {
-      return NextResponse.redirect(new URL("/administrator", request.url));
-    } else if (pathname.startsWith("/user/home")) {
-      return NextResponse.redirect(new URL("/user/login", request.url)); // change if different
-    }
-  }
-
   try {
     if (pathname.startsWith("/administrator/home")) {
+      if(!AdminToken){
+        return NextResponse.redirect(new URL("/administrator", request.url));
+      }
       const adminResponse = await fetch(
         "https://edugrant-express-server-production.up.railway.app/administrator/adminTokenAuthentication",
         {
@@ -62,6 +56,9 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL("/administrator", request.url));
       }
     } else if (pathname.startsWith("/user/home")) {
+      if(!token){
+        return NextResponse.redirect(new URL("/user/login", request.url));
+      }
       const userResponse = await fetch(
         "https://edugrant-express-server-production.up.railway.app/user/tokenValidation",
         {
