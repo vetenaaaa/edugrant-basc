@@ -22,7 +22,7 @@ import {
   ArrowLeft,
   ArrowRight,
 } from "lucide-react";
-
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 export default function Reviewer({
   fileFormat, // jpg png pdf docx
   resourceType, // image or raw
