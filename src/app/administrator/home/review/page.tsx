@@ -16,8 +16,6 @@ import {
   PaginationContent,
   PaginationItem,
 } from "@/components/ui/pagination";
-import { Badge } from "@/components/ui/badge";
-import useScholarshipSearch from "@/lib/scholarship-search";
 import { Input } from "@/components/ui/input";
 
 import DynamicHeaderAdmin from "../dynamic-header";
