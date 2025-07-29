@@ -33,9 +33,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function middleware(request: NextRequest) {
   const token = request.cookies.get("token")?.value;
+  const AdminToken = request.cookies.get("AdminToken")?.value;
   const { pathname } = request.nextUrl;
 
-  if (!token) {
+  if (!token || !AdminToken) {
     // Redirect to appropriate login page if no token
     if (pathname.startsWith("/administrator/home")) {
       return NextResponse.redirect(new URL("/administrator", request.url));
@@ -52,7 +53,7 @@ export async function middleware(request: NextRequest) {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Cookie: `token=${token}`,
+            Cookie: `AdminToken=${AdminToken}`,
           },
         }
       );
