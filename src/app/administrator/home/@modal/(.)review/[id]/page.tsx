@@ -50,7 +50,7 @@ export default function InterceptReviewApplicants() {
   const params = useParams();
   const [open, setOpen] = useState(true);
   const id = params.id as string;
-  const { data, loading } = useApplicationById(id);
+  const { data } = useApplicationById(id);
   const HandleCloseDrawer = (value: boolean) => {
     setOpen(value);
     if (!value) {
