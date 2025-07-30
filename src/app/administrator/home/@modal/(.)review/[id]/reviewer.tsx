@@ -53,7 +53,7 @@ export default function Reviewer({
           <Expand />
         </Button>
       </DialogTrigger>
-      <DialogContent className="h-screen !max-w-full  p-0 border-0">
+      <DialogContent className="h-screen !max-w-3/4  p-0 border-0">
         <DialogHeader className="sr-only">
           <DialogTitle>Document Viewer</DialogTitle>
           <DialogDescription>Full screen document preview</DialogDescription>

@@ -48,11 +48,12 @@ import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 
 const options: Option[] = [
-  { label: "PDF", value: ".pdf" },
-  { label: "Word Document", value: ".docx" },
-  { label: "JPEG Image", value: ".jpg" },
-  { label: "PNG Image", value: ".png" },
+  { label: "PDF", value: "application/pdf" },
+  { label: "Word Document", value: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" },
+  { label: "JPEG Image", value: "image/jpeg" },
+  { label: "PNG Image", value: "image/png" },
 ];
+
 
 const documentsSchema = z.object({
   label: z.string().min(3, "Requireds"),
@@ -194,7 +195,7 @@ export default function Create() {
       console.log("startDate:", today);
       formDataToSend.append(
         "newScholarDeadline",
-        format(formData.applicationDeadline, "PPP")
+        formData.applicationDeadline.toISOString()
       );
       console.log("applicationDeadline:", data.applicationDeadline);
 
@@ -381,7 +382,6 @@ export default function Create() {
                             mode="single"
                             selected={field.value}
                             onSelect={field.onChange}
-                          
                             captionLayout="dropdown"
                           />
                         </PopoverContent>
@@ -687,7 +687,7 @@ export default function Create() {
                           </FormLabel>
                           <FormControl>
                             <MultipleSelector
-                            className="bg-white/5"
+                              className="bg-white/5"
                               commandProps={{
                                 label: "Select document formats",
                               }}
