@@ -44,10 +44,10 @@ export function DragAndDropArea({
       }, {} as Record<string, string[]>),
       disabled: uploadedFiles.length > 0, // ✅ Disable dropzone if files exist
     });
-  const clearAllFiles = () => {
-    setUploadedFiles([]);
-    onFilesChange([]);
-  };
+  // const clearAllFiles = () => {
+  //   setUploadedFiles([]);
+  //   onFilesChange([]);
+  // };
   return (
     <div className="space-y-3">
       <div
