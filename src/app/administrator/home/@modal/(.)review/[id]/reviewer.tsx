@@ -13,14 +13,8 @@ import {
   ZoomIn,
   ZoomOut,
   RotateCw,
-  Download,
-  ExternalLink,
   RefreshCw,
-  ArrowUp,
-  ArrowDown,
-  ArrowLeft,
-  ArrowRight,
-  X,
+
 } from "lucide-react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
@@ -69,7 +63,7 @@ export default function Reviewer({
               maxScale={5}
               centerOnInit={true}
             >
-              {({ zoomIn, zoomOut, resetTransform, setTransform }) => (
+              {({ zoomIn, zoomOut, resetTransform }) => (
                 <>
                   {/* Control Panel */}
                   <div className="absolute top-4 left-4 z-10 flex gap-2 bg-card p-2 rounded-lg">

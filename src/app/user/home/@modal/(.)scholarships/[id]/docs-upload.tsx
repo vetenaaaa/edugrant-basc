@@ -19,8 +19,12 @@ import { Send, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import axios from "axios";
 
+interface ScholarshipDocument {
+  label: string;
+  formats: string[];
+}
 // Create Zod schema dynamically based on scholarship documents
-const createFormSchema = (documents: any[]) => {
+const createFormSchema = (documents: ScholarshipDocument[]) => {
   const schemaShape: Record<string, z.ZodType> = {};
 
   documents.forEach((doc) => {
@@ -67,7 +71,7 @@ export default function UploadDocs({
   });
 
   const handleFilesChange = (label: string, files: File[]) => {
-    form.setValue(label as keyof FormData, files as any);
+    form.setValue(label as keyof FormData, files as File[]);
     // Trigger validation for this field
     form.trigger(label as keyof FormData);
   };
