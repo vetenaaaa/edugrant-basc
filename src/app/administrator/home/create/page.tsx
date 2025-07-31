@@ -173,6 +173,7 @@ export default function Create() {
         setOpen(false);
       }
     } catch (error) {
+      console.error(error);
       StyledToast(
         "error",
         "Creation Failed",
@@ -197,7 +198,6 @@ export default function Create() {
         </p>
         <Form {...form}>
           <div className="space-y-5 mt-10">
-         
             <div className="grid grid-cols-3 gap-x-3 gap-y-6">
               <div className="col-span-2">
                 <FormField
@@ -384,7 +384,6 @@ export default function Create() {
           {/* Dynamic Required Documents */}
           <div className="space-y-5 mt-10">
             <div className="w-full flex items-center justify-end ">
-            
               <Button
                 type="button"
                 size="sm"
