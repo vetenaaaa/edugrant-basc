@@ -15,7 +15,7 @@ export default function Home({ children, modal }: DashboardLayoutProps) {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <div className="fixed your-class h-screen w-full"></div>
+        <div className="fixed your-class h-screen w-full pointer-events-none"></div>
         {children} {modal}
         <Toaster richColors position="bottom-right" />
       </SidebarInset>
