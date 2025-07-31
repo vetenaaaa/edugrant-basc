@@ -117,7 +117,7 @@ export default function Manage() {
 
       <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
         <h1 className="text-2xl font-semibold flex items-center gap-2">
-          <UsersRound className="text-yellow-600" />
+          <UsersRound />
           Pending Review
         </h1>
         <p className="text-sm text-gray-500 mt-1">

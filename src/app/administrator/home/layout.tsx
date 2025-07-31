@@ -13,6 +13,7 @@ export default function Home({ children, modal }: DashboardLayoutProps) {
       <AppSidebar />
       <SidebarInset>
         <div className="relative">
+          <div className="fixed your-class h-screen w-full"></div>
           {children}
           {modal}
         </div>
