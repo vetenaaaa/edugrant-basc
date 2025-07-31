@@ -1,6 +1,8 @@
+"use client"
 import { AppSidebar } from "@/components/ui/app-side";
 import { ReactNode } from "react";
 import { Toaster } from "@/components/ui/sonner";
+import useAuthenticatedUser from "@/lib/authAdminInfo";
 interface DashboardLayoutProps {
   children: ReactNode;
   modal: ReactNode;
@@ -8,6 +10,7 @@ interface DashboardLayoutProps {
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 export default function Home({ children, modal }: DashboardLayoutProps) {
+  useAuthenticatedUser();
   return (
     <SidebarProvider>
       <AppSidebar />

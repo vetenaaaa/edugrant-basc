@@ -10,6 +10,7 @@ import {
   GraduationCap,
   Archive,
   CheckCheck,
+  SquareUserRound,
 } from "lucide-react";
 import logo from "@/assets/basclogo.png";
 import {
@@ -35,6 +36,11 @@ const sidebarData = {
           title: "Dashboard",
           url: "/administrator/home",
           icon: Home,
+        },
+        {
+          title: "Admin Profile",
+          url: "/administrator/home/admin",
+          icon: SquareUserRound,
         },
       ],
     },

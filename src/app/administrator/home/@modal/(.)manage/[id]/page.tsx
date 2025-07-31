@@ -79,13 +79,9 @@ export default function InterceptManageScholarship() {
       setDeleteLoading(true);
 
       const res = await axios.post(
-        `https://edugrant-express-server-production.up.railway.app/administrator/deleteScholarship`,
-        {
-          scholarshipId: scholarshipId,
-        },
-        {
-          withCredentials: true,
-        }
+        "https://edugrant-express-server-production.up.railway.app/administrator/deleteScholarship",
+        { scholarshipId }, 
+        { withCredentials: true }
       );
 
       if (res.status === 200) {

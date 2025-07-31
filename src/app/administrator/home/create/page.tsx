@@ -4,15 +4,6 @@ import * as z from "zod";
 import { format } from "date-fns";
 import { useForm, useFieldArray } from "react-hook-form";
 import MultipleSelector, { Option } from "@/components/ui/multi-select";
-import { toast } from "sonner";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-} from "@/components/ui/drawer";
 import {
   Form,
   FormControl,
@@ -25,20 +16,19 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import {
-  AlertCircleIcon,
-  ArrowLeft,
-  CalendarIcon,
-  ImageUpIcon,
-  LoaderCircleIcon,
-  PenLine,
-  Plus,
-  X,
-  XIcon,
-} from "lucide-react";
-import { useEffect, useState } from "react";
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { CalendarIcon, LoaderCircleIcon, PenLine, Plus, X } from "lucide-react";
+import { useState } from "react";
 import axios from "axios";
 import DynamicHeaderAdmin from "../dynamic-header";
-import { useFileUpload } from "@/lib/use-file-upload";
 import {
   Popover,
   PopoverContent,
@@ -46,14 +36,19 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
+import { DragAndDropArea } from "@/app/user/home/@modal/(.)scholarships/[id]/reusable";
+import StyledToast from "@/components/ui/toast-styled";
 
 const options: Option[] = [
   { label: "PDF", value: "application/pdf" },
-  { label: "Word Document", value: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" },
+  {
+    label: "Word Document",
+    value:
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  },
   { label: "JPEG Image", value: "image/jpeg" },
   { label: "PNG Image", value: "image/png" },
 ];
-
 
 const documentsSchema = z.object({
   label: z.string().min(3, "Requireds"),
@@ -92,53 +87,6 @@ const createScholarshipSchema = z.object({
 type FormData = z.infer<typeof createScholarshipSchema>;
 
 export default function Create() {
-  const maxSizeMB = 5;
-  const maxSize = maxSizeMB * 1024 * 1024;
-
-  // Separate file upload hooks for each image
-  const [
-    {
-      files: detailsFiles,
-      isDragging: detailsIsDragging,
-      errors: detailsErrors,
-    },
-    {
-      handleDragEnter: detailsHandleDragEnter,
-      handleDragLeave: detailsHandleDragLeave,
-      handleDragOver: detailsHandleDragOver,
-      handleDrop: detailsHandleDrop,
-      openFileDialog: detailsOpenFileDialog,
-      removeFile: detailsRemoveFile,
-      getInputProps: detailsGetInputProps,
-    },
-  ] = useFileUpload({
-    accept: "image/*",
-    maxSize,
-  });
-
-  const [
-    {
-      files: sponsorFiles,
-      isDragging: sponsorIsDragging,
-      errors: sponsorErrors,
-    },
-    {
-      handleDragEnter: sponsorHandleDragEnter,
-      handleDragLeave: sponsorHandleDragLeave,
-      handleDragOver: sponsorHandleDragOver,
-      handleDrop: sponsorHandleDrop,
-      openFileDialog: sponsorOpenFileDialog,
-      removeFile: sponsorRemoveFile,
-      getInputProps: sponsorGetInputProps,
-    },
-  ] = useFileUpload({
-    accept: "image/*",
-    maxSize,
-  });
-
-  const detailsPreviewUrl = detailsFiles[0]?.preview || null;
-  const sponsorPreviewUrl = sponsorFiles[0]?.preview || null;
-
   const today = new Date().toISOString().split("T")[0];
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -154,19 +102,7 @@ export default function Create() {
       documents: [{ label: "", formats: [] }],
     },
   });
-  useEffect(() => {
-    if (detailsFiles[0]?.file) {
-      form.setValue("detailsImage", detailsFiles[0].file);
-      form.clearErrors("detailsImage");
-    }
-  }, [detailsFiles, form]);
 
-  useEffect(() => {
-    if (sponsorFiles[0]?.file) {
-      form.setValue("sponsorImage", sponsorFiles[0].file);
-      form.clearErrors("sponsorImage");
-    }
-  }, [sponsorFiles, form]);
   const formData = form.watch();
   const { fields, append, remove } = useFieldArray({
     control: form.control,
@@ -180,48 +116,25 @@ export default function Create() {
       const formDataToSend = new FormData();
 
       formDataToSend.append("newScholarTitle", data.scholarshipTitle);
-      console.log("scholarshipTitle:", data.scholarshipTitle);
-
       formDataToSend.append("newScholarProvider", data.providerName);
-      console.log("providerName:", data.providerName);
-
       formDataToSend.append(
         "newScholarDescription",
         data.scholarshipDescription
       );
-      console.log("scholarshipDescription:", data.scholarshipDescription);
-
       formDataToSend.append("applicationStartDate", today);
-      console.log("startDate:", today);
       formDataToSend.append(
         "newScholarDeadline",
         formData.applicationDeadline.toISOString()
       );
-      console.log("applicationDeadline:", data.applicationDeadline);
-
       formDataToSend.append("scholarshipAmount", data.scholarshipAmount);
-      console.log("scholarshipAmount:", data.scholarshipAmount);
-
       formDataToSend.append("scholarshipLimit", data.scholarshipLimit);
-      console.log("scholarshipLimit:", data.scholarshipLimit);
 
       if (data.detailsImage) {
         formDataToSend.append("coverImg", data.detailsImage);
-        console.log("detailsImage file:", data.detailsImage);
-        console.log("Image name:", data.detailsImage.name);
-        console.log("Image type:", data.detailsImage.type);
-        console.log("Image size (bytes):", data.detailsImage.size);
-      } else {
-        console.warn("No image file selected");
       }
+
       if (data.sponsorImage) {
         formDataToSend.append("sponsorLogo", data.sponsorImage);
-        console.log("sponsorImage file:", data.sponsorImage);
-        console.log("Image name:", data.sponsorImage.name);
-        console.log("Image type:", data.sponsorImage.type);
-        console.log("Image size (bytes):", data.sponsorImage.size);
-      } else {
-        console.warn("No image file selected");
       }
 
       formDataToSend.append("requirements", JSON.stringify(data.documents));
@@ -250,41 +163,31 @@ export default function Create() {
           documents: [{ label: "", formats: [] }],
         });
 
-        console.log("Scholarship created successfully!");
-        toast("Scholarship has been created", {
-          description:
-            "The scholarship opportunity has been successfully added to the system.",
-        });
+        StyledToast(
+          "success",
+          "Scholarship Created",
+          "The scholarship has been added successfully."
+        );
 
         setLoading(false);
         setOpen(false);
       }
     } catch (error) {
-      console.error("Error submitting form:", error);
+      StyledToast(
+        "error",
+        "Creation Failed",
+        "We couldn’t create the scholarship. Please try again."
+      );
+
       setLoading(false);
     }
-  };
-
-  const validateAndOpenDrawer = () => {
-    setOpen(true);
-  };
-  const getFileDisplayName = (file: File | undefined) => {
-    if (!file) return "No file selected";
-    return file.name;
-  };
-  const getFormatsDisplay = (formats: string[]) => {
-    if (!formats || formats.length === 0) return "No formats selected";
-    return options
-      .filter((option) => formats.includes(option.value))
-      .map((option) => option.label)
-      .join(", ");
   };
 
   return (
     <div className="px-4">
       <DynamicHeaderAdmin first="Scholarship" second="Create" />
 
-      <div className="mx-auto lg:w-[95%] w-[95%] py-10">
+      <div className="mx-auto lg:w-[70%] w-[95%] py-10">
         <h1 className="text-2xl font-semibold flex items-center gap-2">
           <PenLine />
           Create a New Scholarship Opportunity
@@ -294,10 +197,7 @@ export default function Create() {
         </p>
         <Form {...form}>
           <div className="space-y-5 mt-10">
-            {/* Scholarship Fields */}
-            <h1 className="text-2xl font-semibold flex gap-2 items-center  pl-3 border-l-3 leading-5.5   border-amber-500">
-              Scholarship Details
-            </h1>
+         
             <div className="grid grid-cols-3 gap-x-3 gap-y-6">
               <div className="col-span-2">
                 <FormField
@@ -438,95 +338,19 @@ export default function Create() {
                 <FormField
                   control={form.control}
                   name="detailsImage"
-                  render={({ field: { onChange } }) => (
+                  render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="font-semibold text-lg flex justify-between">
-                        Backdrop Image <FormMessage />
+                      <FormLabel className="font-semibold text-lg">
+                        Details Cover
                       </FormLabel>
                       <FormControl>
-                        <div className="relative">
-                          <div
-                            role="button"
-                            onClick={() => {
-                              detailsOpenFileDialog();
-                            }}
-                            onDragEnter={detailsHandleDragEnter}
-                            onDragLeave={detailsHandleDragLeave}
-                            onDragOver={detailsHandleDragOver}
-                            onDrop={(e) => {
-                              detailsHandleDrop(e);
-                              // Update form field when file is dropped
-                              setTimeout(() => {
-                                if (detailsFiles[0]?.file) {
-                                  onChange(detailsFiles[0].file);
-                                }
-                              }, 0);
-                            }}
-                            data-dragging={detailsIsDragging || undefined}
-                            className="border-input hover:bg-accent/50 data-[dragging=true]:bg-accent/50 has-[input:focus]:border-ring has-[input:focus]:ring-ring/50 relative flex min-h-35 flex-col items-center justify-center overflow-hidden rounded-xl border border-dashed p-4 transition-colors has-disabled:pointer-events-none has-disabled:opacity-50 has-[img]:border-none has-[input:focus]:ring-[3px] bg-white/5"
-                          >
-                            <input
-                              {...detailsGetInputProps()}
-                              className="sr-only"
-                              aria-label="Upload backdrop image"
-                            />
-                            {detailsPreviewUrl ? (
-                              <div className="absolute inset-0">
-                                <img
-                                  src={detailsPreviewUrl}
-                                  alt={
-                                    detailsFiles[0]?.file?.name ||
-                                    "Backdrop image"
-                                  }
-                                  className="size-full object-cover"
-                                />
-                              </div>
-                            ) : (
-                              <div className="flex flex-col items-center justify-center px-4 py-3 text-center">
-                                <div
-                                  className="bg-background mb-2 flex size-11 shrink-0 items-center justify-center rounded-full border"
-                                  aria-hidden="true"
-                                >
-                                  <ImageUpIcon className="size-4 opacity-60" />
-                                </div>
-                                <p className="mb-1.5 text-sm font-medium">
-                                  Drop your backdrop image here or click to
-                                  browse
-                                </p>
-                                <p className="text-muted-foreground text-xs">
-                                  Max size: {maxSizeMB}MB
-                                </p>
-                              </div>
-                            )}
-                          </div>
-                          {detailsPreviewUrl && (
-                            <div className="absolute top-4 right-4">
-                              <button
-                                type="button"
-                                className="focus-visible:border-ring focus-visible:ring-ring/50 z-50 flex size-8 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white transition-[color,box-shadow] outline-none hover:bg-black/80 focus-visible:ring-[3px]"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  detailsRemoveFile(detailsFiles[0]?.id);
-                                  onChange(undefined);
-                                }}
-                                aria-label="Remove backdrop image"
-                              >
-                                <XIcon className="size-4" aria-hidden="true" />
-                              </button>
-                            </div>
-                          )}
-                        </div>
+                        <DragAndDropArea
+                          label="backdrop image"
+                          accept={["image/png", "image/jpeg", "image/jpg"]}
+                          onFilesChange={(files) => field.onChange(files[0])} // Single file
+                        />
                       </FormControl>
-
-                      {detailsErrors.length > 0 && (
-                        <div
-                          className="text-destructive flex items-center gap-1 text-xs"
-                          role="alert"
-                        >
-                          <AlertCircleIcon className="size-3 shrink-0" />
-                          <span>{detailsErrors[0]}</span>
-                        </div>
-                      )}
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -537,95 +361,19 @@ export default function Create() {
                 <FormField
                   control={form.control}
                   name="sponsorImage"
-                  render={({ field: { onChange } }) => (
+                  render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="font-semibold text-lg flex justify-between">
-                        Logo Image
-                        <FormMessage />
+                      <FormLabel className="font-semibold text-lg">
+                        Sponsor Logo/Image
                       </FormLabel>
                       <FormControl>
-                        <div className="relative">
-                          <div
-                            role="button"
-                            onClick={() => {
-                              sponsorOpenFileDialog();
-                            }}
-                            onDragEnter={sponsorHandleDragEnter}
-                            onDragLeave={sponsorHandleDragLeave}
-                            onDragOver={sponsorHandleDragOver}
-                            onDrop={(e) => {
-                              sponsorHandleDrop(e);
-                              // Update form field when file is dropped
-                              setTimeout(() => {
-                                if (sponsorFiles[0]?.file) {
-                                  onChange(sponsorFiles[0].file);
-                                }
-                              }, 0);
-                            }}
-                            data-dragging={sponsorIsDragging || undefined}
-                            className="border-input hover:bg-accent/50 data-[dragging=true]:bg-accent/50 has-[input:focus]:border-ring has-[input:focus]:ring-ring/50 relative flex min-h-35 flex-col items-center justify-center overflow-hidden rounded-xl border border-dashed p-4 transition-colors has-disabled:pointer-events-none has-disabled:opacity-50 has-[img]:border-none has-[input:focus]:ring-[3px] bg-white/5"
-                          >
-                            <input
-                              {...sponsorGetInputProps()}
-                              className="sr-only"
-                              aria-label="Upload sponsor logo"
-                            />
-                            {sponsorPreviewUrl ? (
-                              <div className="absolute inset-0">
-                                <img
-                                  src={sponsorPreviewUrl}
-                                  alt={
-                                    sponsorFiles[0]?.file?.name ||
-                                    "Sponsor logo"
-                                  }
-                                  className="size-full object-cover"
-                                />
-                              </div>
-                            ) : (
-                              <div className="flex flex-col items-center justify-center px-4 py-3 text-center">
-                                <div
-                                  className="bg-background mb-2 flex size-11 shrink-0 items-center justify-center rounded-full border"
-                                  aria-hidden="true"
-                                >
-                                  <ImageUpIcon className="size-4 opacity-60" />
-                                </div>
-                                <p className="mb-1.5 text-sm font-medium">
-                                  Drop your logo image here or click to browse
-                                </p>
-                                <p className="text-muted-foreground text-xs">
-                                  Max size: {maxSizeMB}MB
-                                </p>
-                              </div>
-                            )}
-                          </div>
-                          {sponsorPreviewUrl && (
-                            <div className="absolute top-4 right-4">
-                              <button
-                                type="button"
-                                className="focus-visible:border-ring focus-visible:ring-ring/50 z-50 flex size-8 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white transition-[color,box-shadow] outline-none hover:bg-black/80 focus-visible:ring-[3px]"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  sponsorRemoveFile(sponsorFiles[0]?.id);
-                                  onChange(undefined);
-                                }}
-                                aria-label="Remove sponsor logo"
-                              >
-                                <XIcon className="size-4" aria-hidden="true" />
-                              </button>
-                            </div>
-                          )}
-                        </div>
+                        <DragAndDropArea
+                          label="sponsor logo"
+                          accept={["image/png", "image/jpeg", "image/jpg"]}
+                          onFilesChange={(files) => field.onChange(files[0])} // Single file
+                        />
                       </FormControl>
-
-                      {sponsorErrors.length > 0 && (
-                        <div
-                          className="text-destructive flex items-center gap-1 text-xs"
-                          role="alert"
-                        >
-                          <AlertCircleIcon className="size-3 shrink-0" />
-                          <span>{sponsorErrors[0]}</span>
-                        </div>
-                      )}
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -635,10 +383,8 @@ export default function Create() {
 
           {/* Dynamic Required Documents */}
           <div className="space-y-5 mt-10">
-            <div className="w-full flex items-center justify-between ">
-              <h1 className="text-2xl font-semibold flex gap-2 items-center  pl-3 border-l-3 leading-5.5   border-amber-500">
-                Documents
-              </h1>
+            <div className="w-full flex items-center justify-end ">
+            
               <Button
                 type="button"
                 size="sm"
@@ -731,200 +477,45 @@ export default function Create() {
               ))}
             </div>
           </div>
+          <AlertDialog open={open} onOpenChange={setOpen}>
+            <AlertDialogTrigger asChild>
+              <Button variant="outline" className="w-full mt-15">
+                Submit Scholarship
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Confirm Submission</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Are you sure you want to submit this scholarship?
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <Button
+                  onClick={form.handleSubmit(onSubmit)}
+                  disabled={loading}
+                  className="flex-1"
+                  variant="outline"
+                >
+                  {loading && (
+                    <LoaderCircleIcon
+                      className="-ms-1 animate-spin"
+                      size={16}
+                      aria-hidden="true"
+                    />
+                  )}
+                  {loading ? "Submitting..." : "Yes, Submit"}
+                </Button>
 
-          <Button
-            onClick={form.handleSubmit(validateAndOpenDrawer)}
-            className="w-full mt-10"
-          >
-            Submit
-          </Button>
+                <AlertDialogCancel className="flex items-center gap-1">
+                  <X />
+                  Cancel
+                </AlertDialogCancel>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </Form>
-        <Drawer open={open} onOpenChange={setOpen}>
-          <DrawerContent className="w-3/4 mx-auto h-[85vh]">
-            <DrawerHeader>
-              <DrawerTitle className="text-xl font-bold">
-                Review & Submit Scholarship
-              </DrawerTitle>
-              <DrawerDescription>
-                Please review the scholarship details before submitting.
-              </DrawerDescription>
-            </DrawerHeader>
-
-            <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm overflow-y-auto">
-              <div className="flex gap-3 items-center">
-                <h1 className="text-muted-foreground font-semibold w-[120px]">
-                  Scholarship Title
-                </h1>
-                <p className="text-lg font-bold border p-2 rounded flex-1">
-                  {" "}
-                  {formData.scholarshipTitle || "Not specified"}
-                </p>
-              </div>
-
-              <div className="flex gap-3 items-center">
-                <h1 className="text-muted-foreground font-semibold  w-[120px]">
-                  Provider Name
-                </h1>
-                <p className="text-lg font-bold border p-2 rounded flex-1">
-                  {formData.providerName || "Not specified"}
-                </p>
-              </div>
-              <div className="flex gap-3 items-center">
-                <h1 className="text-muted-foreground font-semibold  w-[120px]">
-                  Description
-                </h1>
-                <p className="text-lg font-bold border p-2 rounded flex-1">
-                  {formData.scholarshipDescription || "No description provided"}
-                </p>
-              </div>
-              <div className="flex gap-3 items-center ">
-                <h1 className="text-muted-foreground font-semibold  w-[120px]">
-                  Amount
-                </h1>
-                <p className="text-lg font-bold border p-2 rounded flex-1">
-                  {formData.scholarshipAmount || "Not specified"}
-                </p>
-              </div>
-              <div className="flex gap-3 items-center">
-                <h1 className="text-muted-foreground font-semibold  w-[120px]">
-                  Start Date
-                </h1>
-                <p className="text-lg font-bold border p-2 rounded flex-1">
-                  {today}
-                </p>
-              </div>
-
-              <div className="flex gap-3 items-center ">
-                <h1 className="text-muted-foreground font-semibold  w-[120px]">
-                  Deadline
-                </h1>
-                <p className="text-lg font-bold border p-2 rounded flex-1">
-                  {formData.applicationDeadline
-                    ? format(formData.applicationDeadline, "PPP")
-                    : "Not specified"}
-                </p>
-              </div>
-
-              <div className="flex gap-3 items-center ">
-                <h1 className="text-muted-foreground font-semibold  w-[120px]">
-                  Limit
-                </h1>
-                <p className="text-lg font-bold border p-2 rounded flex-1">
-                  {formData.scholarshipLimit || "Not specified"}
-                </p>
-              </div>
-
-              <div className="flex gap-3 items-center ">
-                <h1 className="text-muted-foreground font-semibold  w-[120px]">
-                  Backdrop Image
-                </h1>
-                <p className="text-lg font-bold border p-2 rounded flex-1">
-                  {getFileDisplayName(formData.detailsImage)}
-                </p>
-              </div>
-
-              <div className="col-span-2 grid grid-cols-2 gap-3 mt-5">
-                <h1 className="col-span-2 text-xl font-mono">
-                  Required Documents
-                </h1>
-                {formData.documents && formData.documents.length > 0 ? (
-                  formData.documents.map((doc, index) => (
-                    <div className="flex gap-3 items-center " key={index}>
-                      <h1 className="text-muted-foreground font-semibold  w-[120px]">
-                        Document {index + 1}
-                      </h1>
-                      <div className=" border p-2 rounded flex-1 space-y-1">
-                        <div className="font-semibold">
-                          {doc.label || "Untitled Document"}
-                        </div>
-                        <p className="text-green-600">
-                          Formats: {getFormatsDisplay(doc.formats)}
-                        </p>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-sm text-gray-500">
-                    No documents specified
-                  </p>
-                )}
-              </div>
-            </div>
-            <DrawerFooter>
-              <div className="w-full flex justify-end">
-                <div className="flex gap-3 w-1/2 justify-end">
-                  <Button
-                    className="flex-1"
-                    onClick={() => setOpen(false)}
-                    disabled={loading}
-                  >
-                    <ArrowLeft /> Back
-                  </Button>
-                  <Button
-                    onClick={form.handleSubmit(onSubmit)}
-                    disabled={loading}
-                    className="flex-1"
-                    variant="outline"
-                  >
-                    {loading && (
-                      <LoaderCircleIcon
-                        className="-ms-1 animate-spin"
-                        size={16}
-                        aria-hidden="true"
-                      />
-                    )}
-                    {loading ? "Submitting..." : "Submit Scholarship"}
-                  </Button>
-                </div>
-              </div>
-            </DrawerFooter>
-          </DrawerContent>
-        </Drawer>
       </div>
     </div>
   );
 }
-
-//  <FormField
-//                 control={form.control}
-//                 name="detailsImage"
-//                 render={({ field: { onChange, onBlur, name, ref } }) => (
-//                   <FormItem>
-//                     <FormLabel className="flex justify-between items-center">
-//                       Backdrop Image <FormMessage />
-//                     </FormLabel>
-//                     <FormControl>
-//                       <Input
-//                         type="file"
-//                         accept="image/*"
-//                         name={name}
-//                         onBlur={onBlur}
-//                         ref={ref}
-//                         onChange={(e) => onChange(e.target.files?.[0])}
-//                       />
-//                     </FormControl>
-//                   </FormItem>
-//                 )}
-//               />
-
-//               <FormField
-//                 control={form.control}
-//                 name="sponsorImage"
-//                 render={({ field: { onChange, onBlur, name, ref } }) => (
-//                   <FormItem>
-//                     <FormLabel className="flex justify-between items-center">
-//                       Sponsor Image <FormMessage />
-//                     </FormLabel>
-//                     <FormControl>
-//                       <Input
-//                         type="file"
-//                         accept="image/*"
-//                         name={name}
-//                         onBlur={onBlur}
-//                         ref={ref}
-//                         onChange={(e) => onChange(e.target.files?.[0])}
-//                       />
-//                     </FormControl>
-//                   </FormItem>
-//                 )}
-//               />

@@ -9,15 +9,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-
-  CircleCheck,
- 
-  LoaderCircle,
-  XCircle,
-
-} from "lucide-react";
-import { toast } from "sonner";
+import {  LoaderCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
@@ -30,6 +22,7 @@ import { Badge } from "@/components/ui/badge";
 import axios from "axios";
 import { Progress } from "@/components/ui/progress";
 import { useState } from "react";
+import StyledToast from "@/components/ui/toast-styled";
 
 interface ScholarshipDocument {
   label: string;
@@ -100,20 +93,11 @@ export default function UploadDocs({
 
   const onSubmit = async (data: FormData) => {
     console.log("Submitting:", data);
-    toast.custom(() => (
-      <div className="flex items-center gap-4 p-4 border border-green-950/80 bg-black text-foreground rounded-md shadow-md w-sm">
-        <LoaderCircle className="animate-spin text-green-600 size-8" />
-
-        <div className="flex flex-col gap-1">
-          <span className="font-semibold text-sm">
-            Uploading in progress...
-          </span>
-          <span className="text-xs text-muted-foreground">
-            Your documents are being uploaded. Please don’t close the window.
-          </span>
-        </div>
-      </div>
-    ));
+    StyledToast(
+      "checking",
+      "Uploading in progress...",
+      "Your documents are being uploaded. Please don’t close the window."
+    );
 
     try {
       setLoading(true);
@@ -147,35 +131,23 @@ export default function UploadDocs({
       if (res.status === 200) {
         console.log("Upload success:", res.data);
 
-        toast.custom(() => (
-          <div className="flex items-center gap-4 p-4 border border-green-800 bg-green-900 text-white rounded-md shadow-md w-sm">
-            <CircleCheck className="text-green-300 size-6" />
-            <div className="flex flex-col gap-1">
-              <span className="font-semibold text-sm">Upload successful!</span>
-              <span className="text-xs text-green-100">
-                Your documents have been uploaded successfully.
-              </span>
-            </div>
-          </div>
-        ));
+        StyledToast(
+          "success",
+          "Upload successful!",
+          " Your documents have been submitted successfully."
+        );
         setIsApply(true);
         setLoading(false);
-       setTimeout(() => {
-         router.back();
-       }, 300);
+        setTimeout(() => {
+          router.back();
+        }, 300);
       }
     } catch (error) {
-      toast.custom(() => (
-        <div className="flex items-center gap-4 p-4 border border-red-800 bg-red-900 text-white rounded-md shadow-md w-sm">
-          <XCircle className="text-red-300 size-6" />
-          <div className="flex flex-col gap-1">
-            <span className="font-semibold text-sm">Upload failed</span>
-            <span className="text-xs text-red-100">
-              Something went wrong. Please try again.
-            </span>
-          </div>
-        </div>
-      ));
+      StyledToast(
+        "error",
+        "Upload failed",
+        "Something went wrong. Please try again."
+      );
       console.error("Upload error:", error);
       setLoading(false);
     }
@@ -242,7 +214,7 @@ export default function UploadDocs({
           <div className="space-y-3 p-4 bottom-0 fixed w-full bg-black border-t-1">
             <div className="flex gap-3 items-center">
               <Progress
-              className="bg-green-900"
+                className="bg-green-900"
                 value={
                   (completedCount / data.scholarshipDocuments.length) * 100
                 }

@@ -16,6 +16,7 @@ import { PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Bell, ChevronsUpDown, ExternalLink, LogOut, User } from "lucide-react";
 import Link from "next/link";
+import { useAdminStore } from "@/store/adminUserStore";
 function capitalizeFirstLetter(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
@@ -30,7 +31,8 @@ export default function DynamicHeaderAdmin({
   third,
 }: HeaderTypes) {
   const router = useRouter();
-
+ const { admin } = useAdminStore();
+ console.log(admin?.adminName)
   const HandleLogout = async () => {
     try {
       const res = await axios.post(
@@ -47,7 +49,7 @@ export default function DynamicHeaderAdmin({
     }
   };
   return (
-    <header className="flex w-full items-center justify-between your-class2 border-b rounded-md top-2 relative">
+    <header className="flex w-full items-center justify-between top-2 relative">
       <div className="flex h-16 shrink-0 items-center gap-2 px-4">
         <SidebarTrigger className="-ml-1" />
         <Separator
@@ -77,7 +79,7 @@ export default function DynamicHeaderAdmin({
           <PopoverTrigger asChild>
             <Button variant="outline">
               <User />
-              Jerome
+              {admin?.adminName || "N/A"} 
               <ChevronsUpDown />
             </Button>
           </PopoverTrigger>

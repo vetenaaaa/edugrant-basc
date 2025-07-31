@@ -10,6 +10,18 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
   Pagination,
   PaginationContent,
   PaginationItem,
@@ -22,6 +34,8 @@ import DynamicHeaderAdmin from "../dynamic-header";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
+  AlignHorizontalDistributeCenter,
+  Check,
   ChevronDown,
   ChevronFirstIcon,
   ChevronLastIcon,
@@ -32,6 +46,7 @@ import {
   Grid2x2,
   SlidersVertical,
 } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -42,20 +57,36 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 const headers = [
-  { label: "Provider" },
-  { label: "Status" },
+  { label: "Sponsor" },
+  { label: "Title" },
   { label: "Deadline" },
   { label: "Approved" },
   { label: "Applicants" },
 ];
+const sortList = [
+  {
+    value: "",
+    label: "No Sort",
+  },
+  {
+    value: "asc",
+    label: "Ascending",
+  },
+  {
+    value: "desc",
+    label: "Descending",
+  },
+];
 import { useScholarshipStore } from "@/store/scholarshipStore";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
 export default function Manage() {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sort, setSort] = useState<"asc" | "desc" | "">("");
   const { refreshTrigger, deletedScholarshipIds } = useScholarshipStore();
-
+  const [open, setOpen] = useState(false);
   const { data, loading, totalPages } = useScholarshipData({
     currentPage,
     rowsPerPage,
@@ -89,46 +120,70 @@ export default function Manage() {
           modify or remove entries.
         </p>
         <div className="container mx-auto py-10 space-y-3">
-          <div className="flex gap-3">
+          <div className="flex gap-3 justify-between">
             <Input
               placeholder="Search Scholarship Title..."
               onChange={(e) => setQuery(e.target.value)}
+              className="w-md"
             />
-            <Button variant="outline">
-              <Grid2x2 />
-            </Button>
-            <Button variant="outline">Export CSV</Button>
+            <div className="flex gap-2">
+              <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={open}
+                    className="justify-between"
+                  >
+                    <AlignHorizontalDistributeCenter />
+                    {sort
+                      ? sortList.find((framework) => framework.value === sort)
+                          ?.label
+                      : "Sort by"}
+                    <ChevronsUpDown className="opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[150px] p-0">
+                  <Command>
+                    <CommandList>
+                      <CommandEmpty>No framework found.</CommandEmpty>
+                      <CommandGroup>
+                        {sortList.map((framework) => (
+                          <CommandItem
+                            key={framework.value}
+                            value={framework.value}
+                            onSelect={(currentValue) => {
+                              setSort(
+                                currentValue === sort
+                                  ? ""
+                                  : (currentValue as "" | "asc" | "desc")
+                              );
+                              setOpen(false);
+                            }}
+                          >
+                            {framework.label}
+                            <Check
+                              className={cn(
+                                "ml-auto",
+                                sort === framework.value
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              <Button variant="outline">Export CSV</Button>
+            </div>
           </div>
           <Table>
             {/* <TableCaption>A list of active scholarships.</TableCaption> */}
             <TableHeader>
               <TableRow>
-                <TableHead>
-                  <div
-                    className="flex items-center  gap-2 cursor-pointer"
-                    onClick={() => {
-                      if (sort === "") {
-                        setSort("asc");
-                      } else if (sort === "asc") {
-                        setSort("desc");
-                      } else {
-                        setSort(""); // Go back to default/no sort
-                      }
-                      setCurrentPage(1); // Reset to first page when sorting changes
-                    }}
-                  >
-                    Scholarship Title{" "}
-                    {sort === "" && (
-                      <ChevronsUpDown size={18} className="text-white/50" />
-                    )}
-                    {sort === "asc" && (
-                      <ChevronDown size={18} className="text-white/50" />
-                    )}
-                    {sort === "desc" && (
-                      <ChevronUp size={18} className="text-white/50" />
-                    )}
-                  </div>
-                </TableHead>
                 {headers.map((header) => (
                   <TableHead
                     className={
@@ -157,36 +212,26 @@ export default function Manage() {
               ) : !query ? (
                 filteredData.length > 0 ? (
                   filteredData.map((row) => (
-                    <TableRow
-                      key={row.scholarshipId}
-                      onClick={() =>
-                        router.push(
-                          `/administrator/home/manage/${row.scholarshipId}`
-                        )
-                      }
-                      className="cursor-pointer"
-                    >
-                      <TableCell className="font-medium flex items-center gap-3">
-                        {/* <Link
+                    <TableRow key={row.scholarshipId}>
+                      <TableCell className="">
+                        <div className="flex gap-2.5 items-center">
+                          <img
+                            className="size-10 object-cover rounded-sm"
+                            src={row.scholarshipLogo}
+                            alt=""
+                          />{" "}
+                          {row.scholarshipProvider}
+                        </div>
+                      </TableCell>
+                      <TableCell className="font-medium underline">
+                        <Link
                           href={`/administrator/home/manage/${row.scholarshipId}`}
                           prefetch={true}
-                        > */}
-                        <img
-                          className="size-10 object-cover rounded-full"
-                          src={row.scholarshipLogo}
-                          alt=""
-                        />{" "}
-                        {row.scholarshipTitle}
-                        {/* </Link> */}
+                        >
+                          {row.scholarshipTitle}
+                        </Link>
                       </TableCell>
-                      <TableCell className="">
-                        {row.scholarshipProvider}
-                      </TableCell>
-                      <TableCell className="">
-                        <Badge className="bg-green-900 text-gray-300">
-                          Active
-                        </Badge>
-                      </TableCell>
+
                       <TableCell className="">
                         {new Date(row.scholarshipDealine).toLocaleDateString()}
                       </TableCell>

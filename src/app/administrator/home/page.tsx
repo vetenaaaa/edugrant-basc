@@ -12,13 +12,7 @@ import {
 
 import ApplicationSummary from "./dashboard/summary";
 import { Button } from "@/components/ui/button";
-import {
-  Activity,
-  ArrowRight,
-  
-  Megaphone,
-  SquarePen,
-} from "lucide-react";
+import { Activity, ArrowRight, Megaphone, SquarePen } from "lucide-react";
 
 import {
   Timeline,
@@ -28,6 +22,7 @@ import {
 } from "@/components/ui/timeline";
 import { useEffect, useState } from "react";
 import DynamicHeaderAdmin from "./dynamic-header";
+import { useAdminStore } from "@/store/adminUserStore";
 const announcements = [
   {
     id: 1,
@@ -48,8 +43,8 @@ const announcements = [
 ];
 
 export default function AdminDashboard() {
+  const { admin } = useAdminStore();
   const [date, setDate] = useState("");
-
   useEffect(() => {
     const updateDate = () => {
       const now = new Date();
@@ -87,9 +82,11 @@ export default function AdminDashboard() {
       <DynamicHeaderAdmin first="Home" />
 
       <div className=" grid grid-cols-3  gap-5 px-5 ">
-        <div className=" flex justify-between items-start py-10 col-span-2">
+        <div className=" flex justify-between items-start py-5 mt-3 col-span-2">
           <div>
-            <h1 className="text-2xl font-semibold">Hello Admin </h1>
+            <h1 className="text-2xl font-semibold">
+              Hello, {admin?.adminName}
+            </h1>
             <p className="text-sm text-muted-foreground">{date}</p>
           </div>
           <div className="flex gap-3">
@@ -105,9 +102,15 @@ export default function AdminDashboard() {
 
         <div className="col-span-2 grid gap-5">
           <ApplicationSummary />
-          <div className="grid grid-cols-2 gap-5">
-            <ChartBarMultiple />
-            <ChartPieDonutText />
+          <div className="grid grid-cols-2 gap-5 ">
+            <div className="aspect-[14.6/9] relative border border-green-950 bg-background/40  p-4 rounded-md space-y-1.5">
+              <h1>Scholarship Status</h1>
+              <ChartBarMultiple />
+            </div>
+            <div className="aspect-[14.6/9] relative  border border-green-950 bg-background/40  p-4 rounded-md space-y-1.5">
+              <h1>Scholarship Status</h1>
+              <ChartPieDonutText />
+            </div>
           </div>
           <Card className="bg-background/40 flex-1 ">
             <CardHeader>

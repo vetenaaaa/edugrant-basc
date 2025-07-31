@@ -72,3 +72,10 @@ export type UserDocument = {
   document: string;
   cloudinaryId: string;
 };
+
+export type AdminUserType = {
+  adminEmail: string;
+  adminId: string;
+  adminName: string;
+  adminPassword: string;
+};

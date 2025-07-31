@@ -43,87 +43,81 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export default function ChartPieDonutText() {
-  const { data } = useScholarshipData({ currentPage: 1, rowsPerPage: 100, sort: "" });
+  const { data } = useScholarshipData({
+    currentPage: 1,
+    rowsPerPage: 100,
+    sort: "",
+  });
   const filterApproved = data.filter((meow) => meow.totalApproved);
   console.log(filterApproved);
   return (
-    <Card className="bg-backgrousnd/40">
-      <CardHeader>
-        <CardTitle>Application Status Overview</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <ChartContainer
-          config={chartConfig}
-          className="mx-auto aspect-square max-h-[220px]"
-        >
-          <PieChart>
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
-            />
-            <Pie
-              data={chartData}
-              dataKey="value"
-              nameKey="status"
-              innerRadius={55}
-              strokeWidth={5}
-              activeIndex={0}
-              activeShape={({
-                outerRadius = 0,
-                ...props
-              }: PieSectorDataItem) => (
-                <Sector {...props} outerRadius={outerRadius + 10} />
-              )}
-            >
-              <Label
-                content={({ viewBox }) => {
-                  const approved = chartData.find(
-                    (item) => item.status === "Approved"
-                  );
-                  const total = chartData.reduce(
-                    (acc, curr) => acc + curr.value,
-                    0
-                  );
-                  const approvedPercent = approved
-                    ? ((approved.value / total) * 100).toFixed(1)
-                    : "0";
+    <div className=" h-full w-full  border p-2 rounded-md">
+      <ChartContainer config={chartConfig}>
+        <PieChart>
+          <ChartTooltip
+            cursor={false}
+            content={<ChartTooltipContent hideLabel />}
+          />
+          <Pie
+            data={chartData}
+            dataKey="value"
+            nameKey="status"
+            innerRadius={45}
+          
+            strokeWidth={5}
+            activeIndex={0}
+            // activeShape={({ outerRadius = 0, ...props }: PieSectorDataItem) => (
+            //   <Sector {...props} outerRadius={outerRadius + 10} />
+            // )}
+          >
+            <Label
+              content={({ viewBox }) => {
+                const approved = chartData.find(
+                  (item) => item.status === "Approved"
+                );
+                const total = chartData.reduce(
+                  (acc, curr) => acc + curr.value,
+                  0
+                );
+                const approvedPercent = approved
+                  ? ((approved.value / total) * 100).toFixed(1)
+                  : "0";
 
-                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                    return (
-                      <text
+                if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                  return (
+                    <text
+                      x={viewBox.cx}
+                      y={viewBox.cy}
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                    >
+                      <tspan
                         x={viewBox.cx}
                         y={viewBox.cy}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
+                        className="fill-foreground text-2xl font-bold"
                       >
-                        <tspan
-                          x={viewBox.cx}
-                          y={viewBox.cy}
-                          className="fill-foreground text-3xl font-bold"
-                        >
-                          {approvedPercent}%
-                        </tspan>
-                        <tspan
-                          x={viewBox.cx}
-                          y={(viewBox.cy || 0) + 24}
-                          className="fill-muted-foreground text-sm"
-                        >
-                          Approved
-                        </tspan>
-                      </text>
-                    );
-                  }
-                  return null;
-                }}
-              />
-            </Pie>
-            <ChartLegend
-              content={<ChartLegendContent nameKey="status" />}
-              className="-translate-y-2 flex-wrap gap-2 *:basis-1/4 *:justify-center"
+                        {approvedPercent}%
+                      </tspan>
+                      <tspan
+                        x={viewBox.cx}
+                        y={(viewBox.cy || 0) + 24}
+                        className="fill-muted-foreground text-xs"
+                      >
+                        Approved
+                      </tspan>
+                    </text>
+                  );
+                }
+                return null;
+              }}
             />
-          </PieChart>
-        </ChartContainer>
-      </CardContent>
-    </Card>
+          </Pie>
+          <ChartLegend
+            content={<ChartLegendContent nameKey="status" />}
+            className=" flex-wrap gap-4 "
+          />
+        </PieChart>
+      </ChartContainer>
+    </div>
   );
 }
