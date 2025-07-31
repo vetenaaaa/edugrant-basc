@@ -281,7 +281,7 @@ export default function Create() {
   };
 
   return (
-    <div className="px-4 your-class">
+    <div className="px-4">
       <DynamicHeaderAdmin first="Scholarship" second="Create" />
 
       <div className="mx-auto lg:w-[95%] w-[95%] py-10">

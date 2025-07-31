@@ -213,7 +213,7 @@ export default function LoginAdmin() {
   };
 
   return (
-    <div className="h-screen flex justify-center items-center your-class">
+    <div className="h-screen flex justify-center items-center">
       <div className="flex-1  flex flex-col justify-center items-center">
         <div>
           <motion.span

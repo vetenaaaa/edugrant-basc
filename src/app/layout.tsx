@@ -37,6 +37,7 @@ export default function RootLayout({
           disableTransitionOnChange
           themes={["light", "dark", "blue"]}
         >
+          <div className="fixed your-class h-screen w-full"></div>
           {children}
           {modal}
         </ThemeProvider>

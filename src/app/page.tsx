@@ -209,7 +209,7 @@ export default function LandingPage() {
 
   return (
     <>
-      <div className="relative w-full your-class">
+      <div className="relative w-full">
         <HeaderComponent />
         <AnimatePresence mode="wait">
           {transition === "hero" && (

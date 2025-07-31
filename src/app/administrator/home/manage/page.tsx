@@ -76,7 +76,7 @@ export default function Manage() {
   );
 
   return (
-    <div className=" your-class  h-screen px-4">
+    <div className="  h-screen px-4">
       <DynamicHeaderAdmin first="Scholarship" second="Manage" />
 
       <div className="mx-auto lg:w-[95%]  w-[95%] py-10">

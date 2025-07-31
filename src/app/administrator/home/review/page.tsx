@@ -112,7 +112,7 @@ export default function Manage() {
   const { searchData, searchLoading } = useApplicationpSearch({ query });
 
   return (
-    <div className=" your-class  min-h-screen px-4">
+    <div className="   min-h-screen px-4">
       <DynamicHeaderAdmin first="Scholarship" second="Manage" />
 
       <div className="mx-auto lg:w-[95%]  w-[95%] py-10">

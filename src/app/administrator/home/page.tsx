@@ -83,7 +83,7 @@ export default function AdminDashboard() {
   }, []);
 
   return (
-    <div className="pl-1 pr-2 your-class h-screen">
+    <div className="pl-1 pr-2 h-screen">
       <DynamicHeaderAdmin first="Home" />
 
       <div className=" grid grid-cols-3  gap-5 px-5 ">
