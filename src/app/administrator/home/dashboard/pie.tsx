@@ -1,9 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { Label, Pie, PieChart, Sector } from "recharts";
+import { Label, Pie, PieChart } from "recharts";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
@@ -13,7 +12,6 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
-import { PieSectorDataItem } from "recharts/types/polar/Pie";
 import useScholarshipData from "@/lib/scholarship-data";
 
 export const description = "A donut chart with text";

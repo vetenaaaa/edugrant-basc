@@ -36,14 +36,12 @@ import { useRouter } from "next/navigation";
 import {
   AlignHorizontalDistributeCenter,
   Check,
-  ChevronDown,
+  
   ChevronFirstIcon,
   ChevronLastIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   ChevronsUpDown,
-  ChevronUp,
-  Grid2x2,
   SlidersVertical,
 } from "lucide-react";
 
