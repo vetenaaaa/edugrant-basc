@@ -7,6 +7,7 @@ interface DashboardLayoutProps {
   modal: ReactNode;
 }
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { Toaster } from "sonner";
 
 export default function Home({ children, modal }: DashboardLayoutProps) {
   useAuthenticatedUser();
@@ -14,7 +15,9 @@ export default function Home({ children, modal }: DashboardLayoutProps) {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
+        <div className="fixed your-class h-screen w-full"></div>
         {children} {modal}
+        <Toaster richColors position="bottom-right" />
       </SidebarInset>
     </SidebarProvider>
   );

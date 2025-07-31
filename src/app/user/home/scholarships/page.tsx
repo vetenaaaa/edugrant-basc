@@ -3,6 +3,12 @@
 import { usePathname } from "next/navigation";
 import DynamicHeader from "../dynamic-header";
 import {
+  parseISO,
+  isPast,
+  differenceInDays,
+  formatDistanceToNowStrict,
+} from "date-fns";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -10,7 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Info, LogIn, TextSearch } from "lucide-react";
+import { PhilippinePeso, Share2, TextSearch } from "lucide-react";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -29,9 +35,22 @@ export default function ClientScholarship() {
     sort,
   });
   console.log(data, loading);
+  const getDeadlineInfo = (deadline: string) => {
+    const date = parseISO(deadline);
 
+    if (isPast(date))
+      return { label: "Expired", className: "bg-red-800 text-white" };
+
+    const daysLeft = differenceInDays(date, new Date());
+    const label = `${formatDistanceToNowStrict(date)} left`;
+
+    const className =
+      daysLeft <= 2 ? "bg-red-800 text-white" : "bg-green-800 text-gray-200";
+
+    return { label, className };
+  };
   return (
-    <div className="bg-background min-h-screen your-class px-4">
+    <div className=" min-h-screen background px-4 ">
       <DynamicHeader first={segmentedPath[2]} second={segmentedPath[3]} />
 
       <div className="mx-auto w-[95%] pt-10">
@@ -61,68 +80,72 @@ export default function ClientScholarship() {
             ? [...Array(4)].map((_, index) => (
                 <div
                   key={index}
-                  className="p-2 bg-background/40 relative rounded-md border"
+                  className="p-2 dark:bg-black/50 relative rounded-md border"
                 >
-                  <Skeleton className="mb-22 aspect-video" />
-                  <div className="w-full absolute bottom-0 left-0 flex gap-3 px-2 py-4">
-                    <Skeleton className="h-8.5 flex-1" />
-                    <Skeleton className="h-8.5 flex-1" />
+                  <Skeleton className=" aspect-video" />
+
+                  <div className="w-full  bottom-0 left-0 px-2 py-4 space-y-2">
+                    <Skeleton className="h-8.5 w-full" />
+                    <div className=" flex gap-2">
+                      <Skeleton className="h-8.5 flex-1" />
+                      <Skeleton className="h-8.5 w-9" />
+                    </div>
                   </div>
                 </div>
               ))
             : data.map((scholarship) => (
-                <div
+                <Link
+                  href={`/user/home/scholarships/${scholarship.scholarshipId}`}
                   key={scholarship.scholarshipId}
-                  className="rounded-lg border bg-background/40 shadow-sm  overflow-hidden h-full  relative p-2"
+                  className="rounded-lg border border-green-950 dark:bg-black/50 shadow-sm  overflow-hidden h-full  relative p-2"
+                  prefetch
+                  scroll={false}
                 >
                   <img
                     src={scholarship.scholarshipLogo}
                     alt=""
-                    className=" w-full object-cover rounded-md mask-gradient-bottom bg-background mb-22 aspect-video"
+                    className=" w-full object-cover rounded-md mask-gradient-bottom bg-background mb-27 aspect-video dark:brightness-80"
                   />
-                  <div className=" absolute bottom-0 w-full left-0 p-2 space-y-3">
-                    <div className="flex justify-between items-start px-2">
+                  <div className=" absolute bottom-0 w-full left-0 px-2 py-4 space-y-3">
+                    <div className="flex justify-between items-center px-2">
                       <div>
                         <h1 className="font-bold text-lg">
                           {scholarship.scholarshipTitle}
                         </h1>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-xs text-muted-foreground">
                           by {scholarship.scholarshipProvider}
                         </p>
                       </div>
-                      <Badge>2 days left</Badge>
+                      {/* <h1 className="flex  text-lg items-center">
+                        <PhilippinePeso size={15} />{" "}
+                        {scholarship.scholarshipAmount}
+                      </h1> */}
+                      <Badge
+                        className={`${
+                          getDeadlineInfo(scholarship.scholarshipDealine)
+                            .className
+                        }`}
+                      >
+                        {getDeadlineInfo(scholarship.scholarshipDealine).label}
+                      </Badge>
                     </div>
 
-                    <div className="flex gap-3 py-2">
-                      <Link
-                        href={`/user/home/scholarships/${scholarship.scholarshipId}?apply=true`}
-                        className="flex-1"
-                        prefetch
-                        scroll={false}
-                      >
-                        <Button size="sm" className="gap-2 w-full">
-                          <LogIn className="h-4 w-4" />
-                          Apply Now
-                        </Button>
-                      </Link>
-                      <Link
-                        href={`/user/home/scholarships/${scholarship.scholarshipId}`}
-                        className="flex-1"
-                        prefetch
-                        scroll={false}
-                      >
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="gap-2 w-full"
-                        >
-                          <Info className="h-4 w-4" />
-                          Details
-                        </Button>
-                      </Link>
+                    <div className="flex gap-2 items-center px-2">
+                      <div className="flex-1">
+                        <div className="flex gap-1 text-sm">
+                          <h1 className="flex  text font-semibold items-center ">
+                            <PhilippinePeso size={15} strokeWidth={3} />{" "}
+                            {scholarship.scholarshipAmount}
+                          </h1>
+                          per semester
+                        </div>
+                      </div>
+                      <Button size="sm" variant="outline" className="gap-2">
+                        <Share2 />
+                      </Button>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
         </div>
       </div>

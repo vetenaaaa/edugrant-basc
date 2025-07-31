@@ -17,7 +17,7 @@ export default function ClientDashboard() {
   const path = usePathname();
   const segmentedPath = path.split("/");
   return (
-    <div className="px-4   min-h-screen your-class">
+    <div className="px-4   min-h-screen ">
       <DynamicHeader first={segmentedPath[2]} />
       <div className="flex gap-5 py-10">
         <div className="flex-1">

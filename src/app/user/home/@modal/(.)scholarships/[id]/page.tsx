@@ -1,11 +1,14 @@
 "use client";
 import {
+  Calendar,
   CalendarClock,
   FileInput,
   FilePlus2,
   Files,
+  GraduationCap,
   Maximize,
   PhilippinePeso,
+  StickyNote,
   X,
 } from "lucide-react";
 import { Ring } from "ldrs/react";
@@ -72,9 +75,9 @@ export default function InterceptManageScholarshipClient() {
     >
       <DrawerContent className="lg:w-[900px] w-[98%] mx-auto h-[95vh] outline-0 border-0 ">
         <DrawerHeader className={isApply ? "" : "sr-only"}>
-          <DrawerTitle className="text-2xl flex gap-1.5 items-center">
-            <FilePlus2 />
-            Apply for {title}
+          <DrawerTitle className="text-xl flex gap-1.5 items-center">
+            <GraduationCap />
+            Apply Scholarship
           </DrawerTitle>
           <DrawerDescription>
             {" "}
@@ -84,10 +87,29 @@ export default function InterceptManageScholarshipClient() {
 
         <div className=" overflow-auto h-full no-scrollbar">
           {isApply ? (
-            data && <UploadDocs data={data} setIsApply={setIsApply} />
+            loading ? (
+              <div className="relative flex flex-col h-full w-full ">
+                <div className="flex-1 flex justify-center items-center">
+                  <Ring size={40} speed={2} bgOpacity={0} color="green" />
+                </div>
+
+                <div className="space-y-4 p-4">
+                  <div className="flex w-full items-center gap-3 ">
+                    <Skeleton className="h-2 flex-1" />
+                    <Skeleton className="h-2 w-6" />
+                  </div>
+                  <div className="flex w-full items-center gap-3 ">
+                    <Skeleton className="h-9 flex-1" />
+                    <Skeleton className="h-9 flex-1" />
+                  </div>
+                </div>
+              </div>
+            ) : (
+              data && <UploadDocs data={data} setIsApply={setIsApply} />
+            )
           ) : (
             <>
-              <div className="relative h-48 md:h-64 flex justify-center items-center">
+              <div className="relative h-40 md:h-64 flex justify-center items-center">
                 {loading ? (
                   <Skeleton className="h-full w-full" />
                 ) : (
@@ -98,7 +120,7 @@ export default function InterceptManageScholarshipClient() {
                       scroll={false}
                       rel="noopener noreferrer"
                     >
-                      <Button className="absolute z-10 cursor-pointer bottom-5 right-5">
+                      <Button className="absolute z-10 cursor-pointer bottom-5 right-5 bg-green-950 border border-green-950 hover:bg-green-900 text-gray-200 hover:border-green-800">
                         View
                         <Maximize />
                       </Button>
@@ -111,8 +133,8 @@ export default function InterceptManageScholarshipClient() {
                   </div>
                 )}
 
-                <div className="absolute flex items-end gap-3 -bottom-10 left-4">
-                  <div className="lg:size-35 size-25 rounded-full overflow-hidden border-3 border-background bg-background">
+                <div className="absolute flex items-center justify-center -bottom-25 gap-3 flex-col">
+                  <div className="lg:size-35 size-25 rounded-full overflow-hidden border-3 border-green-950 bg-background">
                     {loading ? (
                       <Skeleton className="h-full w-full" />
                     ) : (
@@ -123,25 +145,27 @@ export default function InterceptManageScholarshipClient() {
                       />
                     )}
                   </div>
-                  <div>
-                    <h1 className="text-2xl md:text-3xl  text-white mb-1 font-bold">
+                  <div className="text-center">
+                    <h1 className="text-2xl md:text-3xl  text-gray-200 mb-1 font-bold">
                       {title}
                     </h1>
-                    <p className="text-white/90 flex items-center gap-1">
-                      by {provider}
+                    <p className="text-gray-200/90 gap-1">
+                      {provider}
                     </p>
                   </div>
                 </div>
               </div>
-              <div className="lg:px-6 px-2 pt-16 pb-6 space-y-6">
+              <div className="lg:px-6 px-2 pt-33 pb-6 space-y-6">
                 {/* Stats Cards */}
                 <div className="grid grid-cols-3 gap-3">
-                  <div className="border p-3 rounded-md flex items-end bg-card">
+                  <div className="border border-green-950 p-3 rounded-md flex items-end ">
                     <div className="flex-1 space-y-2">
-                      <PhilippinePeso className="border p-2 rounded-sm h-8 w-8 bg-background text-gray-300" />
-                      <h1 className="text-sm text-gray-300">Amount</h1>
+                      <h1 className="text-sm text-green-700 font-semibold ">Amount</h1>
+                     <Button variant="outline">
+                        <PhilippinePeso />
+                      </Button>
                     </div>
-                    <span className="text-3xl font-semibold text-green-700 ">
+                    <span className="text-3xl font-semibold text-gray-200 ">
                       {loading ? (
                         <Ring size={30} speed={2} bgOpacity={0} color="green" />
                       ) : (
@@ -149,12 +173,14 @@ export default function InterceptManageScholarshipClient() {
                       )}
                     </span>
                   </div>
-                  <div className="border p-3 rounded-md flex items-end bg-card">
+                  <div className="border border-green-950 p-3 rounded-md flex items-end ">
                     <div className="flex-1 space-y-2">
-                      <CalendarClock className="border p-2 rounded-sm h-8 w-8 bg-background text-gray-300" />
-                      <h1 className="text-sm text-gray-300">Deadline</h1>
+                      <h1 className="text-sm text-green-700 font-semibold ">Deadline</h1>
+                      <Button variant="outline">
+                        <Calendar />
+                      </Button>
                     </div>
-                    <span className="text-xl font-semibold text-green-700">
+                    <span className="text-2xl font-semibold text-gray-200">
                       {loading ? (
                         <Ring size={30} speed={2} bgOpacity={0} color="green" />
                       ) : (
@@ -162,12 +188,14 @@ export default function InterceptManageScholarshipClient() {
                       )}
                     </span>
                   </div>{" "}
-                  <div className="border p-3 rounded-md flex items-end bg-card">
+                  <div className="border border-green-950 p-3 rounded-md flex items-end ">
                     <div className="flex-1 space-y-2">
-                      <Files className="border p-2 rounded-sm h-8 w-8 bg-background text-gray-300" />
-                      <h1 className="text-sm text-gray-300">Required Docs</h1>
+                      <h1 className="text-sm text-green-700 font-semibold ">Required Docs</h1>
+                      <Button variant="outline">
+                        <StickyNote />
+                      </Button>
                     </div>
-                    <span className="text-3xl font-semibold text-green-700">
+                    <span className="text-3xl font-semibold text-gray-200">
                       {loading ? (
                         <Ring size={30} speed={2} bgOpacity={0} color="green" />
                       ) : (
@@ -180,7 +208,7 @@ export default function InterceptManageScholarshipClient() {
                 {/* <div className="flex bg-card gap-3 items-center rounded-md border">
                   <div className="flex-1 flex justify-between items-end p-4">
                     <div>
-                      <PhilippinePeso className="border p-2 rounded-sm h-8 w-8 bg-background text-gray-300" />
+                      <PhilippinePeso className="border bg-green-950/80 p-2 rounded-sm h-9 w-9 bg-background text-gray-300" />
                       <h1>Amount</h1>
                     </div>
                     <p className="text-3xl font-semibold text-green-700">
@@ -190,7 +218,7 @@ export default function InterceptManageScholarshipClient() {
                   <div className="border h-17"></div>
                   <div className="flex-1 flex justify-between items-end p-4">
                     <div>
-                      <CalendarClock className="border p-2 rounded-sm h-8 w-8 bg-background text-gray-300 " />
+                      <CalendarClock className="border bg-green-950/80 p-2 rounded-sm h-9 w-9 bg-background text-gray-300 " />
                       <h1>Deadlne</h1>
                     </div>
                     <p className="text-xl font-semibold text-green-700">
@@ -200,7 +228,7 @@ export default function InterceptManageScholarshipClient() {
                   <div className="border h-17"></div>
                   <div className="flex-1 flex justify-between items-end p-4">
                     <div>
-                      <CalendarClock className="border p-2 rounded-sm h-8 w-8 bg-background text-gray-300" />
+                      <CalendarClock className="border bg-green-950/80 p-2 rounded-sm h-9 w-9 bg-background text-gray-300" />
                       <h1>Required Docs</h1>
                     </div>
                     <p className="text-3xl font-semibold text-green-700">
@@ -239,7 +267,7 @@ export default function InterceptManageScholarshipClient() {
                         {data?.scholarshipDocuments.map((docs) => (
                           <div
                             key={docs.label}
-                            className="flex border justify-between border-l-4 border-l-green-800 items-center p-4 gap-5 rounded-sm bg-card"
+                            className="flex border justify-between border-l-4 border-l-green-800 items-center p-4 gap-5 rounded-md bg-background"
                           >
                             <h1>Document: {docs.label}</h1>
 
@@ -267,7 +295,7 @@ export default function InterceptManageScholarshipClient() {
           <DrawerFooter>
             <div className="flex gap-3">
               <Button
-                className="flex-1"
+                className="flex-1 bg-green-950 border border-green-950 hover:bg-green-800 text-gray-200 hover:border-green-800"
                 onClick={() => setIsApply(true)}
                 disabled={loading}
               >

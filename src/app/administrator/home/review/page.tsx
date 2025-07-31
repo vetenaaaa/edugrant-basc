@@ -69,6 +69,7 @@ import {
 } from "@/components/ui/popover";
 import ApplicationFilter from "./filter";
 import useApplicationpSearch from "@/lib/application-search";
+import Link from "next/link";
 const sortList = [
   {
     value: "",
@@ -111,7 +112,7 @@ export default function Manage() {
   const { searchData, searchLoading } = useApplicationpSearch({ query });
 
   return (
-    <div className=" your-class  h-screen px-4">
+    <div className=" your-class  min-h-screen px-4">
       <DynamicHeaderAdmin first="Scholarship" second="Manage" />
 
       <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
@@ -236,18 +237,25 @@ export default function Manage() {
                   data.map((row) => (
                     <TableRow
                       key={row.applicationId}
-                      onClick={() =>
-                        router.push(
-                          `/administrator/home/review/${row.applicationId}`
-                        )
-                      }
+                      // onClick={() =>
+                      //   router.push(
+                      //     `/administrator/home/review/${row.applicationId}`
+                      //   )
+                      // }
                       className="cursor-pointer"
                     >
                       <TableCell className="">
                         {row.student.studentId}
                       </TableCell>
                       <TableCell className="font-medium flex items-center gap-3">
-                        {`${row.student.lastName}, ${row.student.firstName} ${row.student.middleName}`}
+                        <Link
+                          href={`/administrator/home/review/${row.applicationId}`}
+                          scroll={false}
+                          prefetch={true}
+                         className="underline h-full w-full"
+                        >
+                          {`${row.student.lastName}, ${row.student.firstName} ${row.student.middleName}`}
+                        </Link>
                       </TableCell>
 
                       <TableCell>

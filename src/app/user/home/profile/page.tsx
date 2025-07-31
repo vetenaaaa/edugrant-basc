@@ -29,7 +29,7 @@ export default function Profile() {
   console.log("meow", user?.userId);
 
   return (
-    <div className="bg-background min-h-screen your-class px-4">
+    <div className="bg-background min-h-screen px-4">
       <DynamicHeader first={segmentedPath[2]} second={segmentedPath[3]} />
 
       <Form {...form}>

@@ -9,6 +9,16 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import {
+
+  CircleCheck,
+ 
+  LoaderCircle,
+  XCircle,
+
+} from "lucide-react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -18,6 +28,8 @@ import { DragAndDropArea } from "./reusable";
 import { Send, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import axios from "axios";
+import { Progress } from "@/components/ui/progress";
+import { useState } from "react";
 
 interface ScholarshipDocument {
   label: string;
@@ -26,7 +38,6 @@ interface ScholarshipDocument {
 // Create Zod schema dynamically based on scholarship documents
 const createFormSchema = (documents: ScholarshipDocument[]) => {
   const schemaShape: Record<string, z.ZodType> = {};
-
   documents.forEach((doc) => {
     schemaShape[doc.label] = z
       .array(z.instanceof(File))
@@ -51,9 +62,13 @@ export default function UploadDocs({
   data: ScholarshipTypes;
   setIsApply: (value: boolean) => void;
 }) {
+  const router = useRouter();
   const user = useUserStore((state) => state.user);
   const userId = user?.userId;
   const scholarId = data.scholarshipId;
+  const [completedCount, setCompletedCount] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [disable, setDisable] = useState(false);
 
   // Create form schema based on scholarship documents
   const formSchema = createFormSchema(data.scholarshipDocuments);
@@ -72,13 +87,37 @@ export default function UploadDocs({
 
   const handleFilesChange = (label: string, files: File[]) => {
     form.setValue(label as keyof FormData, files as File[]);
-    // Trigger validation for this field
     form.trigger(label as keyof FormData);
+
+    // Count how many document fields are filled
+    const filled = data.scholarshipDocuments.filter((doc) => {
+      const fieldFiles = form.getValues(doc.label as keyof FormData) as File[];
+      return fieldFiles && fieldFiles.length > 0;
+    }).length;
+
+    setCompletedCount(filled);
   };
 
   const onSubmit = async (data: FormData) => {
     console.log("Submitting:", data);
+    toast.custom(() => (
+      <div className="flex items-center gap-4 p-4 border border-green-950/80 bg-black text-foreground rounded-md shadow-md w-sm">
+        <LoaderCircle className="animate-spin text-green-600 size-8" />
+
+        <div className="flex flex-col gap-1">
+          <span className="font-semibold text-sm">
+            Uploading in progress...
+          </span>
+          <span className="text-xs text-muted-foreground">
+            Your documents are being uploaded. Please don’t close the window.
+          </span>
+        </div>
+      </div>
+    ));
+
     try {
+      setLoading(true);
+      setDisable(true);
       const formData = new FormData();
       formData.append("userId", String(userId));
       formData.append("scholarshipId", String(scholarId));
@@ -107,10 +146,38 @@ export default function UploadDocs({
 
       if (res.status === 200) {
         console.log("Upload success:", res.data);
+
+        toast.custom(() => (
+          <div className="flex items-center gap-4 p-4 border border-green-800 bg-green-900 text-white rounded-md shadow-md w-sm">
+            <CircleCheck className="text-green-300 size-6" />
+            <div className="flex flex-col gap-1">
+              <span className="font-semibold text-sm">Upload successful!</span>
+              <span className="text-xs text-green-100">
+                Your documents have been uploaded successfully.
+              </span>
+            </div>
+          </div>
+        ));
         setIsApply(true);
+        setLoading(false);
+       setTimeout(() => {
+         router.back();
+       }, 300);
       }
     } catch (error) {
+      toast.custom(() => (
+        <div className="flex items-center gap-4 p-4 border border-red-800 bg-red-900 text-white rounded-md shadow-md w-sm">
+          <XCircle className="text-red-300 size-6" />
+          <div className="flex flex-col gap-1">
+            <span className="font-semibold text-sm">Upload failed</span>
+            <span className="text-xs text-red-100">
+              Something went wrong. Please try again.
+            </span>
+          </div>
+        </div>
+      ));
       console.error("Upload error:", error);
+      setLoading(false);
     }
   };
 
@@ -134,35 +201,37 @@ export default function UploadDocs({
                 name={doc.label as keyof FormData}
                 render={() => (
                   <FormItem>
-                    <div className="border-green-950/80 p-3 border rounded-lg bg-background">
-                      <FormLabel className="font-bold text-green-800">
-                        {doc.label}
-                      </FormLabel>
-                      <div className="flex justify-between mt-1">
-                        <h1 className="text-sm text-gray-200">
-                          Required formats
-                        </h1>
-                        <div className="space-x-1.5">
-                          {doc.formats.map((format, formatIndex) => (
-                            <Badge
-                              key={formatIndex}
-                              className="bg-green-900 text-gray-200"
-                            >
-                              {mimeToLabelMap[format] || format}
-                            </Badge>
-                          ))}
+                    <div>
+                      <div className="border-green-950/80 p-3 border rounded-lg bg-background">
+                        <FormLabel className="font-bold text-green-800">
+                          {doc.label}
+                        </FormLabel>
+                        <div className="flex justify-between mt-1">
+                          <h1 className="text-sm text-gray-200">
+                            Required formats
+                          </h1>
+                          <div className="space-x-1.5">
+                            {doc.formats.map((format, formatIndex) => (
+                              <Badge
+                                key={formatIndex}
+                                className="bg-green-900 text-gray-200"
+                              >
+                                {mimeToLabelMap[format] || format}
+                              </Badge>
+                            ))}
+                          </div>
                         </div>
+                        <FormControl>
+                          <DragAndDropArea
+                            label={doc.label}
+                            accept={doc.formats}
+                            onFilesChange={(files) =>
+                              handleFilesChange(doc.label, files)
+                            }
+                          />
+                        </FormControl>
+                        <FormMessage />
                       </div>
-                      <FormControl>
-                        <DragAndDropArea
-                          label={doc.label}
-                          accept={doc.formats}
-                          onFilesChange={(files) =>
-                            handleFilesChange(doc.label, files)
-                          }
-                        />
-                      </FormControl>
-                      <FormMessage />
                     </div>
                   </FormItem>
                 )}
@@ -170,20 +239,39 @@ export default function UploadDocs({
             ))}
           </div>
 
-          <div className="flex gap-3 p-4 bottom-0 fixed w-full bg-black border-t-1">
-            <Button type="submit" className="flex-1">
-              <Send />
-              Submit
-            </Button>
-            <Button
-              type="button"
-              className="flex-1"
-              variant="outline"
-              onClick={() => setIsApply(false)}
-            >
-              <X />
-              Back
-            </Button>
+          <div className="space-y-3 p-4 bottom-0 fixed w-full bg-black border-t-1">
+            <div className="flex gap-3 items-center">
+              <Progress
+              className="bg-green-900"
+                value={
+                  (completedCount / data.scholarshipDocuments.length) * 100
+                }
+              />
+              <div className="text-sm text-muted-foreground">
+                {completedCount}/{data.scholarshipDocuments.length}
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <Button
+                type="submit"
+                className="flex-1"
+                disabled={
+                  completedCount < data.scholarshipDocuments.length || disable
+                }
+              >
+                {loading ? <LoaderCircle className="animate-spin" /> : <Send />}
+                {loading ? "Submitting..." : "Submit"}
+              </Button>
+              <Button
+                type="button"
+                className="flex-1"
+                variant="outline"
+                onClick={() => setIsApply(false)}
+              >
+                <X />
+                Back
+              </Button>
+            </div>
           </div>
         </form>
       </Form>

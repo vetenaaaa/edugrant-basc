@@ -43,7 +43,7 @@ export default function DynamicHeader({ first, second, third }: HeaderTypes) {
     }
   };
   return (
-    <header className="flex w-full items-center justify-between your-class2 border-b rounded-md top-2 relative">
+    <header className="flex w-full items-center justify-between rounded-md top-2 relative">
       <div className="flex h-16 shrink-0 items-center gap-2 px-4">
         <SidebarTrigger className="-ml-1" />
         <Separator
