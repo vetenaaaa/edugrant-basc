@@ -1,0 +1,272 @@
+// "use client";
+
+// import { Input } from "@/components/ui/input";
+// import {
+//   Form,
+//   FormControl,
+//   FormField,
+//   FormItem,
+//   FormLabel,
+//   FormMessage,
+// } from "@/components/ui/form";
+// import { zodResolver } from "@hookform/resolvers/zod";
+// import * as z from "zod";
+// import { useForm } from "react-hook-form";
+// import { Button } from "@/components/ui/button";
+// import { ScholarshipTypes } from "@/lib/get-scholar-by-id";
+// import axios from "axios";
+// import { FileInput, X } from "lucide-react";
+// import { useUserStore } from "@/store/useUserStore";
+
+// export default function UploadDocs({
+//   data,
+//   setIsApply,
+// }: {
+//   data: ScholarshipTypes;
+//   setIsApply: (value: boolean) => void;
+// }) {
+//   const user = useUserStore((state) => state.user);
+//   const userId = user?.userId;
+//   const scholarId = data.scholarshipId;
+//   const formSchema = z.object({
+//     documents: z
+//       .array(
+//         z
+//           .instanceof(File, { message: "Please upload a file" })
+//           .refine((file) => file.size > 0, "File cannot be empty")
+//       )
+//       .length(data.scholarshipDocuments.length, {
+//         message: `Please upload all ${data.scholarshipDocuments.length} required documents`,
+//       }),
+//   });
+
+//   type FormSchemaType = z.infer<typeof formSchema>;
+//   console.log(data);
+
+//   const form = useForm<FormSchemaType>({
+//     resolver: zodResolver(formSchema),
+//     defaultValues: {
+//       documents: [],
+//     },
+//   });
+
+//   const onSubmit = async (values: FormSchemaType) => {
+//     try {
+//       const formData = new FormData();
+//       formData.append("userId", String(userId));
+//       formData.append("scholarshipId", String(scholarId));
+
+//       values.documents.forEach((file, index) => {
+//         const label = data.scholarshipDocuments[index]?.label;
+//         if (label && file) {
+//           formData.append(label, file);
+//         }
+//       });
+
+//       console.log("sending to backend:");
+//       for (const [key, value] of formData.entries()) {
+//         console.log(`${key}:`, value);
+//       }
+
+//       const res = await axios.post(
+//         "https://edugrant-express-server-production.up.railway.app/user/applyScholarship",
+//         formData,
+//         {
+//           withCredentials: true,
+//           headers: {
+//             "Content-Type": "multipart/form-data",
+//           },
+//         }
+//       );
+
+//       if (res.status === 200) {
+//         console.log("Upload success:", res.data);
+//       }
+//     } catch (error) {
+//       console.error("Upload error:", error);
+//     }
+//   };
+
+//   const uploadedCount = form.watch("documents").filter(Boolean).length;
+
+//   return (
+//     <Form {...form}>
+//       <div className="p-4 space-y-5">
+//         {/* <div className="space-y-2">
+//           <div className="flex items-center gap-2">
+//             <h1 className="text-2xl font-bold">Apply for Scholarship</h1>
+//           </div>
+//           <p className="text-muted-foreground">
+//             Complete your application by uploading the required documents below.
+//           </p>
+//         </div>
+
+//         <Separator /> */}
+
+//         <div className="space-y-4">
+//           <div className="flex justify-between items-center">
+//             <h1>Required Documents</h1>
+//             <h1>
+//               {uploadedCount}/{data.scholarshipDocuments.length}
+//             </h1>
+//           </div>
+
+//           {data.scholarshipDocuments.map((doc, index) => (
+//             <FormField
+//               key={doc.label}
+//               control={form.control}
+//               name={`documents.${index}`}
+//               render={() => (
+//                 <FormItem>
+//                   <div className="flex justify-between items-center">
+//                     <FormLabel>
+//                       {index + 1}. {doc.label}
+//                     </FormLabel>
+//                     <p className="text-sm text-muted-foreground">
+//                       {doc.formats.join(", ")}
+//                     </p>
+//                   </div>
+//                   <FormControl>
+//                     <Input
+//                       type="file"
+//                       accept={doc.formats.join(",")}
+//                       onChange={(e) => {
+//                         const file = e.target.files?.[0];
+//                         if (file) {
+//                           const currentDocs = form.getValues("documents") || [];
+//                           currentDocs[index] = file;
+//                           form.setValue("documents", currentDocs);
+//                           form.trigger(`documents.${index}`);
+//                         }
+//                       }}
+//                     />
+//                   </FormControl>
+//                   <FormMessage />
+//                 </FormItem>
+//               )}
+//             />
+//           ))}
+//         </div>
+//       </div>
+//       <div className="flex gap-3 p-4 absolute bottom-0 w-full left-0">
+//         <Button
+//           className="flex-1 bg-green-900 text-foreground hover:bg-green-900 cursor-pointer"
+//           onClick={form.handleSubmit(onSubmit)}
+//         >
+//           <FileInput />
+//           Apply Now
+//         </Button>
+//         <Button
+//           className="flex-1 cursor-pointer"
+//           variant="destructive"
+//           onClick={() => setIsApply(false)}
+//         >
+//           <X />
+//           Cancel Apply
+//         </Button>
+//       </div>
+//     </Form>
+//   );
+// }
+
+
+
+
+
+
+
+
+
+
+//  <div
+//         key={index}
+//         className="flex flex-col gap-2 border p-3 rounded-lg bg-background border-green-950/80"
+//       >
+//         {/* Drop area */}
+//         <div>
+//           <h1 className=" font-bold text-green-800">
+//             Certificate of Registration
+//           </h1>{" "}
+//           <div className="flex justify-between mt-1">
+//             <h1 className="text-sm text-gray-200">Required formats</h1>
+//             <div className="space-x-1.5">
+//               <Badge className="bg-green-900 text-gray-200">PDF</Badge>
+//               <Badge className="bg-green-900 text-gray-200">DOCX</Badge>
+//               <Badge className="bg-green-900 text-gray-200">JPG</Badge>
+//               <Badge className="bg-green-900 text-gray-200">PNG</Badge>
+//             </div>
+//           </div>
+//         </div>
+//         <div
+//           role="button"
+//           onClick={openFileDialog}
+//           onDragEnter={handleDragEnter}
+//           onDragLeave={handleDragLeave}
+//           onDragOver={handleDragOver}
+//           onDrop={handleDrop}
+//           data-dragging={isDragging || undefined}
+//           className="border-input hover:bg-accent/50 data-[dragging=true]:bg-accent/50 has-[input:focus]:border-ring has-[input:focus]:ring-ring/50 flex min-h-40 flex-col items-center justify-center rounded-xl border border-dashed p-4 transition-colors has-disabled:pointer-events-none has-disabled:opacity-50 has-[input:focus]:ring-[3px] bg-green-950/10"
+//         >
+//           <input
+//             {...getInputProps()}
+//             className="sr-only"
+//             aria-label="Upload file"
+//             disabled={Boolean(file)}
+//           />
+
+//           <div className="flex flex-col items-center justify-center text-center">
+//             <div
+//               className="bg-background mb-2 flex size-11 shrink-0 items-center justify-center rounded-full border"
+//               aria-hidden="true"
+//             >
+//               <UploadIcon className="size-4 opacity-60" />
+//             </div>
+//             <p className="mb-1.5 text-sm font-medium">Upload file</p>
+//             <p className="text-muted-foreground text-xs">
+//               Drag & drop or click to browse (max. {formatBytes(maxSize)})
+//             </p>
+//           </div>
+//         </div>
+
+//         {errors.length > 0 && (
+//           <div
+//             className="text-destructive flex items-center gap-1 text-xs"
+//             role="alert"
+//           >
+//             <AlertCircleIcon className="size-3 shrink-0" />
+//             <span>{errors[0]}</span>
+//           </div>
+//         )}
+
+//         {/* File list */}
+//         {file && (
+//           <div className="space-y-2">
+//             <div
+//               key={file.id}
+//               className="flex items-center justify-between gap-2 rounded-xl border px-4 py-2"
+//             >
+//               <div className="flex items-center gap-3 overflow-hidden">
+//                 <PaperclipIcon
+//                   className="size-4 shrink-0 opacity-60"
+//                   aria-hidden="true"
+//                 />
+//                 <div className="min-w-0">
+//                   <p className="truncate text-[13px] font-medium">
+//                     {file.file.name}
+//                   </p>
+//                 </div>
+//               </div>
+
+//               <Button
+//                 size="icon"
+//                 variant="ghost"
+//                 className="text-muted-foreground/80 hover:text-foreground -me-2 size-8 hover:bg-transparent"
+//                 onClick={() => removeFile(files[0]?.id)}
+//                 aria-label="Remove file"
+//               >
+//                 <XIcon className="size-4" aria-hidden="true" />
+//               </Button>
+//             </div>
+//           </div>
+//         )}
+//       </div>

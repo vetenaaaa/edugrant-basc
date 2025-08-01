@@ -31,7 +31,7 @@ export function ChartBarMultiple() {
     sort: "",
   });
   return (
-    <div className=" h-full w-full  border p-2  rounded-lg">
+    <div className=" h-full w-full  border p-2  rounded-lg ">
       <ChartContainer config={chartConfig}>
         <BarChart
           accessibilityLayer

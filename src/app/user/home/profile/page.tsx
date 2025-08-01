@@ -44,9 +44,9 @@ export default function Profile() {
                 ID: {user?.studentId}
               </p>
               <div className="flex gap-2 mt-2">
-                <Badge>{user?.studentCourseYearSection.course}</Badge>
-                <Badge>{user?.studentCourseYearSection.year}</Badge>
-                <Badge>Section {user?.studentCourseYearSection.section}</Badge>
+                <Badge>{user?.course}</Badge>
+                <Badge>{user?.year}</Badge>
+                <Badge>Section {user?.section}</Badge>
               </div>
             </div>
             <Button onClick={() => setIsEdit(!isEdit)}>
@@ -197,7 +197,7 @@ export default function Profile() {
               <div className="grid grid-cols-3 gap-3 col-span-2">
                 <FormField
                   control={form.control}
-                  name="course.course"
+                  name="course"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Course</FormLabel>
@@ -210,7 +210,7 @@ export default function Profile() {
                 />{" "}
                 <FormField
                   control={form.control}
-                  name="course.year"
+                  name="year"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Year Level</FormLabel>
@@ -223,7 +223,7 @@ export default function Profile() {
                 />{" "}
                 <FormField
                   control={form.control}
-                  name="course.section"
+                  name="section"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Section</FormLabel>

@@ -12,7 +12,7 @@ import {
 
 import ApplicationSummary from "./dashboard/summary";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Megaphone } from "lucide-react";
+import { ArrowRight, CircleQuestionMark, Megaphone } from "lucide-react";
 
 import {
   Timeline,
@@ -41,7 +41,6 @@ const announcements = [
 ];
 
 export default function AdminDashboard() {
-
   // const [date, setDate] = useState("");
   // useEffect(() => {
   //   const updateDate = () => {
@@ -80,17 +79,27 @@ export default function AdminDashboard() {
       <DynamicHeaderAdmin first="Home" />
 
       <div className=" grid grid-cols-3  gap-5 px-5  py-5 mt-3 ">
-       
-
         <div className="col-span-2 grid gap-5">
           <ApplicationSummary />
           <div className="grid grid-cols-2 gap-5 ">
-            <div className="aspect-[14.6/9] relative border border-green-950 bg-background/40  p-4 rounded-md space-y-1.5">
-              <h1>Scholarship Status</h1>
+            <div className="aspect-[14.6/9] relative border  bg-background/40  p-4 rounded-md space-y-1.5">
+              <div className="flex justify-between items-center">
+                <h1>Scholarship Status</h1>
+
+                <div className="opacity-40">
+                  <CircleQuestionMark size={16} />
+                </div>
+              </div>
               <ChartBarMultiple />
             </div>
-            <div className="aspect-[14.6/9] relative  border border-green-950 bg-background/40  p-4 rounded-md space-y-1.5">
-              <h1>Scholarship Status</h1>
+            <div className="aspect-[14.6/9] relative  border  bg-background/40  p-4 rounded-md space-y-1.5">
+              <div className="flex justify-between items-center">
+                <h1>Scholarship Status</h1>
+
+                <div className="opacity-40">
+                  <CircleQuestionMark size={16} />
+                </div>
+              </div>
               <ChartPieDonutText />
             </div>
           </div>
