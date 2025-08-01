@@ -16,7 +16,7 @@ export const description = "A multiple bar chart";
 const chartConfig = {
   applicationsReceived: {
     label: "Received Application",
-    color: "var(--chart-1)",
+    color: "oklch(0.68 0.14 76)",
   },
   applicationsApproved: {
     label: "Approved Application",
@@ -31,7 +31,7 @@ export function ChartBarMultiple() {
     sort: "",
   });
   return (
-    <div className=" h-full w-full  border p-2  rounded-md">
+    <div className=" h-full w-full  border p-2  rounded-lg">
       <ChartContainer config={chartConfig}>
         <BarChart
           accessibilityLayer
@@ -56,7 +56,7 @@ export function ChartBarMultiple() {
           <ChartLegend content={<ChartLegendContent />} />
           <Bar
             dataKey="applicationsReceived"
-            fill="var(--chart-1)"
+            fill="oklch(0.68 0.14 76)"
             radius={4}
           />
           <Bar

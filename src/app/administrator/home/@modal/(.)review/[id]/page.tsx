@@ -93,13 +93,13 @@ export default function InterceptReviewApplicants() {
               </p>
               <span className="flex gap-2 items-center mt-2">
                 <Badge className="bg-blue-800 text-gray-200">
-                  {data?.student.studentCourseYearSection.course}
+                  {data?.student.course}
                 </Badge>
                 <Badge className="bg-blue-800 text-gray-200">
-                  {data?.student.studentCourseYearSection.year}
+                  {data?.student.year}
                 </Badge>
                 <Badge className="bg-blue-800 text-gray-200">
-                  Section {data?.student.studentCourseYearSection.section}
+                  Section {data?.student.section}
                 </Badge>
               </span>
             </div>

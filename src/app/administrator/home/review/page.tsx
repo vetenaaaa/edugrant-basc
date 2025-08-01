@@ -97,6 +97,10 @@ export default function Manage() {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [scholar, setScholar] = useState("");
+  const [course, setCourse] = useState("");
+  const [year, setYear] = useState("");
+  const [section, setSection] = useState("");
   const [sort, setSort] = useState<"" | "asc" | "desc" | "newest" | "oldest">(
     ""
   );
@@ -105,6 +109,10 @@ export default function Manage() {
     currentPage,
     rowsPerPage,
     sort,
+    scholar,
+    course,
+    year,
+    section,
   });
 
   const [query, setQuery] = useState<string>("");
@@ -202,7 +210,16 @@ export default function Manage() {
                   </Command>
                 </PopoverContent>
               </Popover>
-              <ApplicationFilter />
+              <ApplicationFilter
+                setCourse={setCourse}
+                setYear={setYear}
+                setScholar={setScholar}
+                setSections={setSection}
+                scholar={scholar}
+                course={course}
+                year={year}
+                section={section}
+              />
               <Button variant="outline">
                 <FileDown />
                 Export CSV
@@ -252,19 +269,15 @@ export default function Manage() {
                           href={`/administrator/home/review/${row.applicationId}`}
                           scroll={false}
                           prefetch={true}
-                         className="underline h-full w-full"
+                          className="underline h-full w-full"
                         >
                           {`${row.student.lastName}, ${row.student.firstName} ${row.student.middleName}`}
                         </Link>
                       </TableCell>
 
                       <TableCell>
-                        {`${
-                          row.student.studentCourseYearSection.course
-                        }-${row.student.studentCourseYearSection.year.slice(
-                          0,
-                          1
-                        )}${row.student.studentCourseYearSection.section}`}
+                        {`${row.student.course}-
+                        ${row.student.year.slice(0, 1)}${row.student.section}`}
                       </TableCell>
                       <TableCell>{row.scholarship.scholarshipTitle}</TableCell>
                       <TableCell className="text-center">
@@ -304,12 +317,8 @@ export default function Manage() {
                     </TableCell>
 
                     <TableCell>
-                      {`${
-                        row.student.studentCourseYearSection.course
-                      }-${row.student.studentCourseYearSection.year.slice(
-                        0,
-                        1
-                      )}${row.student.studentCourseYearSection.section}`}
+                      {`${row.student.course}-
+                        ${row.student.year.slice(0, 1)}${row.student.section}`}
                     </TableCell>
                     <TableCell>{row.scholarship.scholarshipTitle}</TableCell>
                     <TableCell className="text-center">

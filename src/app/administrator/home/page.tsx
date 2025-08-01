@@ -81,24 +81,8 @@ export default function AdminDashboard() {
     <div className="pl-1 pr-2 min-h-screen">
       <DynamicHeaderAdmin first="Home" />
 
-      <div className=" grid grid-cols-3  gap-5 px-5 ">
-        <div className=" flex justify-between items-start py-5 mt-3 col-span-2">
-          <div>
-            <h1 className="text-2xl font-semibold">
-              Hello, {admin?.adminName}
-            </h1>
-            <p className="text-sm text-muted-foreground">{date}</p>
-          </div>
-          <div className="flex gap-3">
-            <Button variant="outline" className="flex-1">
-              <SquarePen /> Post a scholarship
-            </Button>
-            <Button variant="outline" className="flex-1">
-              <Activity /> Generate Report
-            </Button>
-          </div>
-        </div>
-        <>1</>
+      <div className=" grid grid-cols-3  gap-5 px-5  py-5 mt-3 ">
+       
 
         <div className="col-span-2 grid gap-5">
           <ApplicationSummary />

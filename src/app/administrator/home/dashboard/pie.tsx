@@ -17,9 +17,9 @@ import useScholarshipData from "@/lib/scholarship-data";
 export const description = "A donut chart with text";
 
 const chartData = [
-  { status: "Approved", value: 300, fill: "oklch(0.63 0.17 149)" },
-  { status: "Pending", value: 150, fill: "oklch(0.86 0.17 92)" },
-  { status: "Rejected", value: 50, fill: "oklch(0.58 0.22 27)" },
+  { status: "Approved", value: 300, fill: "oklch(0.53 0.14 150)" },
+  { status: "Pending", value: 150, fill: "oklch(0.68 0.14 76)" },
+  { status: "Rejected", value: 50, fill: "oklch(0.51 0.19 28)" },
 ];
 
 const chartConfig = {
@@ -28,15 +28,15 @@ const chartConfig = {
   },
   Approved: {
     label: "Approved",
-    color: "oklch(0.63 0.17 149)",
+    color: "oklch(0.53 0.14 150)",
   },
   Pending: {
     label: "Pending",
-    color: "oklch(0.86 0.17 92)",
+    color: "oklch(0.68 0.14 76)",
   },
   Rejected: {
     label: "Rejected",
-    color: "oklch(0.58 0.22 27)",
+    color: "oklch(0.51 0.19 28)",
   },
 } satisfies ChartConfig;
 
@@ -49,7 +49,7 @@ export default function ChartPieDonutText() {
   const filterApproved = data.filter((meow) => meow.totalApproved);
   console.log(filterApproved);
   return (
-    <div className=" h-full w-full  border p-2 rounded-md">
+    <div className=" h-full w-full  border p-2 rounded-lg">
       <ChartContainer config={chartConfig}>
         <PieChart>
           <ChartTooltip

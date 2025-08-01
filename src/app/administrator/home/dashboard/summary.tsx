@@ -12,8 +12,8 @@ export default function ApplicationSummary() {
   const filterApplication = data.filter((meow) => meow.totalApplicants);
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-      <div className="space-y-2 bg-background/40 flex flex-col justify-center px-3 py-3 rounded-xl border shadow-sm">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 ">
+      <div className=" bg-background/40 flex flex-col justify-between  rounded-lg border shadow-sm aspect-[16/8] p-3">
         <div className="flex justify-between items-start ">
           <span className="border p-2 rounded-md">
             <TrendingUp />
@@ -23,7 +23,7 @@ export default function ApplicationSummary() {
           </p>
         </div>
         <div className="flex justify-between items-end">
-          <p className="text-sm text-muted-foreground">Total Application</p>
+          <p className="text-sm text-muted-foreground">Total Applicants</p>
           <span className="text-3xl font-semibold text-blue-600">
             {loading ? (
               <Ring
@@ -39,7 +39,7 @@ export default function ApplicationSummary() {
           </span>
         </div>
       </div>
-      <div className="space-y-2 bg-background/40 flex flex-col justify-center px-3 py-3 rounded-xl border shadow-sm">
+     <div className=" bg-background/40 flex flex-col justify-between  rounded-lg border shadow-sm aspect-[16/8] p-3">
         <div className="flex justify-between items-start ">
           <span className="border p-2 rounded-md">
             <CheckCheck />
@@ -65,7 +65,7 @@ export default function ApplicationSummary() {
           </span>
         </div>
       </div>
-      <div className="space-y-2 bg-background/40 flex flex-col justify-center px-3 py-3 rounded-xl border shadow-sm">
+     <div className=" bg-background/40 flex flex-col justify-between  rounded-lg border shadow-sm aspect-[16/8] p-3">
         <div className="flex justify-between items-start ">
           <span className="border p-2 rounded-md">
             <CloudUpload />
@@ -75,7 +75,7 @@ export default function ApplicationSummary() {
           </p>
         </div>
         <div className="flex justify-between items-end">
-          <p className="text-sm text-muted-foreground">Submitted</p>
+          <p className="text-sm text-muted-foreground">Pending</p>
           <span className="text-3xl font-semibold text-yellow-500">
             {" "}
             {loading ? (
@@ -92,7 +92,7 @@ export default function ApplicationSummary() {
           </span>
         </div>
       </div>
-      <div className="space-y-2 bg-background/40 flex flex-col justify-center px-3 py-3 rounded-xl border shadow-sm">
+     <div className=" bg-background/40 flex flex-col justify-between  rounded-lg border shadow-sm aspect-[16/8] p-3">
         <div className="flex justify-between items-start ">
           <span className="border p-2 rounded-md">
             <Activity />
@@ -102,7 +102,7 @@ export default function ApplicationSummary() {
           </p>
         </div>
         <div className="flex justify-between items-end">
-          <p className="text-sm text-muted-foreground">Active Scholarships</p>
+          <p className="text-sm text-muted-foreground">Active Scholarship</p>
           <span className="text-3xl font-semibold text-green-600">
             {loading ? (
               <Ring

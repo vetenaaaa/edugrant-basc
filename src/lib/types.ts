@@ -47,14 +47,10 @@ export type UserProfileTypes = {
   //Academic
   studentId: string;
   password: string;
-  studentCourseYearSection: CourseTypes;
-};
-type CourseTypes = {
   course: string;
   year: string;
   section: string;
 };
-
 export type ApplicationTypes = {
   applicationId: string;
   scholarship: ScholarshipTypes;
@@ -78,4 +74,16 @@ export type AdminUserType = {
   adminId: string;
   adminName: string;
   adminPassword: string;
+};
+
+export type FilterTypes = {
+  Courses: { course: string }[];
+  Years: { year: string }[];
+  Sections: { section: string }[];
+  Scholarships: ScholarshipFilterTypes[];
+};
+
+type ScholarshipFilterTypes = {
+  scholarshipId: string | number;
+  scholarshipTitle: string;
 };

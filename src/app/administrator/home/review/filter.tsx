@@ -16,23 +16,30 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import useGetFilter from "@/lib/dynamic-filter";
 import { RotateCcw, Settings2, Undo2 } from "lucide-react";
-const frameworks = [
-  { value: "bsit", label: "BSIT" },
-  { value: "bsab", label: "BSABEN" },
-  { value: "bsft", label: "BSFT" },
-  { value: "bsge", label: "BSGE" },
-  { value: "bsba", label: "BSBA" },
-  { value: "bshm", label: "BSHM" },
-  { value: "bsa", label: "BSA" },
-  { value: "bsagribus", label: "BSAgriBus" },
-  { value: "bsdc", label: "BSDC" },
-  { value: "bse", label: "BSEd" },
-  { value: "bee", label: "BEEd" },
-  { value: "bsaf", label: "BSAF" },
-  { value: "dvm", label: "DVM" },
-];
-export default function ApplicationFilter() {
+
+type FilterApplication = {
+  setScholar: (scholar: string) => void;
+  setCourse: (scholar: string) => void;
+  setYear: (scholar: string) => void;
+  setSections: (scholar: string) => void;
+  scholar: string;
+  course: string;
+  year: string;
+  section: string;
+};
+export default function ApplicationFilter({
+  setScholar,
+  setCourse,
+  setYear,
+  setSections,
+  scholar,
+  course,
+  year,
+  section,
+}: FilterApplication) {
+  const { filter } = useGetFilter();
   return (
     <Drawer direction="right" modal={true}>
       <DrawerTrigger asChild>
@@ -56,36 +63,40 @@ export default function ApplicationFilter() {
           <div className="space-y-1.5">
             <h1>Course, Year & Section</h1>
             <div className="flex flex-col gap-3">
-              <Select>
+              <Select value={course} onValueChange={setCourse}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Filter Course" />
                 </SelectTrigger>
                 <SelectContent>
-                  {frameworks.map((meow) => (
-                    <SelectItem key={meow.value} value={meow.value}>
-                      {meow.label}
+                  {filter?.Courses.map((meow) => (
+                    <SelectItem key={meow.course} value={meow.course}>
+                      {meow.course}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-              <Select>
+              <Select value={year} onValueChange={setYear}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Filter Year Level" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="light">Light</SelectItem>
-                  <SelectItem value="dark">Dark</SelectItem>
-                  <SelectItem value="system">System</SelectItem>
+                  {filter?.Years.map((meow) => (
+                    <SelectItem key={meow.year} value={meow.year.slice(0, 3)}>
+                      {meow.year}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
-              <Select>
+              <Select value={section} onValueChange={setSections}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Filter Section" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="light">Light</SelectItem>
-                  <SelectItem value="dark">Dark</SelectItem>
-                  <SelectItem value="system">System</SelectItem>
+                  {filter?.Sections.map((meow) => (
+                    <SelectItem key={meow.section} value={meow.section}>
+                      {meow.section}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -93,20 +104,32 @@ export default function ApplicationFilter() {
 
           <div className="space-y-1.5">
             <h1>Scholarships</h1>
-            <Select>
+            <Select value={scholar} onValueChange={setScholar}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Filter Scholarship" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="light">Light</SelectItem>
-                <SelectItem value="dark">Dark</SelectItem>
-                <SelectItem value="system">System</SelectItem>
+                {filter?.Scholarships.map((meow) => (
+                  <SelectItem
+                    key={meow.scholarshipId}
+                    value={meow.scholarshipId.toString()}
+                  >
+                    {meow.scholarshipTitle}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
         </div>
         <DrawerFooter>
-          <Button>
+          <Button
+            onClick={() => {
+              setScholar("");
+              setCourse("");
+              setYear("");
+              setSections("");
+            }}
+          >
             <RotateCcw />
             Reset
           </Button>

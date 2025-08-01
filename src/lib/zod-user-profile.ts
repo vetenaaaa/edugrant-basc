@@ -17,11 +17,9 @@ const userProfileSchema = z.object({
   address: z.string().min(1, "Required"),
   //Academic
   studentId: z.string().min(1, "Required"),
-  course: z.object({
-    course: z.string().min(1, "Required"),
-    year: z.string().min(1, "Required"),
-    section: z.string().min(1, "Required"),
-  }),
+  course: z.string().min(1, "Required"),
+  year: z.string().min(1, "Required"),
+  section: z.string().min(1, "Required"),
   password: z.string().min(1, "Required"),
 });
 
@@ -42,11 +40,9 @@ export function useProfileZod(data: UserProfileTypes | null) {
       address: "",
       //Academic
       studentId: "",
-      course: {
-        course: "",
-        year: "",
-        section: "",
-      },
+      course: "",
+      year: "",
+      section: "",
       password: "************",
     },
   });
@@ -65,11 +61,9 @@ export function useProfileZod(data: UserProfileTypes | null) {
         address: data.address || "",
         //Academic
         studentId: data.studentId || "",
-        course: data.studentCourseYearSection || {
-          course: "",
-          year: "",
-          section: "",
-        },
+        course: "",
+        year: "",
+        section: "",
         password: "************",
       });
     }
