@@ -12,7 +12,7 @@ import {
 
 import ApplicationSummary from "./dashboard/summary";
 import { Button } from "@/components/ui/button";
-import { Activity, ArrowRight, Megaphone, SquarePen } from "lucide-react";
+import { ArrowRight, Megaphone } from "lucide-react";
 
 import {
   Timeline,
@@ -20,9 +20,7 @@ import {
   TimelineDate,
   TimelineItem,
 } from "@/components/ui/timeline";
-import { useEffect, useState } from "react";
 import DynamicHeaderAdmin from "./dynamic-header";
-import { useAdminStore } from "@/store/adminUserStore";
 const announcements = [
   {
     id: 1,
@@ -43,39 +41,39 @@ const announcements = [
 ];
 
 export default function AdminDashboard() {
-  const { admin } = useAdminStore();
-  const [date, setDate] = useState("");
-  useEffect(() => {
-    const updateDate = () => {
-      const now = new Date();
-      const day = now.getDate();
-      const suffix =
-        day >= 11 && day <= 13
-          ? "th"
-          : day % 10 === 1
-          ? "st"
-          : day % 10 === 2
-          ? "nd"
-          : day % 10 === 3
-          ? "rd"
-          : "th";
 
-      const formatted = now
-        .toLocaleDateString("en-US", {
-          weekday: "long",
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        })
-        .replace(/\b\d{1,2}\b/, `${day}${suffix}`);
+  // const [date, setDate] = useState("");
+  // useEffect(() => {
+  //   const updateDate = () => {
+  //     const now = new Date();
+  //     const day = now.getDate();
+  //     const suffix =
+  //       day >= 11 && day <= 13
+  //         ? "th"
+  //         : day % 10 === 1
+  //         ? "st"
+  //         : day % 10 === 2
+  //         ? "nd"
+  //         : day % 10 === 3
+  //         ? "rd"
+  //         : "th";
 
-      setDate(formatted);
-    };
+  //     const formatted = now
+  //       .toLocaleDateString("en-US", {
+  //         weekday: "long",
+  //         year: "numeric",
+  //         month: "long",
+  //         day: "numeric",
+  //       })
+  //       .replace(/\b\d{1,2}\b/, `${day}${suffix}`);
 
-    updateDate();
-    const interval = setInterval(updateDate, 1000);
-    return () => clearInterval(interval);
-  }, []);
+  //     setDate(formatted);
+  //   };
+
+  //   updateDate();
+  //   const interval = setInterval(updateDate, 1000);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   return (
     <div className="pl-1 pr-2 min-h-screen">
