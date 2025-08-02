@@ -209,7 +209,7 @@ export default function LandingPage() {
 
   return (
     <>
-      <div className="relative w-full">
+      <div className="relative w-full your-class">
         <HeaderComponent />
         <AnimatePresence mode="wait">
           {transition === "hero" && (
@@ -219,7 +219,7 @@ export default function LandingPage() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2, ease: "easeInOut" }}
-              className="relative min-h-[75vh] mx-auto w-[95%]   rounded-3xl overflow-hidden  shadow-md flex items-center bg-[var(--green)]"
+              className="relative min-h-[75vh]  mx-auto w-[95%]   rounded-3xl overflow-hidden  shadow-md flex items-center bg-[var(--green)]"
             >
               <div className="absolute inset-0 h-full w-full flex items-center rounded-3xl">
                 <img

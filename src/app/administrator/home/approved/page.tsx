@@ -25,6 +25,7 @@ import {
   AlignHorizontalDistributeCenter,
   ArrowRightIcon,
   Check,
+  CheckCheck,
   ChevronFirstIcon,
   ChevronLastIcon,
   ChevronLeftIcon,
@@ -32,7 +33,6 @@ import {
   ChevronsUpDown,
   FileDown,
   SearchIcon,
-  UsersRound,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -43,14 +43,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import useAdminReview from "@/lib/get-applications";
 
 const headers = [
   { label: "Student ID" },
   { label: "Student Name" },
   { label: "Course, Year & Section" },
   { label: "Scholarship" },
-  { label: "Application Date" },
+  { label: "Status" },
+  { label: "Approved Date" },
 ];
 
 import { cn } from "@/lib/utils";
@@ -67,9 +67,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import ApplicationFilter from "./filter";
+import ApplicationFilter from "../review/filter";
 import useApplicationpSearch from "@/lib/application-search";
 import Link from "next/link";
+import useStatusReview from "@/lib/get-by-status";
+import { Badge } from "@/components/ui/badge";
 const sortList = [
   {
     value: "",
@@ -105,7 +107,7 @@ export default function Manage() {
     ""
   );
   const [open, setOpen] = useState(false);
-  const { data, loading, totalPages } = useAdminReview({
+  const { data, loading, totalPages } = useStatusReview({
     currentPage,
     rowsPerPage,
     sort,
@@ -113,6 +115,7 @@ export default function Manage() {
     course,
     year,
     section,
+    status: "APPROVE",
   });
 
   const [query, setQuery] = useState<string>("");
@@ -121,16 +124,17 @@ export default function Manage() {
 
   return (
     <div className="   min-h-screen px-4">
-      <DynamicHeaderAdmin first="Applicants" second="Review" />
+      <DynamicHeaderAdmin first="Applicants" second="Approved" />
 
       <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
         <h1 className="text-2xl font-semibold flex items-center gap-2">
-          <UsersRound />
-          Pending Review
+          <CheckCheck />
+          Approved Applicants
         </h1>
         <p className="text-sm text-gray-500 mt-1">
-          Review submitted documents and take action on scholarship
-          applications. You can approve, decline, or manage applicants.
+          View and manage applicants whose scholarship applications have been
+          approved. You can review their submitted documents, or take further
+          action if needed.
         </p>
         <div className="container mx-auto py-10 space-y-3">
           <div className="flex gap-3 justify-between">
@@ -233,7 +237,7 @@ export default function Manage() {
                 {headers.map((header) => (
                   <TableHead
                     className={
-                      header.label === "Application Date" ? "text-center" : ""
+                      header.label === "Approved Date" ? "text-center" : ""
                     }
                     key={header.label}
                   >
@@ -280,6 +284,11 @@ export default function Manage() {
                         ${row.student.year.slice(0, 1)}${row.student.section}`}
                       </TableCell>
                       <TableCell>{row.scholarship.scholarshipTitle}</TableCell>
+                      <TableCell>
+                        <Badge className="bg-green-800 text-gray-200">
+                          Approved
+                        </Badge>
+                      </TableCell>
                       <TableCell className="text-center">
                         {row.applicationDate
                           ? format(row.applicationDate, "PPP")
@@ -321,6 +330,11 @@ export default function Manage() {
                         ${row.student.year.slice(0, 1)}${row.student.section}`}
                     </TableCell>
                     <TableCell>{row.scholarship.scholarshipTitle}</TableCell>
+                    <TableCell>
+                      <Badge className="bg-green-800 text-gray-200">
+                        Approved
+                      </Badge>
+                    </TableCell>
                     <TableCell className="text-center">
                       {row.applicationDate
                         ? format(row.applicationDate, "PPP")
