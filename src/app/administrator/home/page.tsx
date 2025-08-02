@@ -32,11 +32,11 @@ const announcements = [
   },
   {
     id: 2,
-    title: "New Document Upload Feature",
+    title: "Scholarship Application Deadline Extended",
     description:
-      "You can now upload additional supporting documents through your dashboard.",
-    date: "Dec 10, 2024",
-    priority: "medium",
+      "The deadline for scholarship applications has been extended to June 30, 2025.",
+    date: "Dec 12, 2024",
+    priority: "high",
   },
 ];
 
@@ -75,7 +75,7 @@ export default function AdminDashboard() {
   // }, []);
 
   return (
-    <div className="pl-1 pr-2 min-h-screen">
+    <div className="pl-1 pr-2 min-h-screen z-10">
       <DynamicHeaderAdmin first="Home" />
 
       <div className=" grid grid-cols-3  gap-5 px-5  py-5 mt-3 ">
@@ -92,6 +92,7 @@ export default function AdminDashboard() {
               </div>
               <ChartBarMultiple />
             </div>
+
             <div className="aspect-[14.6/9] relative  border  bg-background/40  p-4 rounded-md space-y-1.5">
               <div className="flex justify-between items-center">
                 <h1>Scholarship Status</h1>
@@ -103,36 +104,27 @@ export default function AdminDashboard() {
               <ChartPieDonutText />
             </div>
           </div>
-          <Card className="bg-background/40 flex-1 ">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Megaphone className="h-5 w-5" />
-                Announcements
-              </CardTitle>
-              <CardDescription>Keep on latest update</CardDescription>
-            </CardHeader>
-            <CardContent className="grid grid-cols-1 gap-3 ">
-              <Timeline className="divide-y rounded-lg border">
-                {announcements.map((item) => (
-                  <TimelineItem
-                    key={item.id}
-                    step={item.id}
-                    className="m-0! px-4! py-3!"
-                  >
-                    <TimelineContent className="text-foreground">
-                      {item.description}
-                      <TimelineDate className="mt-1">{item.date}</TimelineDate>
-                    </TimelineContent>
-                  </TimelineItem>
-                ))}
-              </Timeline>
-            </CardContent>
-            <CardFooter>
-              <Button className="w-full " size="sm" variant="outline">
-                View All <ArrowRight className="h-4 w-4" />
-              </Button>
-            </CardFooter>
-          </Card>
+        </div>
+        <div className="row-span-2 z-10">
+          <div className=" space-y-2 p-4 bg-background/40 rounded-md border">
+            
+              <h1>Announcements</h1>
+             
+            <Timeline className="divide-y rounded-lg border">
+              {announcements.map((item) => (
+                <TimelineItem
+                  key={item.id}
+                  step={item.id}
+                  className="m-0! px-4! py-3!"
+                >
+                  <TimelineContent className="text-foreground">
+                    {item.description}
+                    <TimelineDate className="mt-1">{item.date}</TimelineDate>
+                  </TimelineContent>
+                </TimelineItem>
+              ))}
+            </Timeline>
+          </div>
         </div>
       </div>
     </div>
