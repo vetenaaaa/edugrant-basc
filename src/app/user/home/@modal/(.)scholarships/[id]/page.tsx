@@ -178,7 +178,7 @@ export default function InterceptManageScholarshipClient() {
                         <Calendar />
                       </Button>
                     </div>
-                    <span className="text-2xl font-semibold text-gray-200">
+                    <span className="text-xl font-semibold text-gray-200 line-clamp-1">
                       {loading ? (
                         <Ring size={30} speed={2} bgOpacity={0} color="green" />
                       ) : (

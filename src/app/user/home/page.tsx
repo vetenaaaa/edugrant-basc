@@ -1,48 +1,80 @@
 "use client";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+import ApplicationSummary from "./summary";
 import { Button } from "@/components/ui/button";
-import type React from "react";
-import { usePathname } from "next/navigation";
+import { ArrowRight, CircleQuestionMark, Megaphone } from "lucide-react";
 
-import DynamicHeader from "./dynamic-header";
+import {
+  Timeline,
+  TimelineContent,
+  TimelineDate,
+  TimelineItem,
+} from "@/components/ui/timeline";
+import DynamicHeaderAdmin from "./dynamic-header";
+const announcements = [
+  {
+    id: 1,
+    title: "Scholarship Application Deadline Extended",
+    description:
+      "The deadline for scholarship applications has been extended to June 30, 2025.",
+    date: "Dec 12, 2024",
+    priority: "high",
+  },
+  {
+    id: 2,
+    title: "New Document Upload Feature",
+    description:
+      "You can now upload additional supporting documents through your dashboard.",
+    date: "Dec 10, 2024",
+    priority: "medium",
+  },
+  {
+    id: 3,
+    title: "New Document Upload Feature",
+    description:
+      "You can now upload additional supporting documents through your dashboard.",
+    date: "Dec 10, 2024",
+    priority: "medium",
+  },
+];
 
-import { Calendar } from "@/components/ui/calendar";
-import SummaryClient from "./summary";
-import { useState } from "react";
-
-
-export default function ClientDashboard() {
-  
-  const [date, setDate] = useState<Date | undefined>(new Date());
-
-  const path = usePathname();
-  const segmentedPath = path.split("/");
+export default function AdminDashboard() {
   return (
-    <div className="px-4   min-h-screen ">
-      <DynamicHeader first={segmentedPath[2]} />
-      <div className="flex gap-5 py-10">
-        <div className="flex-1">
-          <SummaryClient />
+    <div className="pl-1 pr-2 min-h-screen z-10">
+      <DynamicHeaderAdmin first="Home" />
+
+      <div className=" grid grid-cols-3  gap-5 px-5  py-5 mt-3 ">
+        <div className="col-span-2 grid gap-5">
+          <ApplicationSummary />
         </div>
-        <div className="space-y-3">
-          <div className="border p-4 space-y-3">
-            <h1>Quick Action</h1>
-            <div className="space-x-3">
-              <Button>Find Scholarship</Button>
-              <Button>Track Application</Button>
-            </div>
-          </div>
-          <div className="flex items-center justify-center bg-background/40 rounded-md border">
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={setDate}
-              className="rounded-md  p-4 "
-              classNames={{
-                month_caption: "ms-2.5 me-20 justify-start",
-                nav: "justify-end",
-              }}
-            />
-          </div>
+        <div className=" space-y-2 p-4 bg-background/40 rounded-md">
+          <h1>Announcements</h1>
+          <Timeline className="divide-y rounded-lg border">
+            {announcements.map((item) => (
+              <TimelineItem
+                key={item.id}
+                step={item.id}
+                className="m-0! px-4! py-3!"
+              >
+                <TimelineContent className="text-foreground">
+                  {item.description}
+                  <TimelineDate className="mt-1">{item.date}</TimelineDate>
+                </TimelineContent>
+              </TimelineItem>
+            ))}
+          </Timeline>
+          <Button className="w-full" variant="link">
+            See all
+          </Button>
         </div>
       </div>
     </div>

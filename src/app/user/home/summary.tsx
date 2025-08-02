@@ -1,64 +1,88 @@
-import {  CheckCheck, CloudUpload, PhilippinePeso, TrendingUp } from "lucide-react";
+import useScholarshipData from "@/lib/scholarship-data";
+import { Activity, CheckCheck, CloudUpload, TrendingUp } from "lucide-react";
+import { Ring } from "ldrs/react";
+import "ldrs/react/Ring.css";
+export default function ApplicationSummary() {
 
-export default function SummaryClient() {
+
+  const summaryCards = [
+    {
+      label: " Total Applicants",
+      data: 1,
+      icon: <TrendingUp />,
+      color: "blue",
+    },
+    {
+      label: " Approved Applicants",
+      data: 1,
+      icon: <CheckCheck />,
+      color: "green",
+    },
+    {
+      label: "Pending Applicants",
+      data: 1,
+      icon: <CloudUpload />,
+      color: "yellow",
+    },
+    {
+      label: "Active Scholarships",
+      data: 1,
+      icon: <Activity />,
+      color: "white",
+    },
+  ];
+  const colorMap = {
+    blue: {
+      text: "text-blue-600",
+      bg: "bg-blue-800/10",
+    },
+    green: {
+      text: "text-green-600",
+      bg: "bg-green-800/10",
+    },
+    yellow: {
+      text: "text-yellow-600",
+      bg: "bg-yellow-800/10",
+    },
+    white: {
+      text: "text-white",
+      bg: "bg-white/10",
+    },
+  };
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-      <div className="space-y-2 bg-background/40 flex flex-col justify-center p-4 rounded-lg border shadow-sm">
-        <div className="flex justify-between items-start ">
-          <span className="border p-2 rounded-md">
-            <TrendingUp />
-          </span>
-          <p className="flex text-xs border p-1 rounded-sm bg-green-800/10 text-blue-600">
-           + 3 pending review
-          </p>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 ">
+      {summaryCards.map((meow, index) => (
+        <div
+          key={index}
+          className=" bg-background/40 z-10 flex flex-col justify-between  rounded-lg  shadow-sm border aspect-[16/8] p-3"
+        >
+          <div className="flex justify-between items-start ">
+            <span className="border p-2 rounded-md">{meow.icon}</span>
+            <p
+              className={`flex text-xs border p-1 rounded-sm bg-${meow.color}-800/10 text-${meow.color}-600`}
+            >
+              + 100 today
+            </p>
+          </div>
+          <div className="flex justify-between items-end">
+            <p className="text-sm text-muted-foreground">{meow.label}</p>
+            <span className={`text-3xl font-semibold text-${meow.color}-600`}>
+              {/* {loading ? (
+                <Ring
+                  size={25}
+                  stroke={2}
+                  speed={2}
+                  bgOpacity={0}
+                  color="yellow"
+                />
+              ) : (
+                filterApplication.length
+              )} */}1
+            </span>
+          </div>
         </div>
-        <div className="flex justify-between items-end">
-          <p className="font-semibold text-sm">All Application</p>
-          <p className="text-3xl font-semibold text-blue-600">2</p>
-        </div>
-      </div>
-      <div className="space-y-2 bg-background/40 flex flex-col justify-center p-4 rounded-lg border shadow-sm">
-        <div className="flex justify-between items-start ">
-          <span className="border p-2 rounded-md">
-            <CheckCheck />
-          </span>
-          <p className="flex text-xs border p-1 rounded-sm bg-green-800/10 text-green-600">
-            + 0 today
-          </p>
-        </div>
-        <div className="flex justify-between items-end">
-          <p className="font-semibold text-sm">Approved</p>
-          <p className="text-3xl font-semibold text-green-600">0</p>
-        </div>
-      </div>
-      <div className="space-y-2 bg-background/40 flex flex-col justify-center p-4 rounded-lg border shadow-sm">
-        <div className="flex justify-between items-start ">
-          <span className="border p-2 rounded-md">
-            <CloudUpload />
-          </span>
-          <p className="flex text-xs border p-1 rounded-sm bg-green-800/10 text-yellow-500">
-            Avg. 14 days review
-          </p>
-        </div>
-        <div className="flex justify-between items-end">
-          <p className="font-semibold text-sm">Pending</p>
-          <p className="text-3xl font-semibold text-yellow-500">0</p>
-        </div>
-      </div>
-      <div className="space-y-2 bg-background/40 flex flex-col justify-center p-4 rounded-lg border shadow-sm">
-        <div className="flex justify-between items-start ">
-          <span className="border p-2 rounded-md">
-            <PhilippinePeso />
-          </span>
-          {/* <p className="flex text-xs border p-1 rounded-sm bg-gray-800/10 text-gray-600">
-            Above average
-          </p> */}
-        </div>
-        <div className="flex justify-between items-end">
-          <p className="font-semibold text-sm">Total Recieve</p>
-          <p className="text-3xl font-semibold text-gray-600">3K</p>
-        </div>
-      </div>
+      ))}
     </div>
   );
 }

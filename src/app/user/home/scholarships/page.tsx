@@ -109,7 +109,7 @@ export default function ClientScholarship() {
                   <div className=" absolute bottom-0 w-full left-0 px-2 py-4 space-y-3">
                     <div className="flex justify-between items-center px-2">
                       <div>
-                        <h1 className="font-bold text-lg">
+                        <h1 className="font-bold text-lg line-clamp-1">
                           {scholarship.scholarshipTitle}
                         </h1>
                         <p className="text-xs text-muted-foreground">
