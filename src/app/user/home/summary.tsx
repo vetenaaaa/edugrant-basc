@@ -1,6 +1,6 @@
 
 import { Activity, CheckCheck, CloudUpload, TrendingUp } from "lucide-react";
-
+;
 import "ldrs/react/Ring.css";
 export default function ApplicationSummary() {
 
@@ -31,24 +31,7 @@ export default function ApplicationSummary() {
       color: "white",
     },
   ];
-  const colorMap = {
-    blue: {
-      text: "text-blue-600",
-      bg: "bg-blue-800/10",
-    },
-    green: {
-      text: "text-green-600",
-      bg: "bg-green-800/10",
-    },
-    yellow: {
-      text: "text-yellow-600",
-      bg: "bg-yellow-800/10",
-    },
-    white: {
-      text: "text-white",
-      bg: "bg-white/10",
-    },
-  };
+
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 ">
