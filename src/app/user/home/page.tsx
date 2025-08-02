@@ -1,17 +1,8 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 
 import ApplicationSummary from "./summary";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, CircleQuestionMark, Megaphone } from "lucide-react";
 
 import {
   Timeline,

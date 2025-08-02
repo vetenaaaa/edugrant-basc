@@ -1,6 +1,6 @@
-import useScholarshipData from "@/lib/scholarship-data";
+
 import { Activity, CheckCheck, CloudUpload, TrendingUp } from "lucide-react";
-import { Ring } from "ldrs/react";
+
 import "ldrs/react/Ring.css";
 export default function ApplicationSummary() {
 

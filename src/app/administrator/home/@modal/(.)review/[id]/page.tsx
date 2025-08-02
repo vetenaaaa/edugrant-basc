@@ -4,7 +4,7 @@
 import { Progress } from "@/components/ui/progress";
 import {
   AlertDialog,
-  AlertDialogAction,
+
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -31,7 +31,7 @@ import useApplicationById from "@/lib/get-application-by-id";
 import { Button } from "@/components/ui/button";
 import {
   Calendar,
-  CardSim,
+
   Download,
   File,
   GraduationCap,
@@ -40,13 +40,11 @@ import {
   LoaderCircleIcon,
   Mail,
   Phone,
-  User,
+ 
 } from "lucide-react";
-import { Label } from "@/components/ui/label";
 
 import Reviewer from "./reviewer";
 import { format } from "date-fns";
-import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import axios from "axios";
 import StyledToast from "@/components/ui/toast-styled";
