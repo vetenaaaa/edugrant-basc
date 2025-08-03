@@ -165,7 +165,7 @@ export default function UploadDocs({
     <div className="relative h-full w-full">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="p-4 pb-20 grid grid-cols-2 gap-5">
+          <div className="p-4 pb-20 lg:grid-cols-2  grid grid-cols-1 gap-5">
             {data.scholarshipDocuments.map((doc, index) => (
               <FormField
                 key={index}

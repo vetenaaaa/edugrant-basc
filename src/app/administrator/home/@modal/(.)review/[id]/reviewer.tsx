@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Expand, ZoomIn, ZoomOut, RotateCw, RefreshCw } from "lucide-react";
+import { Expand, ZoomIn, ZoomOut, RotateCw, RefreshCw, Maximize } from "lucide-react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 // Mock types for demonstration
@@ -36,8 +36,8 @@ export default function Reviewer({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="secondary" className="flex-1">
-          <Expand /> Review
+        <Button variant="outline">
+          <Maximize /> 
         </Button>
       </DialogTrigger>
       <DialogContent className="h-screen !max-w-3/4  p-0 border-0">
