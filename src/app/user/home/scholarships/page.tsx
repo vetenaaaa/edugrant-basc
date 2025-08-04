@@ -3,12 +3,6 @@
 import { usePathname } from "next/navigation";
 import DynamicHeader from "../dynamic-header";
 import {
-  parseISO,
-  isPast,
-  differenceInDays,
-  formatDistanceToNowStrict,
-} from "date-fns";
-import {
   Select,
   SelectContent,
   SelectItem,
