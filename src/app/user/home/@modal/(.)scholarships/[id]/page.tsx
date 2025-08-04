@@ -1,12 +1,16 @@
 "use client";
 import {
   Calendar,
+  CalendarX2,
+  FileCheck2,
   FileInput,
   GraduationCap,
   Maximize,
   PhilippinePeso,
   PiggyBank,
+  PinOff,
   StickyNote,
+  Wallet,
   X,
 } from "lucide-react";
 import { Ring } from "ldrs/react";
@@ -100,117 +104,89 @@ export default function InterceptManageScholarshipClient() {
             )
           ) : (
             <>
-              <div className="relative h-64 flex justify-center items-center">
-                {loading ? (
-                  <Skeleton className="h-full w-full" />
-                ) : (
-                  <div className="relative h-full w-full flex justify-center items-center overflow-hidden ">
-                    <Link
-                      href={`${scholarshipCover}`}
-                      target="_blank"
-                      scroll={false}
-                      rel="noopener noreferrer"
-                    >
-                      <Button className="absolute z-10 cursor-pointer bottom-5 right-5 bg-green-950 border border-green-950 hover:bg-green-900 text-gray-200 hover:border-green-800">
-                        View
-                        <Maximize />
-                      </Button>
-                    </Link>
-                    <img
-                      src={scholarshipCover}
-                      alt="Scholarship Cover"
-                      className="w-full h-full object-cover mask-gradient brightness-75 "
-                    />
-                  </div>
-                )}
-
-                <div className="absolute flex items-center justify-center left-5 -bottom-10 gap-3 flex-col">
-                  <div className="lg:size-35 size-30 rounded-full overflow-hidden border-3 border-green-950 bg-background">
-                    {loading ? (
-                      <Skeleton className="h-full w-full" />
-                    ) : (
-                      <img
-                        src={scholarshipLogo}
-                        alt=""
-                        className="w-full h-full object-cover"
-                      />
-                    )}
+              <div className=" relative flex flex-col justify-center items-center w-full">
+                <img
+                  src={scholarshipCover}
+                  alt=""
+                  className=" object-cover brightness-90 mask-gradient h-50 w-full mb-10"
+                />
+                <div className="absolute -bottom-8 flex flex-col justify-center items-center gap-2">
+                  <img
+                    src={scholarshipLogo}
+                    alt=""
+                    className=" rounded-full shadow-sm shadow-black border-background size-30 object-cover"
+                  />
+                  <div className="text-center">
+                    <h1 className="text-xl zxczxc tracking-[-3px] font-semibold">
+                      {title}
+                    </h1>
+                    <h3 className="text-sm text-muted-foreground">
+                      {provider}
+                    </h3>
                   </div>
                 </div>
               </div>
-
-              <div className="lg:px-6 px-2 pt-15 pb-6 space-y-6">
-                {/* Description */}
-
-                <div className="grid lg:grid-cols-3 grid-cols-1 gap-6">
-                  <div className="col-span-2 space-y-4">
-                    <div>
-                      <h1 className="text-xl md:text-2xl  text-gray-200 mb-1 font-bold">
-                        {title}
-                      </h1>
-                      <p className="text-gray-200/90 gap-1">{provider}</p>
+              <div className="mt-13 p-2 space-y-8">
+                <div className="grid lg:grid-cols-3 grid-cols-2 gap-2.5">
+                  <div className="border lg:p-4 p-2.5 rounded bg-card flex justify-between items-end">
+                    <div className="space-y-3">
+                      <h1 className="text-xs text-muted-foreground">Amount</h1>
+                      <Wallet />
                     </div>
-                    <div>
-                      <h2 className="line-clamp-3">{description}</h2>
-                    </div>
+                    <p className="line-clamp-4 text-2xl text-blue-700 font-semibold">
+                      ₱{amount}
+                    </p>
                   </div>
-                  <div className="space-y-5">
-                    <div className="">
-                      <h2 className="text-muted-foreground text-sm">Amount</h2>
-
-                      <p className="text-xl font-semibold">₱{amount}</p>
-                    </div>
-                    <div className="">
-                      <h2 className="text-muted-foreground text-sm">
+                  <div className="border lg:p-4 p-2.5 rounded bg-card flex justify-between items-end">
+                    <div className="space-y-3">
+                      <h1 className="text-xs text-muted-foreground">
                         Deadline
-                      </h2>
-
-                      <p className="text-xl font-semibold">
-                        {deadline && format(deadline, "PPP")}
-                      </p>
+                      </h1>
+                      <CalendarX2 />
                     </div>
+                    <p className="line-clamp-4 text-2xl text-blue-700 font-semibold">
+                      {deadline && format(deadline, "MM-dd-yyy")}
+                    </p>
+                  </div>{" "}
+                  <div className="border lg:p-4 p-2.5 rounded bg-card  lg:flex hidden justify-between items-end">
+                    <div className="space-y-3">
+                      <h1 className="text-xs text-muted-foreground">
+                        Deadline
+                      </h1>
+                      <CalendarX2 />
+                    </div>
+                    <p className="line-clamp-4 text-2xl text-blue-700 font-semibold">
+                      {deadline && format(deadline, "MM-dd-yyy")}
+                    </p>
                   </div>
                 </div>
 
-                {/* Required Documents */}
-                {data?.scholarshipDocuments &&
-                  data.scholarshipDocuments.length > 0 && (
-                    <div className="space-y-3">
-                      <h2 className="text-muted-foreground text-sm">
-                        {" "}
-                        Required Documents
-                      </h2>
-                      <div className="grid gap-2">
-                        {data?.scholarshipDocuments.map((docs, index) => (
-                          <div
-                            key={docs.label}
-                            className="flex border justify-between  items-center p-4 gap-5 rounded-md bg-background"
-                          >
-                            <h1>
-                              {index + 1}. {docs.label}
-                            </h1>
-
-                            <div className="space-x-2">
-                              <Badge className="bg-green-800 text-gray-200">
-                                PDF
-                              </Badge>
-                              <Badge className="bg-green-800 text-gray-200">
-                                JPG
-                              </Badge>
-                              <Badge className="bg-green-800 text-gray-200">
-                                DOCX
-                              </Badge>
-                            </div>
-                          </div>
-                        ))}
+                <p className="line-clamp-4">{description}</p>
+                <div>
+                  <h1 className="text-sm text-muted-foreground">
+                    Required Documents
+                  </h1>
+                  <div className="space-y-2 mt-2">
+                    {data?.scholarshipDocuments.map((meow) => (
+                      <div
+                        className="p-2.5 border bg-card rounded-sm flex justify-between items-center"
+                        key={meow.label}
+                      >
+                        <div>{meow.label}</div>
+                        <div className="flex gap-2">
+                          <Badge className="bg-blue-800 text-gray-200">
+                            PDF
+                          </Badge>
+                          <Badge className="bg-blue-800 text-gray-200">
+                            DOCX
+                          </Badge>
+                          <Badge className="bg-blue-800 text-gray-200">
+                            JPG
+                          </Badge>
+                        </div>
                       </div>
-                    </div>
-                  )}
-
-                {/* Status */}
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">Status:</span>
-                  <Badge className="bg-green-800 text-gray-300">Active</Badge>
+                    ))}
+                  </div>
                 </div>
               </div>
             </>
@@ -218,8 +194,8 @@ export default function InterceptManageScholarshipClient() {
         </div>
 
         {!isApply && (
-          <DrawerFooter>
-            <div className="flex gap-3">
+          <div className="p-2">
+            <div className="flex gap-2">
               <Button
                 className="flex-1 bg-green-950 border border-green-950 hover:bg-green-800 text-gray-200 hover:border-green-800"
                 onClick={() => setIsApply(true)}
@@ -239,7 +215,7 @@ export default function InterceptManageScholarshipClient() {
                 Back
               </Button>
             </div>
-          </DrawerFooter>
+          </div>
         )}
       </DrawerContent>
     </Drawer>
