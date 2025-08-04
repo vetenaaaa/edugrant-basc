@@ -90,7 +90,7 @@ const howItWorks = [
   {
     title: "4. Track Your Status",
     description:
-      "Get real-time updates on your appwewlication status and receive notifications via email and dashboard.",
+      "Get real-time updates on your application status and receive notifications via email and dashboard.",
     image: track.src,
   },
 ];
