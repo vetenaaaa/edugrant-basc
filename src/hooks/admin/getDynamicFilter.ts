@@ -1,17 +1,17 @@
 "use client";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { FilterTypes } from "./types";
+import { FilterTypes } from "../types";
 
 export default function useGetFilter() {
- const [filter, setFilter] = useState<FilterTypes | null>(null);
+  const [filter, setFilter] = useState<FilterTypes | null>(null);
   const [loading, setLoading] = useState(true);
   useEffect(function () {
     async function fetchFilter() {
       setLoading(true);
       try {
         const res = await axios.get(
-          `https://edugrant-express-server-production.up.railway.app/administrator/getFilterData`,
+          `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/getFilterData`,
           { withCredentials: true }
         );
         if (res.status === 200) {

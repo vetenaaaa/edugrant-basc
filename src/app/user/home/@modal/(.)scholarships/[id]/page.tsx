@@ -29,7 +29,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import useScholarshipUserById from "@/lib/get-scholar-by-id";
+import useScholarshipUserById from "@/hooks/user/getScholarshipData";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import UploadDocs from "./docs-upload";

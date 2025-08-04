@@ -1,25 +1,25 @@
 "use client";
 import axios from "axios";
 import { useEffect } from "react";
-import { useAdminStore } from "@/store/adminUserStore";
+import { useUserStore } from "../../store/useUserStore";
 
 export default function useAuthenticatedUser() {
-  const { setAdmin, setLoading, setError } = useAdminStore();
+  const { setUser, setLoading, setError } = useUserStore();
 
   useEffect(() => {
     async function fetchUserData() {
       try {
         setLoading(true);
         const res = await axios.get(
-          `https://edugrant-express-server-production.up.railway.app/administrator/adminTokenAuthentication`,
+          `${process.env.NEXT_PUBLIC_USER_URL}/tokenValidation`,
           {
             withCredentials: true,
           }
         );
 
         if (res.status === 200) {
-          setAdmin(res.data.user[0]);
-          console.log("authapi:", res.data.user[0]);
+          setUser(res.data.userData);
+          console.log("authapi:", res.data);
         }
       } catch (error) {
         if (axios.isAxiosError(error) && error.message === "Network Error") {
@@ -33,7 +33,7 @@ export default function useAuthenticatedUser() {
     }
 
     fetchUserData();
-  }, [setAdmin, setLoading, setError]);
+  }, [setUser, setLoading, setError]);
 
   return null;
 }

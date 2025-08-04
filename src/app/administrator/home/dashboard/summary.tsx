@@ -1,4 +1,4 @@
-import useScholarshipData from "@/lib/scholarship-data";
+import useScholarshipData from "@/hooks/admin/getScholarship";
 import { Activity, CheckCheck, CloudUpload, TrendingUp } from "lucide-react";
 import { Ring } from "ldrs/react";
 import "ldrs/react/Ring.css";
@@ -37,7 +37,6 @@ export default function ApplicationSummary() {
       color: "white",
     },
   ];
-
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 ">

@@ -1,7 +1,7 @@
 "use client";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { ApplicationTypes } from "./types";
+import { ApplicationTypes } from "../hooks/types";
 
 export default function useStatusReview({
   currentPage,

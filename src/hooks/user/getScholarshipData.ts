@@ -36,7 +36,7 @@ export default function useScholarshipUserById(id: string) {
           const res = await axios.get<{
             scholarship: ScholarshipTypes;
           }>(
-            `https://edugrant-express-server-production.up.railway.app/user/getScholarshipsbyId?scholarshipId=${id}`,
+            `${process.env.NEXT_PUBLIC_USER_URL}/getScholarshipsbyId?scholarshipId=${id}`,
 
             { withCredentials: true }
           );

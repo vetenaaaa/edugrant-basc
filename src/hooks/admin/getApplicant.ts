@@ -1,7 +1,7 @@
 "use client";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { ApplicationTypes } from "./types";
+import { ApplicationTypes } from "../types";
 
 export default function useAdminReview({
   currentPage,
@@ -14,7 +14,7 @@ export default function useAdminReview({
 }: {
   currentPage: number;
   rowsPerPage: number;
-  sort: string;
+  sort?: string;
   scholar?: string;
   course?: string;
   year?: string;
@@ -30,9 +30,13 @@ export default function useAdminReview({
         setLoading(true);
         try {
           const res = await axios.get(
-            `https://edugrant-express-server-production.up.railway.app/administrator/getStudentApplication?page=${currentPage}&dataPerPage=${rowsPerPage}&sortBy=${sort}${
-              scholar ? `&scholarshipId=${scholar}` : ""
-            }${course ? `&course=${course}` : ""}
+            `${
+              process.env.NEXT_PUBLIC_ADMINISTRATOR_URL
+            }/getStudentApplication?page=${currentPage}&dataPerPage=${rowsPerPage}${
+              sort ? `&sortBy=${sort}` : ""
+            }${scholar ? `&scholarshipId=${scholar}` : ""}${
+              course ? `&course=${course}` : ""
+            }
             ${year ? `&year=${year}` : ""} ${
               section ? `&section=${section}` : ""
             }`,

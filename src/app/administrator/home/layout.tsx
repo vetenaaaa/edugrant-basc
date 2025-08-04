@@ -2,7 +2,7 @@
 import { AppSidebar } from "@/components/ui/app-side";
 import { ReactNode } from "react";
 import { Toaster } from "@/components/ui/sonner";
-import useAuthenticatedUser from "@/lib/authAdminInfo";
+import useAuthenticatedUser from "@/hooks/admin/getTokenAuthentication";
 interface DashboardLayoutProps {
   children: ReactNode;
   modal: ReactNode;

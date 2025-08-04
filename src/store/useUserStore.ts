@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { UserProfileTypes } from "@/lib/types";
+import { UserProfileTypes } from "@/hooks/types";
 
 type UserStore = {
   user: UserProfileTypes | null;

@@ -20,7 +20,7 @@ import { InfoIcon, PhilippinePeso, Share2, TextSearch } from "lucide-react";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
 
-import useScholarshipUserData from "@/lib/client-scholarship";
+import useScholarshipUserData from "@/hooks/user/getScholarship";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 export default function ClientScholarship() {
@@ -119,7 +119,7 @@ export default function ClientScholarship() {
                             {scholarship.scholarshipTitle}
                           </h1>
                           <p className="text-sm text-muted-foreground group-hover:text-muted-foreground/80 transition-colors duration-300">
-                          {scholarship.scholarshipProvider}
+                            {scholarship.scholarshipProvider}
                           </p>
                         </div>
                       </div>

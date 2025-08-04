@@ -27,7 +27,7 @@ export default function useScholarshipSearch({ query }: { query: string }) {
     const delayDebounce = setTimeout(async () => {
       try {
         const res = await axios.get(
-          `https://edugrant-express-server-production.up.railway.app/administrator/searchScholarship?search=${trimmedQuery}`,
+          `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/searchScholarship?search=${trimmedQuery}`,
 
           { withCredentials: true }
         );

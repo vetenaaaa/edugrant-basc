@@ -1,7 +1,7 @@
 "use client";
 import { AppSidebar } from "@/components/ui/client-sidebar";
 import { ReactNode } from "react";
-import useAuthenticatedUser from "@/lib/get-student-by-id";
+import useAuthenticatedUser from "@/hooks/user/getTokenAuthentication";
 interface DashboardLayoutProps {
   children: ReactNode;
   modal: ReactNode;

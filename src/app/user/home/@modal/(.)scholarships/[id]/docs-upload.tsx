@@ -9,12 +9,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {  LoaderCircle } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { ScholarshipTypes } from "@/lib/get-scholar-by-id";
+import { ScholarshipTypes } from "@/hooks/user/getScholarshipData";
 import { useUserStore } from "@/store/useUserStore";
 import { DragAndDropArea } from "./reusable";
 import { Send, X } from "lucide-react";

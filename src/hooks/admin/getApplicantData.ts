@@ -1,7 +1,7 @@
 "use client";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { ApplicationTypes } from "./types";
+import { ApplicationTypes } from "../types";
 
 export default function useApplicationById(id: string) {
   const [data, setData] = useState<ApplicationTypes | null>(null);
@@ -16,7 +16,7 @@ export default function useApplicationById(id: string) {
           const res = await axios.get<{
             data: ApplicationTypes;
           }>(
-            `https://edugrant-express-server-production.up.railway.app/administrator/getApplicationById?applicationId=${id}`,
+            `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/getApplicationById?applicationId=${id}`,
 
             { withCredentials: true }
           );

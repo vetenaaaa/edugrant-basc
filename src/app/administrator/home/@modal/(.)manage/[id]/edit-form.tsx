@@ -18,9 +18,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
-import { EditScholarshipTypes } from "@/lib/types";
+import { EditScholarshipTypes } from "@/hooks/types";
 import { useEditScholarshipForm } from "@/lib/use-edit-scholarship-form";
-import { useScholarshipSubmission } from "@/lib/edit-scholarship-submission";
+import { useScholarshipSubmission } from "@/hooks/admin/putUpdateScholarship";
 export default function EditScholarship({
   data,
   setEditMode,

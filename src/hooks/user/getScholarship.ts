@@ -1,8 +1,7 @@
 "use client";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { ScholarshipTypes } from "./types";
-
+import { ScholarshipTypes } from "../types";
 
 export default function useScholarshipUserData({
   currentPage,
@@ -22,7 +21,7 @@ export default function useScholarshipUserData({
         setLoading(true);
         try {
           const res = await axios.get(
-            `https://edugrant-express-server-production.up.railway.app/user/getAllScholarships?page=${currentPage}&dataPerPage=${rowsPerPage}&sortBy=${sort}`,
+            `${process.env.NEXT_PUBLIC_USER_URL}/getAllScholarships?page=${currentPage}&dataPerPage=${rowsPerPage}&sortBy=${sort}`,
             { withCredentials: true }
           );
           if (res.status === 200) {

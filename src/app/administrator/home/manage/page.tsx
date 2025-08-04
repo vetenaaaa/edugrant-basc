@@ -27,16 +27,15 @@ import {
   PaginationItem,
 } from "@/components/ui/pagination";
 import { Badge } from "@/components/ui/badge";
-import useScholarshipSearch from "@/lib/scholarship-search";
+import useScholarshipSearch from "@/hooks/admin/getScholarshipSearch";
 import { Input } from "@/components/ui/input";
-import useScholarshipData from "@/lib/scholarship-data";
+import useScholarshipData from "@/hooks/admin/getScholarship";
 import DynamicHeaderAdmin from "../dynamic-header";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   AlignHorizontalDistributeCenter,
   Check,
-  
   ChevronFirstIcon,
   ChevronLastIcon,
   ChevronLeftIcon,

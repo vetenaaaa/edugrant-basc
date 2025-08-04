@@ -68,7 +68,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import ApplicationFilter from "../review/filter";
-import useApplicationpSearch from "@/lib/application-search";
+import useApplicationpSearch from "@/hooks/admin/getApplicantSearch";
 import Link from "next/link";
 import useStatusReview from "@/lib/get-by-status";
 import { Badge } from "@/components/ui/badge";
@@ -128,7 +128,6 @@ export default function Manage() {
       <DynamicHeaderAdmin first="Applicants" second="Approved" />
 
       <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
-    
         <h1 className="text-2xl font-semibold flex items-center gap-2">
           <CheckCheck />
           Processed Applicants
@@ -139,7 +138,6 @@ export default function Manage() {
           action if needed.
         </p>
         <div className="container mx-auto py-10 space-y-3">
-          
           <div className="flex gap-3 justify-between">
             <div className="relative w-[40%]">
               <Input

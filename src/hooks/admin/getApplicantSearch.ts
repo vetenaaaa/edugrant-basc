@@ -1,7 +1,7 @@
 "use client";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { ApplicationTypes } from "./types";
+import { ApplicationTypes } from "../types";
 
 export default function useApplicationpSearch({ query }: { query: string }) {
   const [searchData, setSearchData] = useState<ApplicationTypes[]>([]);
@@ -18,8 +18,11 @@ export default function useApplicationpSearch({ query }: { query: string }) {
     const delayDebounce = setTimeout(async () => {
       try {
         const res = await axios.get(
-          `https://edugrant-express-server-production.up.railway.app/administrator/searchApplication?search=${trimmedQuery}`,
-
+          `${
+            process.env.NEXT_PUBLIC_ADMINISTRATOR_URL
+          }/searchApplication?search=${encodeURIComponent(
+            trimmedQuery
+          )}`,
           { withCredentials: true }
         );
 

@@ -43,7 +43,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import useAdminReview from "@/lib/get-applications";
+import useAdminReview from "@/hooks/admin/getApplicant";
 
 const headers = [
   { label: "Student ID" },
@@ -68,7 +68,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import ApplicationFilter from "./filter";
-import useApplicationpSearch from "@/lib/application-search";
+import useApplicationpSearch from "@/hooks/admin/getApplicantSearch";
 import Link from "next/link";
 const sortList = [
   {

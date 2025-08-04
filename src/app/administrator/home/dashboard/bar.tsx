@@ -9,7 +9,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import useScholarshipData from "@/lib/scholarship-data";
+import useScholarshipData from "@/hooks/admin/getScholarship";
 
 export const description = "A multiple bar chart";
 

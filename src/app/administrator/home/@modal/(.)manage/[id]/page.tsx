@@ -39,7 +39,7 @@ import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
-import useScholarshipUserByIdAdmin from "@/lib/get-id-scholar-admin";
+import useScholarshipUserByIdAdmin from "@/hooks/admin/getScholarshipData";
 import { format } from "date-fns";
 
 export default function InterceptManageScholarship() {

@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import useGetFilter from "@/lib/dynamic-filter";
+import useGetFilter from "@/hooks/admin/getDynamicFilter";
 import { RotateCcw, Settings2, Undo2 } from "lucide-react";
 
 type FilterApplication = {

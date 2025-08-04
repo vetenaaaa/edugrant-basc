@@ -12,7 +12,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
-import useScholarshipData from "@/lib/scholarship-data";
+import useScholarshipData from "@/hooks/admin/getScholarship";
 
 export const description = "A donut chart with text";
 
@@ -61,7 +61,6 @@ export default function ChartPieDonutText() {
             dataKey="value"
             nameKey="status"
             innerRadius={45}
-          
             strokeWidth={5}
             activeIndex={0}
             // activeShape={({ outerRadius = 0, ...props }: PieSectorDataItem) => (

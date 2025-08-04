@@ -90,7 +90,7 @@ export default function LoginAdmin() {
     const checkToken = async () => {
       try {
         const response = await axios.get(
-          `https://edugrant-express-server-production.up.railway.app/administrator/adminTokenAuthentication`,
+          `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/adminTokenAuthentication`,
           {
             withCredentials: true,
           }
@@ -116,7 +116,7 @@ export default function LoginAdmin() {
       setDisableInput(true);
       setLoginError("");
       const response = await axios.post(
-        `https://edugrant-express-server-production.up.railway.app/administrator/adminLogin`,
+        `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/adminLogin`,
         {
           adminEmail: data.email,
           adminPassword: data.password,
@@ -176,7 +176,7 @@ export default function LoginAdmin() {
       setDisableInput(true);
       setLoading(true);
       const response = await axios.post(
-        `https://edugrant-express-server-production.up.railway.app/administrator/adminCodeAuthentication`,
+        `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/adminCodeAuthentication`,
         {
           adminEmail: credentials.email,
           adminPassword: credentials.password,
