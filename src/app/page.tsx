@@ -29,7 +29,6 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { useState } from "react";
 const navItems = [
   { label: "Home", icon: Home },
   { label: "Features", icon: Zap },
@@ -150,15 +149,12 @@ const FaqsComponent = () => {
   );
 };
 
-import Login from "./login";
-import Register from "./register";
+import Login from "./user/login/page";
+import Register from "./user/register/page";
 
 export default function LandingPage() {
   const pathname = usePathname();
   console.log(pathname);
-  const [transition, setTransition] = useState<"hero" | "login" | "register">(
-    "hero"
-  );
   const HeaderComponent = () => {
     return (
       <header className="py-7 w-[95%] mx-auto  flex justify-between items-center ">
@@ -192,11 +188,7 @@ export default function LandingPage() {
           </ul>
         </span>
         <span className="flex gap-3 items-center">
-          <Link
-            href={"/user/login"}
-            prefetch={true}
-            onClick={() => setTransition("login")}
-          >
+          <Link href={"/user/login"} prefetch={true}>
             <Button variant="outline">
               Login <LogInIcon />
             </Button>
@@ -212,97 +204,61 @@ export default function LandingPage() {
       <div className="relative w-full your-class">
         <HeaderComponent />
         <AnimatePresence mode="wait">
-          {transition === "hero" && (
-            <motion.div
-              key="hero"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2, ease: "easeInOut" }}
-              className="relative min-h-[75vh]  mx-auto w-[95%]   rounded-3xl overflow-hidden  shadow-md flex items-center bg-[var(--green)]"
-            >
-              <div className="absolute inset-0 h-full w-full flex items-center rounded-3xl">
-                <img
-                  className="absolute opacity-3 h-[120%] [mask-image:linear-gradient(to_right,transparent,black_30%)] pointer-events-none left-10"
-                  src={bascLogo.src}
-                  alt=""
-                />
-                <img
-                  className="h-full w-[40%] object-cover absolute right-0 [mask-image:linear-gradient(to_right,transparent,black)] z-10"
-                  src={bascImage.src}
-                  alt=""
-                />
-              </div>
+          <motion.div
+            key="hero"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
+            className="relative min-h-[75vh]  mx-auto w-[95%]   rounded-3xl overflow-hidden  shadow-md flex items-center bg-[var(--green)]"
+          >
+            <div className="absolute inset-0 h-full w-full flex items-center rounded-3xl">
+              <img
+                className="absolute opacity-3 h-[120%] [mask-image:linear-gradient(to_right,transparent,black_30%)] pointer-events-none left-10"
+                src={bascLogo.src}
+                alt=""
+              />
+              <img
+                className="h-full w-[40%] object-cover absolute right-0 [mask-image:linear-gradient(to_right,transparent,black)] z-10"
+                src={bascImage.src}
+                alt=""
+              />
+            </div>
 
-              <div className="absolute z-10 left-10 h-full w-full flex flex-col justify-center">
-                <motion.span
-                  className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-green-500/70
+            <div className="absolute z-10 left-10 h-full w-full flex flex-col justify-center">
+              <motion.span
+                className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-green-500/70
   text-6xl  zxczxc tracking-[-8px] -translate-x-2
   "
-                  initial={{ backgroundPosition: "200% 0" }}
-                  animate={{ backgroundPosition: "-200% 0" }}
-                  transition={{
-                    repeat: Infinity,
-                    repeatType: "loop",
-                    duration: 7,
-                    ease: "linear",
-                  }}
-                >
-                  Edugrant
-                </motion.span>
-                <BlurText
-                  text="Online scholarship application portal for BASC students."
-                  delay={150}
-                  animateBy="words"
-                  direction="top"
-                  className="text-2xl mt-3 text-white"
-                />
-                <Link
-                  href={"/user/register"}
-                  prefetch={true}
-                  className="mt-8"
-                  onClick={() => setTransition("register")}
-                >
-                  <Button variant="outline">
-                    Get started <ArrowRight />
-                  </Button>
-                </Link>
-              </div>
-            </motion.div>
-          )}
-
-          {transition === "login" && (
-            <motion.div
-              key="login"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2, ease: "easeInOut" }}
-              className=" w-[95%] mx-auto"
-            >
-              <Login setTransition={setTransition} className={true} />
-            </motion.div>
-          )}
-          {transition === "register" && (
-            <motion.div
-              key="register"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2, ease: "easeInOut" }}
-              className=" w-[95%] mx-auto"
-            >
-              <Register setTransition={setTransition} className={false} />
-            </motion.div>
-          )}
+                initial={{ backgroundPosition: "200% 0" }}
+                animate={{ backgroundPosition: "-200% 0" }}
+                transition={{
+                  repeat: Infinity,
+                  repeatType: "loop",
+                  duration: 7,
+                  ease: "linear",
+                }}
+              >
+                Edugrant
+              </motion.span>
+              <BlurText
+                text="Online scholarship application portal for BASC students."
+                delay={150}
+                animateBy="words"
+                direction="top"
+                className="text-2xl mt-3 text-white"
+              />
+              <Link href={"/user/register"} prefetch={true} className="mt-8">
+                <Button variant="outline">
+                  Get started <ArrowRight />
+                </Button>
+              </Link>
+            </div>
+          </motion.div>
         </AnimatePresence>
 
-        {transition === "hero" && (
-          <>
-            <HowitworksComponent />
-            <FaqsComponent />
-          </>
-        )}
+        <HowitworksComponent />
+        <FaqsComponent />
       </div>
     </>
   );
