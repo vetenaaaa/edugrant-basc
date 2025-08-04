@@ -149,8 +149,6 @@ const FaqsComponent = () => {
   );
 };
 
-import Login from "./user/login/page";
-import Register from "./user/register/page";
 
 export default function LandingPage() {
   const pathname = usePathname();
