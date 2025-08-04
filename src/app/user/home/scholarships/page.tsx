@@ -16,13 +16,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { InfoIcon, PhilippinePeso, Share2, TextSearch } from "lucide-react";
+import {  PhilippinePeso, Share2, TextSearch } from "lucide-react";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import useScholarshipUserData from "@/hooks/user/getScholarship";
 import { useState } from "react";
-import { Badge } from "@/components/ui/badge";
 export default function ClientScholarship() {
   const [currentPage] = useState(1);
   const [rowsPerPage] = useState(20);
@@ -35,20 +34,7 @@ export default function ClientScholarship() {
     sort,
   });
   console.log(data, loading);
-  const getDeadlineInfo = (deadline: string) => {
-    const date = parseISO(deadline);
 
-    if (isPast(date))
-      return { label: "Expired", className: "bg-red-800 text-white" };
-
-    const daysLeft = differenceInDays(date, new Date());
-    const label = `${formatDistanceToNowStrict(date)} left`;
-
-    const className =
-      daysLeft <= 2 ? "bg-red-800 text-white" : "bg-green-800 text-gray-200";
-
-    return { label, className };
-  };
   return (
     <div className=" min-h-screen background px-4 ">
       <DynamicHeader first={segmentedPath[2]} second={segmentedPath[3]} />

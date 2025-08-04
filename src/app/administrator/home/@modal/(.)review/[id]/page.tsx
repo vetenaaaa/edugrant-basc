@@ -30,12 +30,11 @@ import useApplicationById from "@/hooks/admin/getApplicantData";
 import { Button } from "@/components/ui/button";
 import {
   Calendar,
-  Download,
-  File,
+ 
   Folder,
   GraduationCap,
   IdCard,
-  Image,
+
   LoaderCircleIcon,
   Mail,
   Phone,

@@ -1,15 +1,15 @@
 "use client";
 import {
   Activity,
-  CheckCheck,
+
   Edit,
   LoaderCircleIcon,
   Maximize,
-  PhilippinePeso,
+
   Trash2,
-  Users2,
+
 } from "lucide-react";
-import { Ring } from "ldrs/react";
+
 import "ldrs/react/Ring.css";
 import {
   Drawer,
@@ -37,7 +37,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import axios from "axios";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import useScholarshipUserByIdAdmin from "@/hooks/admin/getScholarshipData";
 import { format } from "date-fns";
@@ -56,13 +55,6 @@ export default function InterceptManageScholarship() {
 
   const title = data?.scholarshipTitle || "N/A";
   const deadline = data?.scholarshipDealine;
-  const readable = deadline
-    ? new Date(deadline).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      })
-    : "No deadline set";
   const provider = data?.scholarshipProvider || "unknown";
   const description = data?.scholarshipDescription;
    const amount = data?.scholarshipAmount;

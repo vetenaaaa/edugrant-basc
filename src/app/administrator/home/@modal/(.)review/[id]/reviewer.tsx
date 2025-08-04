@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Expand, ZoomIn, ZoomOut, RotateCw, RefreshCw, Maximize } from "lucide-react";
+import {  ZoomIn, ZoomOut, RotateCw, RefreshCw, Maximize } from "lucide-react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 // Mock types for demonstration

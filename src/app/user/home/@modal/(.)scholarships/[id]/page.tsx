@@ -1,15 +1,11 @@
 "use client";
 import {
-  Calendar,
+
   CalendarX2,
-  FileCheck2,
+
   FileInput,
   GraduationCap,
-  Maximize,
-  PhilippinePeso,
-  PiggyBank,
-  PinOff,
-  StickyNote,
+ 
   Wallet,
   X,
 } from "lucide-react";
@@ -20,7 +16,7 @@ import {
   Drawer,
   DrawerContent,
   DrawerDescription,
-  DrawerFooter,
+
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
@@ -31,10 +27,8 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import useScholarshipUserById from "@/hooks/user/getScholarshipData";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import UploadDocs from "./docs-upload";
 import { useSearchParams } from "next/navigation";
-import Link from "next/link";
 import { format } from "date-fns";
 export default function InterceptManageScholarshipClient() {
   const searchParams = useSearchParams();

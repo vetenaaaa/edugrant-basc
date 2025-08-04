@@ -72,7 +72,6 @@ import useApplicationpSearch from "@/hooks/admin/getApplicantSearch";
 import Link from "next/link";
 import useStatusReview from "@/lib/get-by-status";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 const sortList = [
   {
     value: "",
