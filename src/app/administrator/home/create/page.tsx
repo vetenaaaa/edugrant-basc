@@ -140,7 +140,7 @@ export default function Create() {
       formDataToSend.append("requirements", JSON.stringify(data.documents));
 
       const res = await axios.post(
-        `https://edugrant-express-server-production.up.railway.app/administrator/adminAddScholarships`,
+        `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/adminAddScholarships`,
         formDataToSend,
         {
           withCredentials: true,
