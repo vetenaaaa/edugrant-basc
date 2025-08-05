@@ -30,11 +30,9 @@ import useApplicationById from "@/hooks/admin/getApplicantData";
 import { Button } from "@/components/ui/button";
 import {
   Calendar,
- 
   Folder,
   GraduationCap,
   IdCard,
-
   LoaderCircleIcon,
   Mail,
   Phone,
@@ -70,32 +68,32 @@ export default function InterceptReviewApplicants() {
     try {
       setOpenApprove(true);
       setLoadingApprove(true);
-      StyledToast(
-        "checking",
-        "Processing Approval...",
-        "Please wait while we approve the application."
-      );
+      StyledToast({
+        status: "checking",
+        title: "Processing Approval...",
+        description: "Please wait while we approve the application.",
+      });
       const res = await axios.post(
         "https://edugrant-express-server-production.up.railway.app/administrator/approveApplication",
         { applicationId: id },
         { withCredentials: true }
       );
       if (res.status === 200) {
-        StyledToast(
-          "success",
-          "Application Approved",
-          "The applicant has been notified and granted access."
-        );
+        StyledToast({
+          status: "success",
+          title: "Application Approved",
+          description: "The applicant has been notified and granted access.",
+        });
         setLoadingApprove(false);
         setOpenApprove(false);
         router.back();
       }
     } catch (error) {
-      StyledToast(
-        "error",
-        "Network Error",
-        "Please check your connection and try again."
-      );
+      StyledToast({
+        status: "error",
+        title: "Network Error",
+        description: "Please check your connection and try again.",
+      });
       setLoadingApprove(false);
       setOpenApprove(false);
       console.error(error);
@@ -108,11 +106,11 @@ export default function InterceptReviewApplicants() {
     try {
       setOpenReject(true);
       setLoadingReject(true);
-      StyledToast(
-        "checking",
-        "Processing Rejection...",
-        "Please wait while we update the application status."
-      );
+      StyledToast({
+        status: "checking",
+        title: "Processing Rejection...",
+        description: "Please wait while we update the application status.",
+      });
       const res = await axios.post(
         "https://edugrant-express-server-production.up.railway.app/administrator/declineApplication",
         { applicationId: id },
@@ -122,21 +120,21 @@ export default function InterceptReviewApplicants() {
       if (res.status === 200) {
         setLoadingReject(false);
         setOpenReject(false);
-        StyledToast(
-          "success",
-          "Application Rejected",
-          "The applicant has been notified of the rejection."
-        );
+        StyledToast({
+          status: "success",
+          title: "Application Rejected",
+          description: "The applicant has been notified of the rejection.",
+        });
         router.back();
       }
     } catch (error) {
       setLoadingReject(false);
       setOpenReject(false);
-      StyledToast(
-        "error",
-        "Network Error",
-        "Please check your connection and try again."
-      );
+      StyledToast({
+        status: "error",
+        title: "Network Error",
+        description: "Please check your connection and try again.",
+      });
       console.error(error);
     } finally {
       setLoadingReject(false);
