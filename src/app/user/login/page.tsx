@@ -23,8 +23,6 @@ import {
 import { useLoginHandler } from "@/hooks/user/postLoginHandler";
 import { ModeToggle } from "@/components/ui/dark-mode";
 export default function Login() {
-  const { setUser } = useUserStore();
-  const router = useRouter();
   const {
     step,
     // setStep,
