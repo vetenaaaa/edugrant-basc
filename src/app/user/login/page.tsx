@@ -3,7 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LoaderCircleIcon } from "lucide-react";
-import { ArrowLeft, ArrowRight } from "iconsax-reactjs";
+import {
+  ArrowLeft,
+  ArrowRight,
+  KeySquare,
+  SecurityUser,
+} from "iconsax-reactjs";
 import Link from "next/link";
 import {
   Form,
@@ -13,7 +18,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {  motion } from "motion/react";
+import { motion } from "motion/react";
 import {
   InputOTP,
   InputOTPGroup,
@@ -21,7 +26,6 @@ import {
 } from "@/components/ui/input-otp";
 import { useLoginHandler } from "@/hooks/user/postLoginHandler";
 import { ModeToggle } from "@/components/ui/dark-mode";
-import { useState } from "react";
 export default function Login() {
   const {
     step,
@@ -37,7 +41,6 @@ export default function Login() {
     // verifyError,
     // verifySuccess,
   } = useLoginHandler();
-  const [stepper, setStepper] = useState(1);
   return (
     <main className="relative min-h-screen lg:pt-15 w-full bg-black flex  overflow-hidden">
       <Link href={"/"} prefetch={true} className="absolute top-3 left-3 z-10">
@@ -170,7 +173,11 @@ export default function Login() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="flex justify-between items-center">
-                            Student ID <FormMessage />
+                            <span className="flex items-center gap-1.5">
+                              <SecurityUser size="20" color="#15803d" /> Student
+                              ID
+                            </span>{" "}
+                            <FormMessage />
                           </FormLabel>
                           <FormControl>
                             <Input
@@ -196,7 +203,10 @@ export default function Login() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="flex justify-between items-center">
-                            Password <FormMessage />
+                            <span className="flex items-center gap-1.5">
+                              <KeySquare size="20" color="#15803d" /> Password
+                            </span>
+                            <FormMessage />
                           </FormLabel>
                           <FormControl>
                             <Input
@@ -243,12 +253,12 @@ export default function Login() {
                 className="text-xs text-center mt-1 p-4"
               >
                 By clicking continue, you agree to our <br />
-                <span className="underline text-green-600">
+                <span className="underline text-green-700 italic">
                   {" "}
                   Terms of Service{" "}
                 </span>{" "}
                 &nbsp; and &nbsp;
-                <span className="underline text-green-600">
+                <span className="underline text-green-700 italic">
                   {" "}
                   Privacy Policy
                 </span>
