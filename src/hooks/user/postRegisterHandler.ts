@@ -24,7 +24,7 @@ interface sendAuthData {
 
 const sendAuthApi = async ({ personalData, accountData }: sendAuthData) => {
   const response = await axios.post(
-    `https://edugrant-express-server-production.up.railway.app/user/sendAuthCodeRegister`,
+    `${process.env.NEXT_PUBLIC_USER_URL}/sendAuthCodeRegister`,
     {
       studentFirstName: personalData.firstName,
       studentMiddleName: personalData.middleName,
@@ -57,7 +57,7 @@ const verifyRegisterApi = async ({
   accountData,
 }: VerifyRegisterData) => {
   const response = await axios.post(
-    `https://edugrant-express-server-production.up.railway.app/user/registerAccount`,
+    `${process.env.NEXT_PUBLIC_USER_URL}/registerAccount`,
     {
       verificationCode: data.otp,
       studentFirstName: personalData.firstName,
