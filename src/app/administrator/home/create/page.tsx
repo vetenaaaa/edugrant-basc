@@ -163,22 +163,22 @@ export default function Create() {
           documents: [{ label: "", formats: [] }],
         });
 
-        StyledToast(
-          "success",
-          "Scholarship Created",
-          "The scholarship has been added successfully."
-        );
+        StyledToast({
+          status: "success",
+          title: "Scholarship Created",
+          description: "The scholarship has been added successfully.",
+        });
 
         setLoading(false);
         setOpen(false);
       }
     } catch (error) {
       console.error(error);
-      StyledToast(
-        "error",
-        "Creation Failed",
-        "We couldn’t create the scholarship. Please try again."
-      );
+      StyledToast({
+        status: "error",
+        title: "Creation Failed",
+        description: "We couldn’t create the scholarship. Please try again.",
+      });
 
       setLoading(false);
     }
