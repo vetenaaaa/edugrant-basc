@@ -93,11 +93,12 @@ export default function UploadDocs({
 
   const onSubmit = async (data: FormData) => {
     console.log("Submitting:", data);
-    StyledToast(
-      "checking",
-      "Uploading in progress...",
-      "Your documents are being uploaded. Please don’t close the window."
-    );
+    StyledToast({
+      status: "checking",
+      title: "Uploading in progress...",
+      description:
+        "Your documents are being uploaded. Please don’t close the window.",
+    });
 
     try {
       setLoading(true);
@@ -131,11 +132,11 @@ export default function UploadDocs({
       if (res.status === 200) {
         console.log("Upload success:", res.data);
 
-        StyledToast(
-          "success",
-          "Upload successful!",
-          " Your documents have been submitted successfully."
-        );
+        StyledToast({
+          status: "success",
+          title: "Upload successful!",
+          description: " Your documents have been submitted successfully.",
+        });
         setIsApply(true);
         setLoading(false);
         setTimeout(() => {
@@ -143,11 +144,11 @@ export default function UploadDocs({
         }, 300);
       }
     } catch (error) {
-      StyledToast(
-        "error",
-        "Upload failed",
-        "Something went wrong. Please try again."
-      );
+      StyledToast({
+        status: "error",
+        title: "Upload failed",
+        description: "Something went wrong. Please try again.",
+      });
       console.error("Upload error:", error);
       setLoading(false);
     }
