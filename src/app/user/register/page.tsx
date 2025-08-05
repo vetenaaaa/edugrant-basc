@@ -80,14 +80,14 @@ export default function Register() {
     accountData,
 
     // Loading states
-    sendAuthCode,
-    verifyRegister,
+    // sendAuthCode,
+    // verifyRegister,
 
     // Utility functions
-    resetAuthState,
-    resetVerifyState,
-    resetAllStates,
-    requestNewCode,
+    // resetAuthState,
+    // resetVerifyState,
+    // resetAllStates,
+    // requestNewCode,
   } = useRegisterHandler();
 
   const handlePrevStepper = () => {
