@@ -240,7 +240,7 @@ export default function Register() {
   };
 
   return (
-    <div className="relative flex justify-center items-center gap-5  w-full min-h-screen">
+    <div className="relative flex justify-center items-center gap-5  w-full min-h-screen your-class">
       <Link href={"/"} prefetch={true} className="absolute top-3 left-3">
         <Button variant="outline">
           <ArrowLeft />
