@@ -38,11 +38,11 @@ export async function middleware(request: NextRequest) {
 
   try {
     if (pathname.startsWith("/administrator/home")) {
-      if(!AdminToken){
+      if (!AdminToken) {
         return NextResponse.redirect(new URL("/administrator", request.url));
       }
       const adminResponse = await fetch(
-        "https://edugrant-express-server-production.up.railway.app/administrator/adminTokenAuthentication",
+        `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/adminTokenAuthentication`,
         {
           method: "GET",
           headers: {
@@ -56,11 +56,11 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL("/administrator", request.url));
       }
     } else if (pathname.startsWith("/user/home")) {
-      if(!token){
+      if (!token) {
         return NextResponse.redirect(new URL("/user/login", request.url));
       }
       const userResponse = await fetch(
-        "https://edugrant-express-server-production.up.railway.app/user/tokenValidation",
+        `${process.env.NEXT_PUBLIC_USER_URL}/tokenValidation`,
         {
           method: "GET",
           headers: {
