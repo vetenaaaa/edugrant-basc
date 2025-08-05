@@ -1,20 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  ArrowLeft,
-  ChevronDownIcon,
-  CircleAlert,
-  CircleCheckIcon,
-  LoaderCircleIcon,
-} from "lucide-react";
+import { ArrowLeft, ChevronDownIcon } from "lucide-react";
 import Link from "next/link";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useRouter } from "next/navigation";
 import {
   Select,
   SelectContent,
@@ -31,8 +24,7 @@ import {
 } from "@/components/ui/stepper";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+
 import {
   Form,
   FormControl,
@@ -41,14 +33,15 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useForm } from "react-hook-form";
+
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { Calendar } from "@/components/ui/calendar";
-import axios from "axios";
+
+import { useRegisterHandler } from "@/hooks/user/postRegisterHandler";
 const steps = [
   {
     step: 1,
@@ -68,74 +61,37 @@ const steps = [
   },
 ];
 
-const personalDetailsSchema = z.object({
-  firstName: z.string().min(1, "Required"),
-  middleName: z.string().min(1, "Required"),
-  lastName: z.string().min(1, "Required"),
-  contactNumber: z.string().min(1, "Required"),
-  gender: z.string().min(1, "Required"),
-  dateOfBirth: z.string().min(1, "Required"),
-  address: z.string().min(1, "Required"),
-});
-const accountDetailsSchema = z.object({
-  studentId: z.string().min(1, "Required"),
-  email: z.string().min(1, "Required"),
-  password: z.string().min(1, "Required"),
-  course: z.string().min(1, "Required"),
-  yearLevel: z.string().min(1, "Required"),
-  section: z.string().min(1, "Required"),
-});
-const otpSchema = z.object({
-  otp: z.string().min(6, "Required").max(6, "Required"),
-});
-
-type personalFormData = z.infer<typeof personalDetailsSchema>;
-type accountFormData = z.infer<typeof accountDetailsSchema>;
-type otpFormData = z.infer<typeof otpSchema>;
-
 export default function Register() {
-  const router = useRouter();
-  const [stepper, setStepper] = useState(1);
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState("");
-  const [error, setError] = useState("");
+  const {
+    // Stepper state
+    stepper,
+    setStepper,
 
-  const personalForm = useForm<personalFormData>({
-    resolver: zodResolver(personalDetailsSchema),
-    defaultValues: {
-      firstName: "",
-      middleName: "",
-      lastName: "",
-      contactNumber: "",
-      gender: "",
-      dateOfBirth: "",
-      address: "",
-    },
-  });
-  const accountForm = useForm<accountFormData>({
-    resolver: zodResolver(accountDetailsSchema),
-    defaultValues: {
-      studentId: "",
-      email: "",
-      password: "",
-      course: "",
-      yearLevel: "",
-      section: "",
-    },
-  });
-  const otpForm = useForm<otpFormData>({
-    resolver: zodResolver(otpSchema),
-    defaultValues: {
-      otp: "",
-    },
-  });
-  const personalData = personalForm.watch();
-  const accountData = accountForm.watch();
+    // Main functions
+    HandleRegister,
+    HandleOtpVerification,
+
+    // Forms
+    personalForm,
+    accountForm,
+    otpForm,
+    personalData,
+    accountData,
+
+    // Loading states
+    sendAuthCode,
+    verifyRegister,
+
+    // Utility functions
+    resetAuthState,
+    resetVerifyState,
+    resetAllStates,
+    requestNewCode,
+  } = useRegisterHandler();
 
   const handlePrevStepper = () => {
     setStepper((prev) => prev - 1);
-    setError("");
   };
 
   const handlePersonalSubmit = () => {
@@ -143,100 +99,6 @@ export default function Register() {
   };
   const handleAccountSubmit = () => {
     setStepper(3);
-  };
-  const handleReviewSubmit = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.post(
-        `https://edugrant-express-server-production.up.railway.app/user/sendAuthCodeRegister`,
-        {
-          studentFirstName: personalData.firstName,
-          studentMiddleName: personalData.middleName,
-          studentLastName: personalData.lastName,
-          studentContact: personalData.contactNumber,
-          studentGender: personalData.gender,
-          studentDateofBirth: personalData.dateOfBirth,
-          studentAddress: personalData.address,
-          studentId: accountData.studentId,
-          studentEmail: accountData.email,
-          studentPassword: accountData.password,
-          course: accountData.course,
-          year: accountData.yearLevel,
-          section: accountData.section,
-        },
-        {
-          withCredentials: true,
-        }
-      );
-
-      if (response.status === 200) {
-        setStepper(4);
-        setLoading(false);
-      }
-    } catch (error) {
-      setLoading(false);
-      if (axios.isAxiosError(error)) {
-        if (error.response?.status === 400) {
-          setError("Student ID already exist.");
-        } else {
-          console.error(
-            "Login error:",
-            error.response?.data?.message || error.message
-          );
-        }
-      } else {
-        console.error("Login error:", error);
-        setError("An unexpected error occurred. Please try again.");
-      }
-    }
-  };
-  const handleOtpSubmit = async (data: otpFormData) => {
-    try {
-      setLoading(true);
-      const response = await axios.post(
-        `https://edugrant-express-server-production.up.railway.app/user/registerAccount`,
-        {
-          verificationCode: data.otp,
-          studentFirstName: personalData.firstName,
-          studentMiddleName: personalData.middleName,
-          studentLastName: personalData.lastName,
-          studentContact: personalData.contactNumber,
-          studentGender: personalData.gender,
-          studentDateofBirth: personalData.dateOfBirth,
-          studentAddress: personalData.address,
-          studentId: accountData.studentId,
-          studentEmail: accountData.email,
-          studentPassword: accountData.password,
-          course: accountData.course,
-          year: accountData.yearLevel,
-          section: accountData.section,
-        },
-        {
-          withCredentials: true,
-        }
-      );
-
-      if (response.status === 200) {
-        setSuccess("Registration successful! Redirecting to login...");
-
-        router.replace("/user/login");
-      }
-    } catch (error) {
-      setLoading(false);
-      if (axios.isAxiosError(error)) {
-        if (error.response?.status === 400) {
-          setError("Invalid code. Please check your code on email.");
-        } else {
-          console.error(
-            "Login error:",
-            error.response?.data?.message || error.message
-          );
-        }
-      } else {
-        console.error("Login error:", error);
-        setError("An unexpected error occurred. Please try again.");
-      }
-    }
   };
 
   return (
@@ -622,18 +484,7 @@ export default function Register() {
                   Please review your information before submitting
                 </p>
               </div>
-              {error && (
-                <div className="rounded-md border border-red-500/50 px-4 py-3 text-red-600">
-                  <p className="text-sm">
-                    <CircleAlert
-                      className="me-3 -mt-0.5 inline-flex opacity-60"
-                      size={16}
-                      aria-hidden="true"
-                    />
-                    {error}
-                  </p>
-                </div>
-              )}
+
               <div className="space-y-6">
                 <div className="space-y-3">
                   <h3 className="text-2xl font-semibold">
@@ -688,22 +539,15 @@ export default function Register() {
                   onClick={handlePrevStepper}
                   variant="outline"
                   className="flex-1"
-                  disabled={loading}
                 >
                   Previous
                 </Button>
                 <Button
-                  disabled={loading}
-                  onClick={handleReviewSubmit}
+                  onClick={() => {
+                    HandleRegister({ personalData, accountData });
+                  }}
                   className="flex-1"
                 >
-                  {loading && (
-                    <LoaderCircleIcon
-                      className="-ms-1 animate-spin"
-                      size={16}
-                      aria-hidden="true"
-                    />
-                  )}
                   Submit Application
                 </Button>
               </div>
@@ -719,30 +563,7 @@ export default function Register() {
                       Enter the code we sent to your gmail.
                     </p>
                   </div>
-                  {success && (
-                    <div className="rounded-md border border-emerald-500/50 px-4 py-3 text-emerald-600">
-                      <p className="text-sm">
-                        <CircleCheckIcon
-                          className="me-3 -mt-0.5 inline-flex opacity-60"
-                          size={16}
-                          aria-hidden="true"
-                        />
-                        {success}
-                      </p>
-                    </div>
-                  )}
-                  {error && (
-                    <div className="rounded-md border border-red-500/50 px-4 py-3 text-red-600">
-                      <p className="text-sm">
-                        <CircleAlert
-                          className="me-3 -mt-0.5 inline-flex opacity-60"
-                          size={16}
-                          aria-hidden="true"
-                        />
-                        {error}
-                      </p>
-                    </div>
-                  )}
+
                   <FormField
                     control={otpForm.control}
                     name="otp"
@@ -756,10 +577,8 @@ export default function Register() {
                           <InputOTP
                             maxLength={6}
                             value={field.value}
-                            disabled={loading}
                             onChange={(value) => {
                               field.onChange(value);
-                              setError("");
                             }}
                           >
                             <InputOTPGroup>
@@ -781,17 +600,9 @@ export default function Register() {
                       Resend (0s)
                     </Button>
                     <Button
-                      onClick={otpForm.handleSubmit(handleOtpSubmit)}
+                      onClick={otpForm.handleSubmit(HandleOtpVerification)}
                       className="flex-1"
-                      disabled={loading}
                     >
-                      {loading && (
-                        <LoaderCircleIcon
-                          className="-ms-1 animate-spin"
-                          size={16}
-                          aria-hidden="true"
-                        />
-                      )}
                       Verify
                     </Button>
                   </div>
