@@ -81,7 +81,7 @@ export default function Register() {
 
     // Loading states
     sendAuthCode,
-    verifyRegister,
+    // verifyRegister,
 
     // Utility functions
     // resetAuthState,

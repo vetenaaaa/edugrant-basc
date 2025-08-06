@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -41,7 +40,7 @@ export default function DynamicHeaderAdmin({
 }: HeaderTypes) {
   const { admin } = useAdminStore();
   console.log(admin?.adminName);
-  const { handleLogout, loading } = useAdminLogout();
+  const { handleLogout } = useAdminLogout();
   const [open, setOpen] = useState(false);
   return (
     <header className="flex w-full items-center justify-between top-2 relative">
