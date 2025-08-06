@@ -17,6 +17,7 @@ import {
   Mail,
   HelpCircle,
   Zap,
+  MapPin,
 } from "lucide-react";
 import bascLogo from "@/assets/basclogo.png";
 import bascImage from "@/assets/BASCjf5989_03 copy.jpg";
@@ -149,7 +150,6 @@ const FaqsComponent = () => {
   );
 };
 
-
 export default function LandingPage() {
   const pathname = usePathname();
   console.log(pathname);
@@ -199,7 +199,7 @@ export default function LandingPage() {
 
   return (
     <>
-      <div className="relative w-full your-class">
+      <div className="relative w-full">
         <HeaderComponent />
         <AnimatePresence mode="wait">
           <motion.div
@@ -208,7 +208,7 @@ export default function LandingPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2, ease: "easeInOut" }}
-            className="relative min-h-[75vh]  mx-auto w-[95%]   rounded-3xl overflow-hidden  shadow-md flex items-center bg-[var(--green)]"
+            className="relative min-h-[75vh]  mx-auto w-[95%]   rounded-3xl overflow-hidden  shadow-2xl shadow-background/50 flex items-center bg-[var(--green)]"
           >
             <div className="absolute inset-0 h-full w-full flex items-center rounded-3xl">
               <img
@@ -224,9 +224,15 @@ export default function LandingPage() {
             </div>
 
             <div className="absolute z-10 left-10 h-full w-full flex flex-col justify-center">
+              <span className="  flex gap-1 items-center">
+                <MapPin className=" text-yellow-500" size={18} />
+                <p className=" text-yellow-500/70 text-lg">
+                  BASC Office of Student Affairs and Services
+                </p>
+              </span>
               <motion.span
                 className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-green-500/70
-  text-6xl  zxczxc tracking-[-8px] -translate-x-2
+  text-6xl  zxczxc tracking-[-8px] -translate-x-2 mt-1.5
   "
                 initial={{ backgroundPosition: "200% 0" }}
                 animate={{ backgroundPosition: "-200% 0" }}

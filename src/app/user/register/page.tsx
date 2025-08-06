@@ -80,8 +80,8 @@ export default function Register() {
     accountData,
 
     // Loading states
-    // sendAuthCode,
-    // verifyRegister,
+    sendAuthCode,
+    verifyRegister,
 
     // Utility functions
     // resetAuthState,
@@ -102,14 +102,14 @@ export default function Register() {
   };
 
   return (
-    <div className="relative flex justify-center items-center gap-5  w-full min-h-screen your-class">
+    <div className="relative flex justify-center items-center gap-5  w-full min-h-screen">
       <Link href={"/"} prefetch={true} className="absolute top-3 left-3">
         <Button variant="outline">
           <ArrowLeft />
         </Button>
       </Link>
       <div className="flex-1 flex justify-center items-center ">
-        <div className="min-w-2xl space-y-5">
+        <div className="w-lg space-y-5">
           <Stepper
             defaultValue={1}
             value={stepper}
@@ -132,7 +132,7 @@ export default function Register() {
             <Form {...personalForm}>
               <div className="space-y-6">
                 <div>
-                  <h1 className="text-2xl font-semibold">
+                  <h1 className="text-xl font-semibold">
                     Personal Information
                   </h1>
                   <p className="text-gray-600 text-sm mt-1">
@@ -140,7 +140,7 @@ export default function Register() {
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
                   <FormField
                     control={personalForm.control}
                     name="firstName"
@@ -320,15 +320,13 @@ export default function Register() {
             <Form {...accountForm}>
               <div className="space-y-6">
                 <div>
-                  <h1 className="text-2xl font-semibold">
-                    Account Information
-                  </h1>
+                  <h1 className="text-xl font-semibold">Account Information</h1>
                   <p className="text-gray-600 text-sm mt-1">
                     Fill out all required fields to start scholarship
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
                   <FormField
                     control={accountForm.control}
                     name="studentId"
@@ -385,22 +383,22 @@ export default function Register() {
                     )}
                   />
 
-                  <div className="flex col-span-2 gap-4">
-                    <FormField
-                      control={accountForm.control}
-                      name="course"
-                      render={({ field }) => (
-                        <FormItem className="flex-1">
-                          <FormLabel className="flex items-center justify-between">
-                            Course <FormMessage />
-                          </FormLabel>
-                          <FormControl>
-                            <Input placeholder="Enter your course" {...field} />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
+                  <FormField
+                    control={accountForm.control}
+                    name="course"
+                    render={({ field }) => (
+                      <FormItem className="col-span-2">
+                        <FormLabel className="flex items-center justify-between">
+                          Course <FormMessage />
+                        </FormLabel>
+                        <FormControl>
+                          <Input placeholder="Enter your course" {...field} />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
 
+                  <div className="flex col-span-2 gap-4">
                     <FormField
                       control={accountForm.control}
                       name="yearLevel"
@@ -479,7 +477,7 @@ export default function Register() {
           {stepper === 3 && (
             <div className="space-y-6">
               <div>
-                <h1 className="text-2xl font-semibold">Review & Submit</h1>
+                <h1 className="text-xl font-semibold">Review & Submit</h1>
                 <p className="text-sm mt-1 text-muted-foreground">
                   Please review your information before submitting
                 </p>
@@ -487,7 +485,7 @@ export default function Register() {
 
               <div className="space-y-6">
                 <div className="space-y-3">
-                  <h3 className="text-2xl font-semibold">
+                  <h3 className="text-xl font-semibold">
                     Personal Information
                   </h3>
                   <div className="grid grid-cols-2 gap-4 text-sm">
@@ -539,6 +537,7 @@ export default function Register() {
                   onClick={handlePrevStepper}
                   variant="outline"
                   className="flex-1"
+                  disabled={sendAuthCode.isLoading}
                 >
                   Previous
                 </Button>
@@ -547,6 +546,7 @@ export default function Register() {
                     HandleRegister({ personalData, accountData });
                   }}
                   className="flex-1"
+                  disabled={sendAuthCode.isLoading}
                 >
                   Submit Application
                 </Button>

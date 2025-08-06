@@ -42,7 +42,7 @@ export default function Login() {
     // verifySuccess,
   } = useLoginHandler();
   return (
-    <main className="relative min-h-screen lg:pt-15 w-full bg-black flex  overflow-hidden">
+    <main className="relative min-h-screen lg:pt-15 w-full dark:bg-black flex  overflow-hidden">
       <Link href={"/"} prefetch={true} className="absolute top-3 left-3 z-10">
         <motion.div
           initial={{ opacity: 0, x: -30 }}
@@ -63,9 +63,9 @@ export default function Login() {
       >
         <ModeToggle />
       </motion.div>
-      <section className="relative z-0 flex flex-1 flex-col items-center overflow-hidden justify-between bg-gradient-to-b from-black to-emerald-500/10">
+      <section className="relative z-0 flex flex-1 flex-col items-center overflow-hidden justify-between dark:bg-gradient-to-b from-black to-emerald-500/10">
         {/* Lamp Effect Background */}
-        <div className="absolute top-15 lg:top-0 isolate z-0 flex w-screen flex-1 items-start justify-center transform scale-75 lg:scale-100">
+        <div className="absolute top-15 lg:top-0 isolate z-0  w-screen flex-1 items-start justify-center transform scale-75 lg:scale-100 hidden dark:flex">
           {/* Optional Blur Layer */}
           <div className="absolute top-0 z-50 h-48 w-screen bg-transparent opacity-10 backdrop-blur-md" />
 
@@ -104,8 +104,8 @@ export default function Login() {
             }}
             className="absolute inset-auto right-1/2 h-56 w-[30rem]"
           >
-            <div className="absolute w-full left-0 bg-black h-40 bottom-0 z-20 [mask-image:linear-gradient(to_top,white,transparent)]" />
-            <div className="absolute w-40 h-full left-0 bg-black bottom-0 z-20 [mask-image:linear-gradient(to_right,white,transparent)]" />
+            <div className="absolute w-full left-0 dark:bg-black h-40 bottom-0 z-20 [mask-image:linear-gradient(to_top,white,transparent)]" />
+            <div className="absolute w-40 h-full left-0 dark:bg-black bottom-0 z-20 [mask-image:linear-gradient(to_right,white,transparent)]" />
           </motion.div>
 
           {/* Right conic gradient */}
@@ -119,8 +119,8 @@ export default function Login() {
             }}
             className="absolute inset-auto left-1/2 h-56 w-[30rem]"
           >
-            <div className="absolute w-40 h-full right-0 bg-black bottom-0 z-20 [mask-image:linear-gradient(to_left,white,transparent)]" />
-            <div className="absolute w-full right-0 bg-black h-40 bottom-0 z-20 [mask-image:linear-gradient(to_top,white,transparent)]" />
+            <div className="absolute w-40 h-full right-0 dark:bg-black bottom-0 z-20 [mask-image:linear-gradient(to_left,white,transparent)]" />
+            <div className="absolute w-full right-0 dark:bg-black h-40 bottom-0 z-20 [mask-image:linear-gradient(to_top,white,transparent)]" />
           </motion.div>
         </div>
 

@@ -1,7 +1,4 @@
 import { Separator } from "@/components/ui/separator";
-import axios from "axios";
-import { useRouter } from "next/navigation";
-
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import {
   Breadcrumb,
@@ -9,14 +6,26 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 import { ModeToggle } from "@/components/ui/dark-mode";
 import { Popover } from "@radix-ui/react-popover";
 import { PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Bell, ChevronsUpDown, ExternalLink, LogOut, User } from "lucide-react";
-import Link from "next/link";
 import { useAdminStore } from "@/store/adminUserStore";
+import { useAdminLogout } from "@/hooks/admin/postAdminLogout";
+import { useState } from "react";
 function capitalizeFirstLetter(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
@@ -30,24 +39,10 @@ export default function DynamicHeaderAdmin({
   second,
   third,
 }: HeaderTypes) {
-  const router = useRouter();
- const { admin } = useAdminStore();
- console.log(admin?.adminName)
-  const HandleLogout = async () => {
-    try {
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_ADMIN_API}/adminLogout`,
-        {},
-        { withCredentials: true }
-      );
-      console.log(res);
-      if (res.status === 200) {
-        router.replace("/administrator");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const { admin } = useAdminStore();
+  console.log(admin?.adminName);
+  const { handleLogout, loading } = useAdminLogout();
+  const [open, setOpen] = useState(false);
   return (
     <header className="flex w-full items-center justify-between top-2 relative">
       <div className="flex h-16 shrink-0 items-center gap-2 px-4">
@@ -79,38 +74,36 @@ export default function DynamicHeaderAdmin({
           <PopoverTrigger asChild>
             <Button variant="outline">
               <User />
-              {admin?.adminName || "N/A"} 
+              {admin?.adminName || "N/A"}
               <ChevronsUpDown />
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-[200px] p-2 bg-background space-y-2">
-            <Link prefetch={true} href="/user/home/profile">
-              <div className="w-full rounded-md border py-1 px-4 shadow-lg">
-                <div className="flex items-center justify-between gap-2">
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium">Profile</p>
-                  </div>
-
-                  <Button size="sm" variant="ghost">
-                    <User />
-                  </Button>
-                </div>
-              </div>
-            </Link>
-            <div
-              className="w-full rounded-md border py-1 px-4 shadow-lg cursor-pointer"
-              onClick={HandleLogout}
-            >
-              <div className="flex items-center justify-between gap-2">
-                <div className="space-y-1">
-                  <p className="text-sm font-medium">Log out</p>
-                </div>
-
-                <Button size="sm" variant="ghost">
-                  <LogOut />
-                </Button>
-              </div>
-            </div>
+          <PopoverContent className="w-[200px] p-1 bg-background flex flex-col gap-2">
+            <div className="p-1.5 text-sm font-semibold">My Account</div>
+            <Separator />
+            <h1 className="flex items-center gap-1.5 text-sm p-1.5 border border-transparent hover:border-primary rounded-sm">
+              <User size={15} /> Profile
+            </h1>
+            <AlertDialog open={open} onOpenChange={setOpen}>
+              <AlertDialogTrigger asChild>
+                <h1 className="flex items-center gap-1.5 text-sm p-1.5 border border-transparent hover:border-primary rounded-sm">
+                  <LogOut size={15} /> Logout
+                </h1>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Log out of your account?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    You will be logged out from this session. You can log in
+                    again anytime.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <Button onClick={handleLogout}>Log Out</Button>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </PopoverContent>
         </Popover>
         <Popover>
